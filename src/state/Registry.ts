@@ -4,6 +4,7 @@ import { createSelect } from "../core/tools/select"
 import { createPencil } from "../core/tools/pencil"
 import { CanvasActionType } from "../core/canvas_actions/canvas_action"
 import { PencilStrokeType } from "../core/canvas_actions/pencil_stroke"
+import createSelectRectangle from "../core/tools/select_rectangle"
 
 export type Registry = {
     tools: Record<string, Tool>,
@@ -13,7 +14,8 @@ export type Registry = {
 export const Registry: Registry = {
     tools: {
         "select": createSelect(),
-        "pencil": createPencil()
+        "pencil": createPencil(),
+        "select_rectangle": createSelectRectangle()
     },
     actionTypes: {
         "pencil_stroke": PencilStrokeType

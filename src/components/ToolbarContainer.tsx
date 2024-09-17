@@ -15,16 +15,16 @@ const ToolbarContainer = () => {
                     {([id, tool]) => (
                         <button
                             class="toolbar-button"
-                            title={tool.title}
+                            title={tool.title + " - " + tool.key}
                             aria-label={tool.title + " - " + tool.key}
                             aria-keyshortcuts={tool.key}
                             aria-pressed={selectedTool() === id}
                             onclick={() => selectTool(id)}
                         >
                             <tool.icon />
-                            <div class="toolbar-button-hint">
+                            {/* <div class="toolbar-button-hint">
                                 {tool.key}
-                            </div>
+                            </div> */}
                         </button>
                     )}
                 </For>
