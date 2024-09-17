@@ -62,8 +62,8 @@
       background: var(--neutral-800);
     }
   
-    &:active {
-      background: var(--neutral-700);
+    &:active:not(:disabled) {
+      background: var(--neutral-750);
     }
   
     &:disabled {
