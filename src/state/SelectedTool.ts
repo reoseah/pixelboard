@@ -1,8 +1,8 @@
-import { createContext, createRoot, createSignal } from "solid-js"
+import { Accessor, createContext, createRoot, createSignal } from "solid-js"
 import { makePersisted } from "@solid-primitives/storage"
 import { Registry } from "./Registry"
 
-export type SelectedToolState = () => string
+export type SelectedToolState = Accessor<string>
 
 export type SelectedToolActions = (id: string) => void
 
@@ -11,6 +11,11 @@ export const SelectedTool: [
     actions: SelectedToolActions
 ] = createRoot(() => {
     const [id, setId] = makePersisted(createSignal("select"), { name: "selected-tool" })
+
+    const tool = Registry.tools[id()]
+    if (tool?.onSelect) {
+        tool.onSelect()
+    }
 
     const select = (targetId: string) => {
         const prev = Registry.tools[id()]

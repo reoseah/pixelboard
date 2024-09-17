@@ -1,10 +1,10 @@
 import { makePersisted } from "@solid-primitives/storage"
-import { createContext, createRoot, createSignal } from "solid-js"
+import { Accessor, createContext, createRoot, createSignal } from "solid-js"
 
 export type ViewportPositionState = {
-    x: () => number
-    y: () => number
-    scale: () => number
+    x: Accessor<number>
+    y: Accessor<number>
+    scale: Accessor<number>
 }
 
 export type ViewportPositionActions = {

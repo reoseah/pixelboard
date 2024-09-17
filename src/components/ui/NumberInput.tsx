@@ -1,5 +1,5 @@
 import './NumberInput.css'
-import { Show, JSX } from 'solid-js'
+import { Show, JSX, onCleanup } from 'solid-js'
 
 export const NumberInput = (props: {
   value: number
@@ -14,10 +14,23 @@ export const NumberInput = (props: {
   title?: string
   disabled?: boolean
 }) => {
+  let ref!: HTMLElement
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (!event.composedPath().includes(ref)) {
+      ref.querySelector('input')?.blur()
+    }
+  }
+  document.addEventListener('mousedown', handleClickOutside)
+  onCleanup(() => {
+    document.removeEventListener('mousedown', handleClickOutside)
+  })
+
   return (
     <label
-        class={`number-input-container ${props.class ?? ''}`}
+      class={`number-input-container ${props.class ?? ''}`}
       title={props.title}
+      ref={el => ref = el}
     >
       <Show when={props.icon}>
         <div class="input-icon">
@@ -50,7 +63,7 @@ export const NumberInput = (props: {
             document.removeEventListener('click', handleClickOutside)
           }, { once: true })
         }}
-        onchange={event => props.onChange(Number((event.target as HTMLInputElement).value))}
+        oninput={event => props.onChange(Number((event.target as HTMLInputElement).value))}
       />
       <Show when={props.unit}>
         <div class="number-input-unit">
