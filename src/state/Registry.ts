@@ -1,7 +1,7 @@
 import { createContext } from "solid-js"
 import { Tool } from "../core/tools/tool"
 import { createSelect } from "../core/tools/select"
-import { createPencil } from "../core/tools/pencil"
+import createPencil from "../core/tools/pencil"
 import { CanvasActionType } from "../core/canvas_actions/canvas_action"
 import { PencilStrokeType } from "../core/canvas_actions/pencil_stroke"
 import createSelectRectangle from "../core/tools/select_rectangle"

@@ -1,4 +1,4 @@
-import "./Select.css"
+import "./CustomSelect.css"
 import { createSignal, onCleanup, Show, JSX } from "solid-js"
 import CheckIcon from "../../assets/icons/check.svg"
 import ChevronDownIcon from "../../assets/icons/chevron-down.svg"

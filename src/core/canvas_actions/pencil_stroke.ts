@@ -1,7 +1,7 @@
 import { CanvasActionType } from "./canvas_action"
 
 export type PencilStroke = {
-    type: "pencil"
+    type: "pencil_stroke"
     points: Array<{ x: number, y: number }>
     shape: "circle" | "square"
     size: number

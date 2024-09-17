@@ -36,8 +36,10 @@ export const VirtualCanvas: [
         if (idx === -1) {
             throw new Error('oldAction not found')
         }
-        state.actions.delete(idx)
-        state.actions.insert(idx, [newAction])
+        YjsState.ydoc.transact(() => {
+            state.actions.delete(idx)
+            state.actions.insert(idx, [newAction])
+        })
     }
 
     const actions = {

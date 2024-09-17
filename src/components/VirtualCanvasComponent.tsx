@@ -102,7 +102,7 @@ const VirtualCanvasComponent = () => {
             const newAction = event.changes.added.values().next().value.content.getContent()[0]
 
             const type = actionTypes[newAction.type]
-            if (type.renderReplacement && type.renderReplacement(oldAction, newAction, access)) {
+            if (type?.renderReplacement && type.renderReplacement(oldAction, newAction, access)) {
                 return
             }
         }
@@ -124,7 +124,7 @@ const VirtualCanvasComponent = () => {
                 deletionAffectedChunks.forEach((rows, column) => {
                     rows.forEach((row) => {
                         if (affectsChunk(type, action, column, row, tileSize)) {
-                            type.render(action, rerenderAccess)
+                            type?.render(action, rerenderAccess)
                         }
                     })
                 })
@@ -134,7 +134,7 @@ const VirtualCanvasComponent = () => {
         event.changes.added.forEach((item) => {
             item.content.getContent().forEach((action) => {
                 const type = actionTypes[action.type]
-                type.render(action, notRerenderedTilesAccess)
+                type?.render(action, notRerenderedTilesAccess)
             })
         })
     }
@@ -186,6 +186,9 @@ const doRectanglesIntersect = (
 }
 
 const getAffectedChunks = <T extends CanvasAction = any,>(type: CanvasActionType<T>, action: T, tileSize: number) => {
+    if (!type) {
+        return []
+    }
     const { x, y, width, height } = type.getBounds(action)
     const chunks = []
     for (let dx = 0; dx <= width; dx += tileSize) {
@@ -202,11 +205,14 @@ const isReplacementOfLastElement = (event: Y.YEvent<Y.Array<any>>): boolean => {
     }
 
     const last = event.changes.delta.at(-1)!
-    if (last.delete === undefined || last.delete !== 1) {
+    const secondToLast = event.changes.delta.at(-2)!
+    if (last.delete === undefined || secondToLast.insert === undefined) {
+        console.log(event.changes.delta)
         return false
     }
-    const secondToLast = event.changes.delta.at(-2)!
-    if (secondToLast.insert === undefined || secondToLast.insert!.length !== 1) {
+    if ((last.delete !== 1 || secondToLast.insert!.length !== 1)
+        && (last.insert!.length !== 1 || secondToLast.delete !== 1)) {
+        console.log(last.delete, secondToLast.insert, last.insert, secondToLast.delete)
         return false
     }
     if (event.changes.delta.length === 3) {

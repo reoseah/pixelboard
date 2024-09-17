@@ -1,5 +1,5 @@
 import { Tool } from "./tool"
-import SelectionIcon from "../../assets/icon/selection.svg"
+import SelectionIcon from "../../assets/icons/selection.svg"
 
 const createSelectRectangle = (): Tool => {
     return {

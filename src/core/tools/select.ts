@@ -1,4 +1,4 @@
-import CursorIcon from '../../assets/icon/cursor.svg'
+import CursorIcon from '../../assets/icons/cursor.svg'
 import { Tool } from './tool'
 
 export const createSelect = (): Tool => {
