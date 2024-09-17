@@ -1,10 +1,11 @@
-import { onCleanup, useContext } from 'solid-js'
+import { onCleanup, Show, useContext } from 'solid-js'
 import './App.css'
 import ToolbarContainer from './components/ToolbarContainer'
 import ViewportContainer from './components/ViewportContainer'
 import { RegistryContext } from './state/Registry'
 import { SelectedToolContext } from './state/SelectedTool'
 import VirtualCanvasComponent from './components/VirtualCanvasComponent'
+import { Dynamic } from 'solid-js/web'
 
 function App() {
   useToolKeybinds()
@@ -13,9 +14,21 @@ function App() {
     <>
       <ViewportContainer>
         <VirtualCanvasComponent />
+        <ToolView />
       </ViewportContainer>
       <ToolbarContainer />
     </>
+  )
+}
+
+const ToolView = () => {
+  const { tools } = useContext(RegistryContext)
+  const [selectedTool, selectTool] = useContext(SelectedToolContext)
+
+  return (
+    <Show when={tools[selectedTool()].viewportContent}>
+      <Dynamic component={tools[selectedTool()].viewportContent} />
+    </Show>
   )
 }
 
