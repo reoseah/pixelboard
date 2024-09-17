@@ -1,3 +1,4 @@
+import { makePersisted } from "@solid-primitives/storage"
 import { createContext, createRoot, createSignal } from "solid-js"
 
 export type ViewportPositionState = {
@@ -18,9 +19,9 @@ export const ViewportPosition: [
     state: ViewportPositionState,
     actions: ViewportPositionActions
 ] = createRoot(() => {
-    const [x, setX] = createSignal(0)
-    const [y, setY] = createSignal(0)
-    const [scale, setScale] = createSignal(10)
+    const [x, setX] = makePersisted(createSignal(0), { name: "viewport-x" })
+    const [y, setY] = makePersisted(createSignal(0), { name: "viewport-y" })
+    const [scale, setScale] = makePersisted(createSignal(10), { name: "viewport-scale" })
 
     const move = (dx: number, dy: number) => {
         setX(x() + dx)

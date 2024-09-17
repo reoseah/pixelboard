@@ -47,7 +47,7 @@ const ViewportContainer = (props: { children: JSXElement }) => {
     }
 
     const handleWheel = (e: WheelEvent) => {
-        if (shouldSkipInteraction(e)) {
+        if (shouldSkipInteraction(e) || dragging()) {
             return
         }
         if (e.ctrlKey) {
@@ -103,7 +103,7 @@ const ViewportContainer = (props: { children: JSXElement }) => {
                         height={position.scale()}
                         patternUnits="userSpaceOnUse"
                     >
-                        <rect width="1" height="1" fill="#505050" />
+                        <rect width="1" height="1" fill="var(--neutral-500)" />
                     </pattern>
                 </defs>
                 <rect
