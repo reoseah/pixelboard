@@ -26,12 +26,32 @@
     --neutral-825: #222222;
 
     /* Tailwind 50% Sky Blue + 50% Blue */
+    --primary-50: #eff7ff;
+    --primary-100: #DDEEFE;
+    --primary-200: #BCE0FD;
+    --primary-300: #87CBFC;
     --primary-400: #4CB0F9;
     --primary-500: #2493ef;
     --primary-600: #1373d8;
     --primary-700: #0f5bbc;
+    --primary-800: #124c99;
+    --primary-900: #15427c;
+    --primary-950: #0f294e;
 
     --primary-500\/20: rgba(36, 147, 239, 0.2);
+
+    /* Primary 20% + Neutral 80% */
+    --infused-50: #F8FAFB;
+    --infused-100: #F0F4F7;
+    --infused-200: #DDE4EA;
+    --infused-300: #C5D3DC;
+    --infused-400: #91A5B4;
+    --infused-500: #637A8C;
+    --infused-600: #46596D;
+    --infused-700: #364559;
+    --infused-800: #222D3D;
+    --infused-900: #161F2B;
+    --infused-950: #0B1018;
 }
 
 input,

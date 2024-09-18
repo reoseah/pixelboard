@@ -93,12 +93,8 @@
     color: var(--neutral-100);
     transition: background-color .15s;
 
-    &:hover {
+    &[aria-selected="true"] {
         background-color: var(--neutral-750);
-    }
-
-    &:focus-visible {
-        background-color: var(--infused-700);
     }
 
     &:active {

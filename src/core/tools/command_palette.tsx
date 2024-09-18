@@ -17,6 +17,7 @@ const createCommandPalette = (): Tool => {
         const { commands } = useContext(RegistryContext)
         const [, selectTool] = useContext(SelectedToolContext)
         const [query, setQuery] = createSignal("")
+        const [selectedEntry, setSelectedEntry] = createSignal<number>(0)
         const keymap = DefaultKeymap
 
         const filteredCommands = createMemo(() => {
@@ -45,16 +46,24 @@ const createCommandPalette = (): Tool => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === "Escape") {
                 selectTool(prevTool)
+            } else if (event.key === "Enter") {
+                const firstCommand = filteredCommands()[selectedEntry()]
+                if (firstCommand) {
+                    selectTool(prevTool)
+                    firstCommand.execute()
+                }
+            } else if (event.key === "ArrowDown") {
+                setSelectedEntry((selectedEntry() + 1) % filteredCommands().length)
+            } else if (event.key === "ArrowUp") {
+                setSelectedEntry((selectedEntry() - 1 + filteredCommands().length) % filteredCommands().length)
             }
-            // TODO: handle arrow keys to navigate the list
         }
         document.addEventListener("keydown", handleKeyDown)
         onCleanup(() => document.removeEventListener("keydown", handleKeyDown))
 
         const handleInput: JSX.InputEventHandlerUnion<HTMLInputElement, InputEvent> = (event) => {
             setQuery(event.target.value)
-            event.preventDefault()
-            event.stopPropagation()
+            setSelectedEntry(0)
         }
 
         const handleCommandClick = (command: Command) => {
@@ -72,7 +81,13 @@ const createCommandPalette = (): Tool => {
                         maxlength="150"
                         spellcheck={false}
                         ref={el => requestAnimationFrame(() => el.focus())}
-                        onInput={handleInput}
+                        oninput={handleInput}
+                        onkeydown={e => {
+                            if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+                                e.preventDefault()
+                                e.stopPropagation()
+                            }
+                        }}
                         id="command-palette-search"
                         autocomplete="off"
                     />
@@ -84,11 +99,13 @@ const createCommandPalette = (): Tool => {
                     <h2 class="command-palette-heading">Actions</h2>
                     <ul class="command-palette-entries">
                         <For each={filteredCommands()}>
-                            {command => (
+                            {(command, idx) => (
                                 <li>
                                     <button
                                         class="command-palette-button"
                                         onClick={() => handleCommandClick(command)}
+                                        aria-selected={selectedEntry() === idx()}
+                                        onmouseover={() => setSelectedEntry(idx())}
                                     >
                                         <div class="command-icon">
                                             <Show when={command.icon}>
@@ -96,11 +113,6 @@ const createCommandPalette = (): Tool => {
                                             </Show>
                                         </div>
                                         <span class="command-description">{typeof command.label === "function" ? command.label() : command.label}</span>
-                                        {/* <Show when={command.keybinds && command.keybinds[0]}>
-                                            <kbd class="command-keybind">
-                                                {stringifyKeybind(command.keybinds![0])}
-                                            </kbd>
-                                        </Show> */}
                                         <Show when={commandToKeybinds()[command.id]}>
                                             <kbd class="command-keybind">
                                                 {commandToKeybinds()[command.id][0]}
