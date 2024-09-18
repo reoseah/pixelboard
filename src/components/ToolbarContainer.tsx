@@ -3,10 +3,21 @@ import "./ToolbarContainer.css"
 import { RegistryContext } from "../state/Registry"
 import { SelectedToolContext } from "../state/SelectedTool"
 import { Dynamic } from "solid-js/web"
+import DefaultKeymap, { stringifyKeybind } from "../state/Keymap"
 
 const ToolbarContainer = () => {
     const { tools } = useContext(RegistryContext)
     const [selectedTool, selectTool] = useContext(SelectedToolContext)
+
+    const toolKeys = DefaultKeymap.reduce((acc, keybinding) => {
+        if (keybinding.command.match(/^select_tool\./)) {
+            const tool = keybinding.command.replace(/^select_tool\./, "")
+            if (tools[tool]) {
+                acc[tool] = stringifyKeybind(keybinding.key)
+            }
+        }
+        return acc
+    }, {} as Record<string, string>)
 
     return (
         <div class="toolbar-container">
@@ -15,9 +26,9 @@ const ToolbarContainer = () => {
                     {([id, tool]) => (
                         <button
                             class="toolbar-button"
-                            title={tool.title + " - " + tool.key}
-                            aria-label={tool.title + " - " + tool.key}
-                            aria-keyshortcuts={tool.key}
+                            title={tool.label + " - " + toolKeys[id]}
+                            aria-label={tool.label + " - " + toolKeys[id]}
+                            aria-keyshortcuts={toolKeys[id]}
                             aria-pressed={selectedTool() === id}
                             onclick={() => selectTool(id)}
                         >

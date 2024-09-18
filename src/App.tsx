@@ -2,13 +2,14 @@ import { onCleanup, Show, useContext } from 'solid-js'
 import './App.css'
 import ToolbarContainer from './components/ToolbarContainer'
 import ViewportContainer from './components/ViewportContainer'
-import { RegistryContext } from './state/Registry'
+import { Registry, RegistryContext } from './state/Registry'
 import { SelectedToolContext } from './state/SelectedTool'
 import VirtualCanvasComponent from './components/VirtualCanvasComponent'
 import { Dynamic } from 'solid-js/web'
+import DefaultKeymap from './state/Keymap'
 
 function App() {
-  useToolKeybinds()
+  useCommandKeybinds()
 
   return (
     <>
@@ -32,10 +33,7 @@ const ToolView = () => {
   )
 }
 
-const useToolKeybinds = () => {
-  const { tools } = useContext(RegistryContext)
-  const [selectedTool, selectTool] = useContext(SelectedToolContext)
-
+const useCommandKeybinds = () => {
   const handleKeyDown = (event: KeyboardEvent) => {
     const target = event.target as HTMLElement
     const isEditable = target.isContentEditable || target.tagName === 'INPUT' || target.tagName === 'TEXTAREA'
@@ -43,10 +41,26 @@ const useToolKeybinds = () => {
       return
     }
 
-    const key = event.key.toUpperCase()
-    const tool = Object.entries(tools).find(([, tool]) => tool.key === key)
-    if (tool) {
-      selectTool(tool[0])
+    const keymap = DefaultKeymap
+
+    const keybind = keymap.find(keybind => {
+      const key = keybind.key
+      return event.key.toUpperCase() === key.key &&
+        event.ctrlKey === key.ctrl &&
+        event.shiftKey === key.shift &&
+        event.altKey === key.alt &&
+        event.metaKey === key.meta
+    })
+
+    if (keybind) {
+      const { commands } = Registry
+      const command = commands[keybind.command]
+      if (command) {
+        command.execute()
+
+        event.preventDefault()
+        event.stopPropagation()
+      }
     }
   }
 

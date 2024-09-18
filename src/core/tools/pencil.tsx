@@ -18,8 +18,8 @@ import NumberInput from '../../components/ui/NumberInput'
 import ToggleButton from '../../components/ui/ToggleButton'
 
 const createPencil = (): Tool => {
-    const [viewport, viewportActions] = useContext(ViewportPositionContext)
-    const [virtualCanvas, virtualCanvasActions] = useContext(VirtualCanvasContext)
+    const [, viewportActions] = useContext(ViewportPositionContext)
+    const [, virtualCanvasActions] = useContext(VirtualCanvasContext)
 
     const [currentMousePos, setCurrentMousePos] = createSignal<{ x: number, y: number }>({ x: 0, y: 0 })
     let currentAction: PencilStroke | null = null
@@ -165,7 +165,7 @@ const createPencil = (): Tool => {
     }
 
     return {
-        title: "Pencil",
+        label: "Pencil",
         key: "B",
         icon: PencilIcon,
         subToolbar: PencilToolbar,

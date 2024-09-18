@@ -108,14 +108,16 @@ const VirtualCanvasComponent = () => {
         }
 
         const deletionAffectedChunks = getChunksAffectedByDeletions(actionTypes, tileSize, event)
+        console.log('deletion affected chunks', deletionAffectedChunks)
         if (deletionAffectedChunks.size !== 0) {
             const rerenderAccess = createLimitedAccess("whitelist", deletionAffectedChunks)
 
             deletionAffectedChunks.forEach((rows, column) => {
                 rows.forEach((row) => {
+                    console.log('clearing', column, row)
                     rerenderAccess
-                        .getOrCreateContext(column * tileSize, row * tileSize)
-                        .clearRect(0, 0, 64, 64)
+                        .getOrCreateContext(column, row)
+                        .clearRect(0, 0, tileSize, tileSize)
                 })
             })
             state.actions.forEach((action) => {
@@ -193,7 +195,7 @@ const getAffectedChunks = <T extends CanvasAction = any,>(type: CanvasActionType
     const chunks = []
     for (let dx = 0; dx <= width; dx += tileSize) {
         for (let dy = 0; dy <= height; dy += tileSize) {
-            chunks.push({ column: Math.floor((y + dx) / tileSize), row: Math.floor((x + dy) / tileSize) })
+            chunks.push({ column: Math.floor((x + dx) / tileSize), row: Math.floor((y + dy) / tileSize) })
         }
     }
     return chunks

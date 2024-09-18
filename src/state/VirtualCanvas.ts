@@ -10,6 +10,7 @@ export type VirtualCanvasState = {
 export type VirtualCanvasActions = {
     add: (action: CanvasAction) => void
     replace: (oldAction: CanvasAction, newAction: CanvasAction) => void
+    clear: () => void
 }
 
 export const VirtualCanvas: [
@@ -42,9 +43,16 @@ export const VirtualCanvas: [
         })
     }
 
+    const clear = () => {
+        YjsState.ydoc.transact(() => {
+            state.actions.delete(0, state.actions.length)
+        })
+    }
+
     const actions = {
         add,
-        replace
+        replace,
+        clear
     }
 
     return [

@@ -12,22 +12,25 @@ export const SelectedTool: [
 ] = createRoot(() => {
     const [id, setId] = makePersisted(createSignal("select"), { name: "selected-tool" })
 
-    const tool = Registry.tools[id()]
-    if (tool?.onSelect) {
-        tool.onSelect()
-    }
-
+    requestAnimationFrame(() => {
+        const tool = Registry.tools[id()]
+        if (tool?.onSelect) {
+            tool.onSelect("select")
+        }
+    })
+    
     const select = (targetId: string) => {
-        const prev = Registry.tools[id()]
-        if (prev?.onDeselect) {
-            prev.onDeselect()
+        const prevId = id()
+        const prevTool = Registry.tools[prevId]
+        if (prevTool?.onDeselect) {
+            prevTool.onDeselect()
         }
 
         setId(targetId)
 
         const tool = Registry.tools[targetId]
         if (tool?.onSelect) {
-            tool.onSelect()
+            tool.onSelect(prevId)
         }
     }
 

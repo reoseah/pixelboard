@@ -92,7 +92,7 @@ const createSelectRectangle = (): Tool => {
     }
 
     return {
-        title: "Select Rectangle",
+        label: "Select Rectangle",
         icon: SelectionIcon,
         key: "M",
         viewportContent: viewportComponent,
