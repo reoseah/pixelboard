@@ -33,6 +33,7 @@ const ColorInput = (props: {
                         (event.target as HTMLInputElement).blur()
                     }
                 }}
+                onblur={event => props.onChange(normalizeHexColor((event.target as HTMLInputElement).value))}
                 ref={setInputRef}
             />
         </div>
@@ -40,3 +41,11 @@ const ColorInput = (props: {
 }
 
 export default ColorInput
+
+const normalizeHexColor = (color: string): string => {
+    color = color.replace(/^#/, '');
+    if (color.length === 3) {
+        color = color.split('').map(char => char + char).join('');
+    }
+    return color.toLowerCase();
+}
