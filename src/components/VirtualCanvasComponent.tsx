@@ -216,12 +216,10 @@ const isReplacementOfLastElement = (event: Y.YEvent<Y.Array<any>>): boolean => {
     const last = event.changes.delta.at(-1)!
     const secondToLast = event.changes.delta.at(-2)!
     if (last.delete === undefined || secondToLast.insert === undefined) {
-        console.log(event.changes.delta)
         return false
     }
     if ((last.delete !== 1 || secondToLast.insert!.length !== 1)
         && (last.insert!.length !== 1 || secondToLast.delete !== 1)) {
-        console.log(last.delete, secondToLast.insert, last.insert, secondToLast.delete)
         return false
     }
     if (event.changes.delta.length === 3) {

@@ -43,6 +43,12 @@ const ColorInput = (props: {
 export default ColorInput
 
 const normalizeHexColor = (color: string): string => {
+    if (color.startsWith("rgb")) {
+        const [r, g, b] = color.match(/\d+/g)!.map(Number)
+        return r.toString(16).padStart(2, '0') +
+            g.toString(16).padStart(2, '0') +
+            b.toString(16).padStart(2, '0')
+    }
     color = color.replace(/^#/, '');
     if (color.length === 3) {
         color = color.split('').map(char => char + char).join('');
