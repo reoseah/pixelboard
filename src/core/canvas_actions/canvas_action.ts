@@ -19,5 +19,5 @@ export type VirtualCanvasAccess = {
     getOrCreateContext: (column: number, row: number) => CanvasRenderingContext2D
 
     get: (x: number, y: number) => number
-    set: (x: number, y: number, color: number) => void
+    set: (x: number, y: number, color: number | string) => void
 }

@@ -16,6 +16,8 @@ import { Select, CustomOption, OptionDivider } from '../../components/ui/CustomS
 import InputGroup from '../../components/ui/InputGroup'
 import NumberInput from '../../components/ui/NumberInput'
 import ToggleButton from '../../components/ui/ToggleButton'
+import ColorInput from "../../components/ui/ColorInput"
+import { makePersisted } from "@solid-primitives/storage"
 
 const createPencil = (): Tool => {
     const [, viewportActions] = useContext(ViewportPositionContext)
@@ -24,10 +26,11 @@ const createPencil = (): Tool => {
     const [currentMousePos, setCurrentMousePos] = createSignal<{ x: number, y: number }>({ x: 0, y: 0 })
     let currentAction: PencilStroke | null = null
 
-    const [shape, setShape] = createSignal<'circle' | 'square'>('circle')
-    const [size, setSize] = createSignal(1)
-    const [mode, setMode] = createSignal<BlendingMode>('normal')
-    const [opacity, setOpacity] = createSignal(100)
+    const [shape, setShape] = makePersisted(createSignal<'circle' | 'square'>('circle'), { name: 'pencil-shape' })
+    const [size, setSize] = makePersisted(createSignal(1), { name: 'pencil-size' })
+    const [color, setColor] = makePersisted(createSignal('FFFFFF'), { name: 'pencil-color' })
+    const [mode, setMode] = makePersisted(createSignal<BlendingMode>('normal'), { name: 'pencil-mode' })
+    const [opacity, setOpacity] = makePersisted(createSignal(100), { name: 'pencil-opacity' })
 
     const handleMouseDown = (e: MouseEvent) => {
         if (!isViewportClick(e)) {
@@ -46,6 +49,7 @@ const createPencil = (): Tool => {
             points: [pos],
             shape: shape(),
             size: size(),
+            color: `#${color()}`
         }
         virtualCanvasActions.add(action)
         currentAction = action
@@ -104,16 +108,23 @@ const createPencil = (): Tool => {
                     </ToggleButton>
                 </InputGroup>
 
-                <NumberInput
-                    class="pencil-toolbar-stroke-width"
-                    value={size()}
-                    onChange={value => setSize(value)}
-                    min={1}
-                    max={100}
-                    step={1}
-                    icon={<StrokeWidthIcon />}
-                    title="Stroke width"
-                />
+                <InputGroup>
+                    <NumberInput
+                        class="pencil-toolbar-stroke-width"
+                        value={size()}
+                        onChange={value => setSize(value)}
+                        min={1}
+                        max={100}
+                        step={1}
+                        icon={<StrokeWidthIcon />}
+                        title="Stroke width"
+                    />
+                    <ColorInput
+                        value={color()}
+                        onChange={value => setColor(value)}
+                        title="Stroke color"
+                    />
+                </InputGroup>
 
                 <InputGroup>
                     <Select
@@ -166,7 +177,6 @@ const createPencil = (): Tool => {
 
     return {
         label: "Pencil",
-        key: "B",
         icon: PencilIcon,
         subToolbar: PencilToolbar,
         onSelect: () => {

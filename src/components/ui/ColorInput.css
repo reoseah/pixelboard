@@ -1,0 +1,41 @@
+.color-input-container {
+    font-size: .75rem;
+    height: 1.5rem;
+    display: grid;
+    grid-template-columns: 1rem 1fr;
+    border-radius: .25rem;
+    background: var(--neutral-750);
+    cursor: text;
+    padding-inline: .25rem;
+    gap: .25rem;
+
+    &:hover {
+        box-shadow: inset 0 0 0 1px var(--neutral-675);
+    }
+
+    &:focus-within {
+        box-shadow: inset 0 0 0 1px var(--primary-500);
+    }
+
+    &:has(:disabled) {
+        color: var(--neutral-400);
+        cursor: not-allowed;
+    }
+}
+
+.color-input-swatch {
+    width: .875rem;
+    height: .875rem;
+    place-self: center;
+    border-radius: .0625rem;
+}
+
+.color-input {
+    display: flex;
+    border: none;
+    background: transparent;
+    outline: none;
+    height: 1.5rem;
+    width: 6.5ch;
+    flex: 1;
+}

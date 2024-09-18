@@ -4,7 +4,8 @@ export type PencilStroke = {
     type: "pencil_stroke"
     points: Array<{ x: number, y: number }>
     shape: "circle" | "square"
-    size: number
+    size: number,
+    color: string
 }
 
 const interval = 1 // TODO: Make this configurable by the user
@@ -26,7 +27,7 @@ export const PencilStrokeType: CanvasActionType<PencilStroke> = {
             drawShape(action.shape, action.size, x, y, visited)
             visited.forEach((set, x) => {
                 set.forEach((y) => {
-                    helper.set(x, y, 0xffffffff)
+                    helper.set(x, y, action.color)
                 })
             })
             return
@@ -40,7 +41,7 @@ export const PencilStrokeType: CanvasActionType<PencilStroke> = {
         })
         visited.forEach((set, x) => {
             set.forEach((y) => {
-                helper.set(x, y, 0xffffffff)
+                helper.set(x, y, action.color)
             })
         })
     },
@@ -55,7 +56,7 @@ export const PencilStrokeType: CanvasActionType<PencilStroke> = {
             })
             visited.forEach((set, x) => {
                 set.forEach((y) => {
-                    helper.set(x, y, 0xffffffff)
+                    helper.set(x, y, newAction.color)
                 })
             })
             return true

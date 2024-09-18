@@ -31,13 +31,6 @@
     color: var(--neutral-300);
 }
 
-.number-input-unit {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(--neutral-400);
-}
-
 .number-input {
     display: flex;
     border: none;
@@ -46,7 +39,6 @@
     -moz-appearance: textfield;
     height: 1.5rem;
     min-width: 0;
-    border-radius: .25rem;
     flex: 1;
 
     &::-webkit-outer-spin-button,
@@ -57,4 +49,11 @@
     &:disabled {
         cursor: not-allowed;
     }
+}
+
+.number-input-unit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--neutral-400);
 }

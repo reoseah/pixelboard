@@ -63,11 +63,15 @@ const VirtualCanvasComponent = () => {
         return imageData.data[0] << 24 | imageData.data[1] << 16 | imageData.data[2] << 8 | imageData.data[3]
     }
 
-    const set = (x: number, y: number, rgba: number) => {
+    const set = (x: number, y: number, rgba: number | string) => {
         const ctx = getOrCreateContext(Math.floor(x / tileSize), Math.floor(y / tileSize))
         const localX = ((x % tileSize) + tileSize) % tileSize
         const localY = ((y % tileSize) + tileSize) % tileSize
-        ctx.fillStyle = `rgba(${(rgba >> 24) & 0xff}, ${(rgba >> 16) & 0xff}, ${(rgba >> 8) & 0xff}, ${rgba & 0xff})`
+        if (typeof rgba === 'string') {
+            ctx.fillStyle = rgba
+        } else {
+            ctx.fillStyle = `rgba(${(rgba >> 24) & 0xff}, ${(rgba >> 16) & 0xff}, ${(rgba >> 8) & 0xff}, ${rgba & 0xff})`
+        }
         ctx.fillRect(localX, localY, 1, 1)
     }
 
@@ -80,7 +84,7 @@ const VirtualCanvasComponent = () => {
 
     const createLimitedAccess = (type: "blacklist" | "whitelist", tiles: Map<number, Set<number>>): VirtualCanvasAccess => {
         const setInternal = access.set
-        const set = (x: number, y: number, rgba: number) => {
+        const set = (x: number, y: number, rgba: number | string) => {
             if (type === "whitelist" && !containsPoint(x, y, tiles, tileSize)) {
                 return
             }
