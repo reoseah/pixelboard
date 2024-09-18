@@ -1,15 +1,21 @@
 import { onCleanup, Show, useContext } from 'solid-js'
 import './App.css'
-import ToolbarContainer from './components/ToolbarContainer'
+import MainToolbar from './components/MainToolbar'
 import ViewportContainer from './components/ViewportContainer'
 import { Registry, RegistryContext } from './state/Registry'
 import { SelectedToolContext } from './state/SelectedTool'
 import VirtualCanvasComponent from './components/VirtualCanvasComponent'
 import { Dynamic } from 'solid-js/web'
 import DefaultKeymap from './state/Keymap'
+import Sidebar from './components/Sidebar'
+import TopCenterLayout from './components/TopCenterLayout'
+import SideLayout from './components/SideLayout'
 
 function App() {
   useCommandKeybinds()
+
+  const { tools } = useContext(RegistryContext)
+  const [selectedTool, selectTool] = useContext(SelectedToolContext)
 
   return (
     <>
@@ -17,7 +23,17 @@ function App() {
         <VirtualCanvasComponent />
         <ToolView />
       </ViewportContainer>
-      <ToolbarContainer />
+      <TopCenterLayout>
+        <MainToolbar />
+        <Show when={tools[selectedTool()].subToolbar}>
+          <div class="toolbar">
+            <Dynamic component={tools[selectedTool()].subToolbar} />
+          </div>
+        </Show>
+      </TopCenterLayout>
+      <SideLayout>
+        <Sidebar />
+      </SideLayout>
     </>
   )
 }

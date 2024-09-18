@@ -21,6 +21,9 @@ export const SelectedTool: [
     
     const select = (targetId: string) => {
         const prevId = id()
+        if (prevId === targetId) {
+            return
+        }
         const prevTool = Registry.tools[prevId]
         if (prevTool?.onDeselect) {
             prevTool.onDeselect()

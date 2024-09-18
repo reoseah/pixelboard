@@ -12,7 +12,7 @@ import { ViewportPositionContext } from '../../state/ViewportPosition'
 import { PencilStroke } from '../canvas_actions/pencil_stroke'
 import { VirtualCanvasContext } from '../../state/VirtualCanvas'
 import { BlendingMode, modeGroups, modeNames } from './blending_modes'
-import { Select, CustomOption, OptionDivider } from '../../components/ui/CustomSelect'
+import { CustomSelect, CustomOption, OptionDivider } from '../../components/ui/CustomSelect'
 import InputGroup from '../../components/ui/InputGroup'
 import NumberInput from '../../components/ui/NumberInput'
 import ToggleButton from '../../components/ui/ToggleButton'
@@ -127,7 +127,7 @@ const createPencil = (): Tool => {
                 </InputGroup>
 
                 <InputGroup>
-                    <Select
+                    <CustomSelect
                         class="pencil-toolbar-mode-select"
                         value={modeNames[mode()]}
                         icon={<DropIcon />}
@@ -158,7 +158,7 @@ const createPencil = (): Tool => {
                             )}
                             </For>
                         )}
-                    </Select>
+                    </CustomSelect>
                     <NumberInput
                         class="pencil-toolbar-opacity"
                         value={opacity()}
@@ -188,6 +188,7 @@ const createPencil = (): Tool => {
             document.removeEventListener("mousedown", handleMouseDown)
             document.removeEventListener("mousemove", handleMouseMove)
             document.removeEventListener("mouseup", handleMouseUp)
+            currentAction = null
         }
     }
 }

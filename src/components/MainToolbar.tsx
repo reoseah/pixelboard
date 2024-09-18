@@ -1,11 +1,11 @@
+import "./MainToolbar.css"
 import { For, Show, useContext } from "solid-js"
-import "./ToolbarContainer.css"
+import { Dynamic } from "solid-js/web"
 import { RegistryContext } from "../state/Registry"
 import { SelectedToolContext } from "../state/SelectedTool"
-import { Dynamic } from "solid-js/web"
 import DefaultKeymap, { stringifyKeybind } from "../state/Keymap"
 
-const ToolbarContainer = () => {
+const MainToolbar = () => {
     const { tools } = useContext(RegistryContext)
     const [selectedTool, selectTool] = useContext(SelectedToolContext)
 
@@ -20,7 +20,7 @@ const ToolbarContainer = () => {
     }, {} as Record<string, string>)
 
     return (
-        <div class="toolbar-container">
+        <>
             <div class="toolbar">
                 <For each={Object.entries(tools)}>
                     {([id, tool]) => (
@@ -33,20 +33,12 @@ const ToolbarContainer = () => {
                             onclick={() => selectTool(id)}
                         >
                             <tool.icon />
-                            {/* <div class="toolbar-button-hint">
-                                {tool.key}
-                            </div> */}
                         </button>
                     )}
                 </For>
             </div>
-            <Show when={tools[selectedTool()].subToolbar}>
-                <div class="toolbar">
-                    <Dynamic component={tools[selectedTool()].subToolbar} />
-                </div>
-            </Show>
-        </div>
+        </>
     )
 }
 
-export default ToolbarContainer
+export default MainToolbar

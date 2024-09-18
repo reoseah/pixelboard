@@ -104,6 +104,9 @@ const createSelectRectangle = (): Tool => {
             document.removeEventListener("mousedown", handleMouseDown)
             document.removeEventListener("mousemove", handleMouseMove)
             document.removeEventListener("mouseup", handleMouseUp)
+            setDragging(false)
+            setInitialPos({ x: 0, y: 0 })
+            setCurrentPos({ x: 0, y: 0 })
         },
     }
 }

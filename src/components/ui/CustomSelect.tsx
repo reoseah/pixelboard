@@ -3,7 +3,7 @@ import { createSignal, onCleanup, Show, JSX } from "solid-js"
 import CheckIcon from "../../assets/icons/check.svg"
 import ChevronDownIcon from "../../assets/icons/chevron-down.svg"
 
-export const Select = (props: {
+export const CustomSelect = (props: {
   value: string
   children: JSX.Element | ((close: () => void) => JSX.Element)
   class?: string
@@ -68,7 +68,7 @@ export const Select = (props: {
 
 export const CustomOption = (props: {
   value: string
-  selected: boolean
+  selected?: boolean
   onClick: () => void
   children: string
   disabled?: boolean

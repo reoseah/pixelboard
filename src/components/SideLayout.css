@@ -1,0 +1,12 @@
+.side-layout {
+    position: absolute;
+    inset: 6rem auto 6rem 1rem;
+    pointer-events: none;
+    display: flex;
+    align-items: start;
+
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+}

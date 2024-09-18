@@ -1,4 +1,4 @@
-import { createSignal, onCleanup } from "solid-js"
+import { createSignal } from "solid-js"
 import "./ColorInput.css"
 import useClickOutside from "../../hooks/useClickOutside"
 
@@ -53,5 +53,5 @@ const normalizeHexColor = (color: string): string => {
     if (color.length === 3) {
         color = color.split('').map(char => char + char).join('');
     }
-    return color.toLowerCase();
+    return color.toUpperCase();
 }
