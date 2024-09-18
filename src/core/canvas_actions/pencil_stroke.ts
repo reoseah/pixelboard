@@ -17,7 +17,12 @@ export const PencilStrokeType: CanvasActionType<PencilStroke> = {
         const maxX = Math.max(...action.points.map((point) => point.x))
         const maxY = Math.max(...action.points.map((point) => point.y))
 
-        return { x, y, width: maxX - x, height: maxY - y }
+        return {
+            x: x - action.size,
+            y: y - action.size,
+            width: maxX - x + action.size * 2 + 1,
+            height: maxY - y + action.size * 2 + 1
+        }
     },
     render: (action, helper) => {
         if (action.points.length === 1) {
