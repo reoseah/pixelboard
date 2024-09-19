@@ -1,6 +1,6 @@
 .side-layout {
     position: absolute;
-    inset: 6rem auto 6rem 1rem;
+    inset: 1rem;
     pointer-events: none;
     display: flex;
     align-items: start;

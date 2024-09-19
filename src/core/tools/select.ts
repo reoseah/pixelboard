@@ -1,9 +1,11 @@
 import CursorIcon from '../../assets/icons/cursor.svg'
-import { Tool } from './tool'
+import Tool from './tool'
 
-export const createSelect = (): Tool => {
+const createSelect = (): Tool => {
     return {
         label: "Select/Move",
         icon: CursorIcon,
     }
 }
+
+export default createSelect

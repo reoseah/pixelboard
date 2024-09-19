@@ -1,4 +1,4 @@
-import { Registry } from "../../state/Registry"
+import Registry from "../../state/Registry"
 import { SelectedTool } from "../../state/SelectedTool"
 import Command from "./command"
 

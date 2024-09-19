@@ -2,7 +2,7 @@ import { onCleanup, Show, useContext } from 'solid-js'
 import './App.css'
 import MainToolbar from './components/MainToolbar'
 import ViewportContainer from './components/ViewportContainer'
-import { Registry, RegistryContext } from './state/Registry'
+import Registry, { RegistryContext } from './state/Registry'
 import { SelectedToolContext } from './state/SelectedTool'
 import VirtualCanvasComponent from './components/VirtualCanvasComponent'
 import { Dynamic } from 'solid-js/web'
@@ -15,7 +15,7 @@ function App() {
   useCommandKeybinds()
 
   const { tools } = useContext(RegistryContext)
-  const [selectedTool, selectTool] = useContext(SelectedToolContext)
+  const [selectedTool] = useContext(SelectedToolContext)
 
   return (
     <>
@@ -40,7 +40,7 @@ function App() {
 
 const ToolView = () => {
   const { tools } = useContext(RegistryContext)
-  const [selectedTool, selectTool] = useContext(SelectedToolContext)
+  const [selectedTool] = useContext(SelectedToolContext)
 
   return (
     <Show when={tools[selectedTool()].viewportContent}>

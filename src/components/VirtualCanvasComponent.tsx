@@ -9,7 +9,7 @@ import { CanvasAction, CanvasActionType, VirtualCanvasAccess } from '../core/can
 const tileSize = 32
 
 const VirtualCanvasComponent = () => {
-    const [state, actions] = useContext(VirtualCanvasContext)
+    const [state] = useContext(VirtualCanvasContext)
     const [viewport] = useContext(ViewportPositionContext)
     const { actionTypes } = useContext(RegistryContext)
 
@@ -102,8 +102,8 @@ const VirtualCanvasComponent = () => {
 
     const onDataChange = (event: Y.YEvent<Y.Array<CanvasAction>>) => {
         if (isReplacementOfLastElement(event)) {
-            const oldAction = event.changes.deleted.values().next().value.content.getContent()[0]
-            const newAction = event.changes.added.values().next().value.content.getContent()[0]
+            const oldAction = event.changes.deleted.values().next().value!.content.getContent()[0]
+            const newAction = event.changes.added.values().next().value!.content.getContent()[0]
 
             const type = actionTypes[newAction.type]
             if (type?.renderReplacement && type.renderReplacement(oldAction, newAction, access)) {

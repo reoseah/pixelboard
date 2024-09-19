@@ -1,6 +1,5 @@
 import "./MainToolbar.css"
-import { For, Show, useContext } from "solid-js"
-import { Dynamic } from "solid-js/web"
+import { For, useContext } from "solid-js"
 import { RegistryContext } from "../state/Registry"
 import { SelectedToolContext } from "../state/SelectedTool"
 import DefaultKeymap, { stringifyKeybind } from "../state/Keymap"
