@@ -96,3 +96,7 @@ kbd {
 .display-none {
     display: none;
 }
+
+.neutral-400 {
+    color: var(--neutral-400);
+}

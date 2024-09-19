@@ -16,7 +16,11 @@ const tabs: Record<string, SidebarTab> = {
     "menu": {
         place: "top",
         icon: MenuIcon,
-        contents: () => <>Menu</>
+        contents: () => (
+            <>
+                ssdgdsg
+            </>
+        )
     },
     "color": {
         place: "top",

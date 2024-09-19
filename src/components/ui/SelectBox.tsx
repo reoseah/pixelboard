@@ -9,12 +9,33 @@ export const SelectBox = (props: {
   class?: string
   icon?: JSX.Element
 }) => {
+  return (
+    <SelectBoxInternal
+      {...props}
+      classes={{
+        root: `custom-select ${props.class ?? ''}`,
+        button: `custom-select-inner`,
+        dropdown: `custom-select-options`
+      }}
+    />
+  )
+}
+
+const SelectBoxInternal = (props: {
+  value: string
+  children: JSX.Element | ((close: () => void) => JSX.Element)
+  icon?: JSX.Element
+  classes: {
+    root: string
+    button: string
+    dropdown: string
+  }
+}) => {
   const [expanded, setExpanded] = createSignal(false)
 
   let dropdownRef!: HTMLDivElement
   const handleClickOutside = (event: MouseEvent) => {
     if (expanded() && !dropdownRef.contains(event.target as Node)) {
-      console.log('closing')
       setExpanded(false)
     }
   }
@@ -33,31 +54,25 @@ export const SelectBox = (props: {
 
   return (
     <div
-      class={`custom-select ${props.class ?? ''}`}
+      class={props.classes.root}
       aria-expanded={expanded()}
     >
       <div
-        class="custom-select-inner"
+        class={props.classes.button}
         onclick={(e) => {
           e.stopImmediatePropagation()
           setExpanded(!expanded())
-
-          console.log('expanding')
         }}
       >
         <Show when={props.icon}>
-          <div class="input-icon">
-            {props.icon}
-          </div>
+          {props.icon}
         </Show>
-        <span class="custom-select-value">{props.value}</span>
-        <div class="custom-select-chevron">
-          <ChevronDownIcon />
-        </div>
+        <span>{props.value}</span>
+        <ChevronDownIcon class="neutral-400" />
       </div>
       <Show when={expanded()}>
         <div
-          class="custom-select-options"
+          class={props.classes.dropdown}
           ref={el => dropdownRef = el}
         >
           <Show

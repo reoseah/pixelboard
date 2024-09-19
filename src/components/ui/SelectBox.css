@@ -4,7 +4,7 @@
   border-radius: .25rem;
   background: var(--neutral-750);
 
-  &:has(> .custom-select-inner:hover) {
+  &:where(:has(> .custom-select-inner:hover)) {
     box-shadow: inset 0 0 0 1px var(--neutral-675);
   }
 
@@ -35,24 +35,11 @@
   cursor: pointer;
   padding-inline: .25rem;
   gap: .25rem;
-}
-
-.custom-select-value {
-  display: flex;
   align-items: center;
-  flex: 1;
 
-  .heading-select & {
-    font-size: .875rem;
-    font-weight: 500;
+  & :not(svg) {
+    flex: 1;
   }
-}
-
-.custom-select-chevron {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--neutral-400);
 }
 
 .custom-select-options {
@@ -71,8 +58,9 @@
 
 .custom-option {
   display: grid;
-  grid-template-columns: 1rem auto;
   align-items: center;
+  justify-content: start;
+  grid-template-columns: 1rem auto;
   gap: .25rem;
   height: 1.5rem;
   padding-inline: .25rem;
