@@ -1,9 +1,9 @@
-import "./CustomSelect.css"
+import "./SelectBox.css"
 import { createSignal, onCleanup, Show, JSX } from "solid-js"
 import CheckIcon from "../../assets/icons/check.svg"
 import ChevronDownIcon from "../../assets/icons/chevron-down.svg"
 
-export const CustomSelect = (props: {
+export const SelectBox = (props: {
   value: string
   children: JSX.Element | ((close: () => void) => JSX.Element)
   class?: string
@@ -14,6 +14,7 @@ export const CustomSelect = (props: {
   let dropdownRef!: HTMLDivElement
   const handleClickOutside = (event: MouseEvent) => {
     if (expanded() && !dropdownRef.contains(event.target as Node)) {
+      console.log('closing')
       setExpanded(false)
     }
   }
@@ -33,13 +34,15 @@ export const CustomSelect = (props: {
   return (
     <div
       class={`custom-select ${props.class ?? ''}`}
-      ref={el => dropdownRef = el}
       aria-expanded={expanded()}
     >
       <div
         class="custom-select-inner"
-        onClick={() => {
+        onclick={(e) => {
+          e.stopImmediatePropagation()
           setExpanded(!expanded())
+
+          console.log('expanding')
         }}
       >
         <Show when={props.icon}>
@@ -53,7 +56,10 @@ export const CustomSelect = (props: {
         </div>
       </div>
       <Show when={expanded()}>
-        <div class="custom-select-options">
+        <div
+          class="custom-select-options"
+          ref={el => dropdownRef = el}
+        >
           <Show
             when={typeof props.children === 'function'}
             fallback={<>{props.children}</>}

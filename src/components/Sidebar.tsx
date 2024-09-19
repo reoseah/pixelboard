@@ -4,7 +4,7 @@ import MenuIcon from "../assets/icons/menu.svg"
 import PaletteIcon from "../assets/icons/palette.svg"
 import SettingsIcon from "../assets/icons/settings.svg"
 import { Dynamic } from "solid-js/web"
-import { CustomOption, CustomSelect } from "./ui/CustomSelect"
+import { CustomOption, SelectBox } from "./ui/SelectBox"
 
 type SidebarTab = {
     place: "top" | "bottom"
@@ -31,7 +31,7 @@ const tabs: Record<string, SidebarTab> = {
                         // gap: ".5rem"
                     }}
                 >
-                    <CustomSelect
+                    <SelectBox
                         value={"RGB"}
                         class="heading-select"
                     >
@@ -43,7 +43,7 @@ const tabs: Record<string, SidebarTab> = {
                                 </>
                             )
                         }}
-                    </CustomSelect>
+                    </SelectBox>
                     <div
                         style={{
                             "background": "linear-gradient(transparent, black), linear-gradient(90deg, white, red)",
