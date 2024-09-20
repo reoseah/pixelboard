@@ -1,5 +1,6 @@
-import { JSXElement } from "solid-js"
 import "./Menu.css"
+import { JSXElement, Show } from "solid-js"
+import CheckIcon from "../../assets/icons/check.svg"
 
 const Menu = (props: {
     children: JSXElement,
@@ -18,7 +19,34 @@ const MenuDivider = () => {
     )
 }
 
+const MenuOption = (props: {
+    value: string
+    selected?: boolean
+    onClick: () => void
+    children: string
+    disabled?: boolean
+    title?: string
+}) => {
+    return (
+        <button
+            class={"menu-option"}
+            onClick={props.onClick}
+            disabled={props.disabled}
+            title={props.title}
+            aria-selected={props.selected}
+        >
+            <Show when={props.selected}>
+                <CheckIcon />
+            </Show>
+            <span class="menu-option-label">
+                {props.children}
+            </span>
+        </button>
+    )
+}
+
 export default Object.assign(Menu, {
-    Divider: MenuDivider
+    Divider: MenuDivider,
+    Option: MenuOption
 })
 

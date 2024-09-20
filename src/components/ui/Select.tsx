@@ -1,6 +1,5 @@
 import "./Select.css"
 import { createSignal, onCleanup, Show, JSX } from "solid-js"
-import CheckIcon from "../../assets/icons/check.svg"
 import ChevronDownIcon from "../../assets/icons/chevron-down.svg"
 import Menu from "./Menu"
 
@@ -11,7 +10,7 @@ export const Select = (props: {
   class?: string
 }) => {
   return (
-    <SelectInternal
+    <SelectBase
       button={
         <>
           <Show when={props.icon}>
@@ -23,14 +22,14 @@ export const Select = (props: {
       }
       children={(setRef, close) => (<Menu ref={setRef}>{props.children(close)}</Menu>)}
       classes={{
-        root: `custom-select ${props.class ?? ''}`,
-        button: `custom-select-trigger`
+        root: `select ${props.class ?? ''}`,
+        button: `select-trigger`
       }}
     />
   )
 }
 
-const SelectInternal = (props: {
+const SelectBase = (props: {
   button: JSX.Element
   children: (setRef: (el: HTMLElement) => void, close: () => void) => JSX.Element
   classes: {
@@ -62,10 +61,10 @@ const SelectInternal = (props: {
   return (
     <div
       class={props.classes.root}
-      aria-expanded={expanded()}
     >
       <button
         class={props.classes.button}
+        aria-expanded={expanded()}
         onclick={(e) => {
           e.stopImmediatePropagation()
           setExpanded(!expanded())
@@ -80,32 +79,5 @@ const SelectInternal = (props: {
   )
 }
 
-export const Option = (props: {
-  value: string
-  selected?: boolean
-  onClick: () => void
-  children: string
-  disabled?: boolean
-  title?: string
-}) => {
-  return (
-    <button
-      class={`custom-option`}
-      onClick={props.onClick}
-      disabled={props.disabled}
-      title={props.title}
-      aria-selected={props.selected}
-    >
-      <Show when={props.selected}>
-        <div class="custom-option-check">
-          <CheckIcon />
-        </div>
-      </Show>
-      <div class="custom-option-label">
-        {props.children}
-      </div>
-    </button>
-  )
-}
-
 export const OptionDivider = Menu.Divider
+export const Option = Menu.Option
