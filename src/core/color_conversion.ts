@@ -53,7 +53,7 @@ export const rgbToHsv = (rgb: [number, number, number]): [number, number, number
     const s = max === 0 ? 0 : delta / max
     const v = max
 
-    return [h, s * 100, v * 100]
+    return [(h + 360) % 360, s * 100, v * 100]
 }
 
 export const hsvToRgb = (hsv: [number, number, number]): [number, number, number] => {
