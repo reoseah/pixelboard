@@ -1,6 +1,6 @@
 import { Accessor, createContext, createRoot, createSignal } from "solid-js"
 import { makePersisted } from "@solid-primitives/storage"
-import { Registry } from "./Registry"
+import Registry from "./Registry"
 
 export type SelectedToolState = Accessor<string>
 

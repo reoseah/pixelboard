@@ -1,4 +1,4 @@
-import { Tool } from "./tool"
+import Tool from "./tool"
 import SelectionIcon from "../../assets/icons/selection.svg"
 import { ViewportPositionContext } from "../../state/ViewportPosition"
 import { createSignal, Show, useContext } from "solid-js"

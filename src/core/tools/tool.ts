@@ -1,6 +1,6 @@
 import { Component } from "solid-js"
 
-export type Tool = {
+type Tool = {
     label: string
     icon: Component
     subToolbar?: Component
@@ -8,6 +8,8 @@ export type Tool = {
     onSelect?: (prev: string) => void
     onDeselect?: () => void
 }
+
+export default Tool
 
 export const isViewportClick = (e: MouseEvent): boolean => {
     if (!(e.target as Element)?.closest(".viewport")) {

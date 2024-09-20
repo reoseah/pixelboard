@@ -7,7 +7,7 @@ import CircleFilledIcon from "../../assets/icons/circle-filled.svg"
 import SquareFilledIcon from "../../assets/icons/square-filled.svg"
 import StrokeWidthIcon from "../../assets/icons/stroke-width.svg"
 import DropIcon from "../../assets/icons/drop.svg"
-import { isViewportClick, Tool } from './tool'
+import Tool, { isViewportClick } from './tool'
 import { ViewportPositionContext } from '../../state/ViewportPosition'
 import { PencilStroke } from '../canvas_actions/pencil_stroke'
 import { VirtualCanvasContext } from '../../state/VirtualCanvas'

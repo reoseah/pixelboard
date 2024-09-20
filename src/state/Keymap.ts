@@ -31,18 +31,44 @@ export type Keybinding = {
     win?: KeyCombination
 }
 
-const defaultToolKeymap: Record<string, string> = {
-    select: "V",
-    pencil: "P",
-    select_rectangle: "R",
-    command_palette: "Ctrl+K"
-}
-
 const DefaultKeymap: Keybinding[] = [
-    ...Object.entries(defaultToolKeymap).map(([tool, key]) => ({
-        command: `select_tool.${tool}`,
-        key: parseKeybind(key)
-    }))
+    {
+        command: "select_tool.select",
+        key: parseKeybind("V")
+    },
+    {
+        command: "select_tool.pencil",
+        key: parseKeybind("P")
+    },
+    {
+        command: "select_tool.select_rectangle",
+        key: parseKeybind("R")
+    },
+    {
+        command: "select_tool.crop",
+        key: parseKeybind("C")
+    },
+    {
+        command: "select_tool.command_palette",
+        key: parseKeybind("Ctrl+K")
+    },
+    
+    {
+        command: "toggle_sidebar",
+        key: parseKeybind("Ctrl+B")
+    },
+    {
+        command: "toggle_tab.menu",
+        key: parseKeybind("Alt+M")
+    },
+    {
+        command: "toggle_tab.color",
+        key: parseKeybind("Alt+C")
+    },
+    {
+        command: "toggle_tab.settings",
+        key: parseKeybind("Alt+S")
+    },
 ]
 
 export default DefaultKeymap

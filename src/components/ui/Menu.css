@@ -1,0 +1,17 @@
+.menu {
+    display: grid;
+    background: var(--neutral-900);
+    box-shadow: var(--shadow-strong);
+    border: 1px solid var(--neutral-800);
+    border-radius: .375rem;
+    font-size: .75rem;
+    font-weight: 400;
+    padding: .1875rem;
+}
+
+.menu-divider {
+    height: 1px;
+    background: var(--neutral-800);
+    margin-block: .125rem;
+    margin-inline: -.1875rem;
+}
