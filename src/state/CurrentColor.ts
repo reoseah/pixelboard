@@ -14,7 +14,7 @@ export type CurrentColor = {
 }
 
 const CurrentColor: CurrentColor = createRoot(() => {
-    const [hex, _setHex] = makePersisted(createSignal("#000000"), { name: "color" })
+    const [hex, _setHex] = makePersisted(createSignal("#FFFFFF"), { name: "color" })
     const [rgb, _setRgb] = createSignal(hexToRgb(hex()))
     const [hsv, _setHsv] = createSignal(rgbToHsv(rgb()))
     const [alpha, setAlpha] = makePersisted(createSignal(1), { name: "alpha" })

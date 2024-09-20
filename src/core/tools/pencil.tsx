@@ -113,6 +113,7 @@ const createPencil = (): Tool => {
                 <InputGroup>
                     <NumberInput
                         class="pencil-toolbar-stroke-width"
+                        name="pencil-stroke-width"
                         value={size()}
                         onChange={value => setSize(value)}
                         min={1}
@@ -123,6 +124,7 @@ const createPencil = (): Tool => {
                     />
                     <ColorInput
                         value={color.hex()}
+                        name="pencil-color"
                         onChange={value => color.setHex(value)}
                         title="Stroke color"
                     />
@@ -163,6 +165,7 @@ const createPencil = (): Tool => {
                     </Select>
                     <NumberInput
                         class="pencil-toolbar-opacity"
+                        name="pencil-opacity"
                         value={opacity()}
                         onChange={value => setOpacity(value)}
                         title="Not implemented yet"

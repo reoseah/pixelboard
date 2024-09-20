@@ -8,6 +8,7 @@ const ColorInput = (props: {
     onChange: (value: string) => void
     title: string
     disabled?: boolean
+    name?: string
 }) => {
     const [inputRef, setInputRef] = createSignal<HTMLInputElement>()
     useClickOutside(inputRef, () => {
@@ -28,6 +29,7 @@ const ColorInput = (props: {
                 type="text"
                 class="color-input"
                 value={value()}
+                name={props.name}
                 disabled={props.disabled}
                 oninput={event => props.onChange((event.target as HTMLInputElement).value)}
                 onclick={event => (event.target as HTMLInputElement).select()}

@@ -13,6 +13,7 @@ export const NumberInput = (props: {
   unit?: JSX.Element
   title?: string
   disabled?: boolean
+  name?: string
 }) => {
   let ref!: HTMLElement
 
@@ -41,6 +42,7 @@ export const NumberInput = (props: {
         type="number"
         class="number-input"
         value={props.value}
+        name={props.name}
         min={props.min}
         max={props.max}
         step={props.step}
