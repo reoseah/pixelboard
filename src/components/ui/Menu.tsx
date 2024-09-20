@@ -2,10 +2,11 @@ import { JSXElement } from "solid-js"
 import "./Menu.css"
 
 const Menu = (props: {
-    children: JSXElement
+    children: JSXElement,
+    ref?: (el: HTMLElement) => void
 }) => {
     return (
-        <div class="menu">
+        <div class="menu" ref={props.ref}>
             {props.children}
         </div>
     )

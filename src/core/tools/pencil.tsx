@@ -12,7 +12,7 @@ import { ViewportPositionContext } from '../../state/ViewportPosition'
 import { PencilStroke } from '../canvas_actions/pencil_stroke'
 import { VirtualCanvasContext } from '../../state/VirtualCanvas'
 import { BlendingMode, modeGroups, modeNames } from './blending_modes'
-import { SelectBox, CustomOption, OptionDivider } from '../../components/ui/SelectBox'
+import { Select, Option, OptionDivider } from '../../components/ui/Select'
 import InputGroup from '../../components/ui/InputGroup'
 import NumberInput from '../../components/ui/NumberInput'
 import ToggleButton from '../../components/ui/ToggleButton'
@@ -127,7 +127,7 @@ const createPencil = (): Tool => {
                 </InputGroup>
 
                 <InputGroup>
-                    <SelectBox
+                    <Select
                         class="pencil-toolbar-mode-select"
                         value={modeNames[mode()]}
                         icon={<DropIcon />}
@@ -137,7 +137,7 @@ const createPencil = (): Tool => {
                                 <>
                                     <For each={group}>
                                         {m => (
-                                            <CustomOption
+                                            <Option
                                                 value={modeNames[m]}
                                                 selected={mode() === m}
                                                 onClick={() => {
@@ -148,7 +148,7 @@ const createPencil = (): Tool => {
                                                 title={m !== "normal" ? "Not implemented yet" : undefined}
                                             >
                                                 {modeNames[m]}
-                                            </CustomOption>
+                                            </Option>
                                         )}
                                     </For>
                                     <Show when={idx() != modeGroups.length - 1}>
@@ -158,7 +158,7 @@ const createPencil = (): Tool => {
                             )}
                             </For>
                         )}
-                    </SelectBox>
+                    </Select>
                     <NumberInput
                         class="pencil-toolbar-opacity"
                         value={opacity()}

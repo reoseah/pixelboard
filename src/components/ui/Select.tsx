@@ -1,39 +1,46 @@
-import "./SelectBox.css"
+import "./Select.css"
 import { createSignal, onCleanup, Show, JSX } from "solid-js"
 import CheckIcon from "../../assets/icons/check.svg"
 import ChevronDownIcon from "../../assets/icons/chevron-down.svg"
+import Menu from "./Menu"
 
-export const SelectBox = (props: {
-  value: string
-  children: JSX.Element | ((close: () => void) => JSX.Element)
-  class?: string
+export const Select = (props: {
   icon?: JSX.Element
+  value: string
+  children: (close: () => void) => JSX.Element
+  class?: string
 }) => {
   return (
-    <SelectBoxInternal
-      {...props}
+    <SelectInternal
+      button={
+        <>
+          <Show when={props.icon}>
+            {props.icon}
+          </Show>
+          <span>{props.value}</span>
+          <ChevronDownIcon class="neutral-400" />
+        </>
+      }
+      children={(setRef, close) => (<Menu ref={setRef}>{props.children(close)}</Menu>)}
       classes={{
         root: `custom-select ${props.class ?? ''}`,
-        button: `custom-select-inner`,
-        dropdown: `custom-select-options`
+        button: `custom-select-trigger`
       }}
     />
   )
 }
 
-const SelectBoxInternal = (props: {
-  value: string
-  children: JSX.Element | ((close: () => void) => JSX.Element)
-  icon?: JSX.Element
+const SelectInternal = (props: {
+  button: JSX.Element
+  children: (setRef: (el: HTMLElement) => void, close: () => void) => JSX.Element
   classes: {
     root: string
     button: string
-    dropdown: string
   }
 }) => {
   const [expanded, setExpanded] = createSignal(false)
 
-  let dropdownRef!: HTMLDivElement
+  let dropdownRef!: HTMLElement
   const handleClickOutside = (event: MouseEvent) => {
     if (expanded() && !dropdownRef.contains(event.target as Node)) {
       setExpanded(false)
@@ -57,37 +64,23 @@ const SelectBoxInternal = (props: {
       class={props.classes.root}
       aria-expanded={expanded()}
     >
-      <div
+      <button
         class={props.classes.button}
         onclick={(e) => {
           e.stopImmediatePropagation()
           setExpanded(!expanded())
         }}
       >
-        <Show when={props.icon}>
-          {props.icon}
-        </Show>
-        <span>{props.value}</span>
-        <ChevronDownIcon class="neutral-400" />
-      </div>
+        {props.button}
+      </button>
       <Show when={expanded()}>
-        <div
-          class={props.classes.dropdown}
-          ref={el => dropdownRef = el}
-        >
-          <Show
-            when={typeof props.children === 'function'}
-            fallback={<>{props.children}</>}
-          >
-            {(props.children as (close: () => void) => JSX.Element)(() => setExpanded(false))}
-          </Show>
-        </div>
+        {props.children((el) => dropdownRef = el, () => setExpanded(false))}
       </Show>
     </div>
   )
 }
 
-export const CustomOption = (props: {
+export const Option = (props: {
   value: string
   selected?: boolean
   onClick: () => void
@@ -115,8 +108,4 @@ export const CustomOption = (props: {
   )
 }
 
-export const OptionDivider = () => {
-  return (
-    <div class="option-divider"></div>
-  )
-}
+export const OptionDivider = Menu.Divider

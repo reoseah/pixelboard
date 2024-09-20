@@ -18,6 +18,10 @@
         background-color: var(--neutral-675);
     }
 
+    &:focus-visible {
+        background-color: var(--infused-600);
+    }
+
     &[aria-pressed="true"] {
         background-color: var(--primary-600);
         color: var(--primary-100);
