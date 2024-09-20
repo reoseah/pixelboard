@@ -18,6 +18,7 @@ import MainMenu from "../core/tabs/main_menu"
 import Color from "../core/tabs/color"
 import Settings from "../core/tabs/settings"
 import { createTabCommand, ToggleSidebar } from "../core/command/sidebar_commands"
+import createCrop from "../core/tools/crop"
 
 export type Registry = {
     tools: Record<string, Tool>,
@@ -30,6 +31,7 @@ const DefaultRegistry: Registry = {
     tools: {
         "select": createSelect(),
         "pencil": createPencil(),
+        "crop": createCrop(),
         "select_rectangle": createSelectRectangle(),
         "command_palette": createCommandPalette()
     },
@@ -39,6 +41,7 @@ const DefaultRegistry: Registry = {
     commands: {
         "select_tool.select": createSelectToolCommand("select"),
         "select_tool.pencil": createSelectToolCommand("pencil"),
+        "select_tool.crop": createSelectToolCommand("crop"),
         "select_tool.select_rectangle": createSelectToolCommand("select_rectangle"),
         "select_tool.command_palette": createSelectToolCommand("command_palette"),
         "toggle_sidebar": ToggleSidebar,

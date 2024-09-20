@@ -13,7 +13,7 @@ const Menu = (props: {
 
 const MenuDivider = () => {
     return (
-        <hr class="menu-divider" />
+        <div class="menu-divider" />
     )
 }
 

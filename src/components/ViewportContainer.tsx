@@ -103,7 +103,7 @@ const ViewportContainer = (props: { children: JSXElement }) => {
                         height={position.scale()}
                         patternUnits="userSpaceOnUse"
                     >
-                        <rect width="1" height="1" fill="var(--neutral-500)" />
+                        <rect width="1" height="1" fill="var(--neutral-675)" />
                     </pattern>
                 </defs>
                 <rect

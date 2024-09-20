@@ -45,6 +45,10 @@ const DefaultKeymap: Keybinding[] = [
         key: parseKeybind("R")
     },
     {
+        command: "select_tool.crop",
+        key: parseKeybind("C")
+    },
+    {
         command: "select_tool.command_palette",
         key: parseKeybind("Ctrl+K")
     },

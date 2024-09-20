@@ -14,8 +14,4 @@
     background: var(--neutral-800);
     margin-block: .125rem;
     margin-inline: -.1875rem;
-
-    &hr {
-        border: none;
-    }
 }

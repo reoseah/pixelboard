@@ -8,7 +8,6 @@ export type SidebarState = {
 
 export type SidebarActions = {
     toggle: (tab?: string) => void,
-    close: () => void,
 }
 
 const DefaultSidebar: [
@@ -19,19 +18,21 @@ const DefaultSidebar: [
     const [tab, setTab] = createSignal("menu")
 
     const toggle = (newTab?: string) => {
-        if (newTab) {
-            setTab(newTab)
+        if (!newTab) {
+            setOpen(!open())
+            return
         }
-        setOpen(!open())
-    }
-
-    const close = () => {
-        setOpen(false)
+        if (newTab === tab()) {
+            setOpen(!open())
+            return
+        }
+        setTab(newTab)
+        setOpen(true)
     }
 
     return [
         { open, tab },
-        { toggle, close }
+        { toggle }
     ]
 })
 

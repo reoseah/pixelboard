@@ -33,7 +33,6 @@
     width: 2rem;
     height: 2rem;
     color: var(--neutral-200);
-    transition: background-color .1s;
 
     &:hover {
         background-color: var(--neutral-750);
