@@ -10,7 +10,7 @@ export const Select = (props: {
   class?: string
 }) => {
   return (
-    <SelectBase
+    <Selectlike
       button={
         <>
           <Show when={props.icon}>
@@ -29,7 +29,7 @@ export const Select = (props: {
   )
 }
 
-const SelectBase = (props: {
+export const Selectlike = (props: {
   button: JSX.Element
   children: (setRef: (el: HTMLElement) => void, close: () => void) => JSX.Element
   classes: {

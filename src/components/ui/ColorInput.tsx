@@ -1,6 +1,7 @@
 import { createSignal } from "solid-js"
 import "./ColorInput.css"
 import useClickOutside from "../../hooks/useClickOutside"
+import { normalizeHex } from "../../core/color_conversion"
 
 const ColorInput = (props: {
     value: string
@@ -13,18 +14,20 @@ const ColorInput = (props: {
         inputRef()?.blur()
     })
 
+    const value = () => props.value.startsWith("#") ? props.value.slice(1) : props.value
+
     return (
         <div class="color-input-container" title={props.title}>
             <div
                 class="color-input-swatch"
                 style={{
-                    "background-color": `#${props.value}`
+                    "background-color": `#${value()}`
                 }}
             ></div>
             <input
                 type="text"
                 class="color-input"
-                value={props.value}
+                value={value()}
                 disabled={props.disabled}
                 oninput={event => props.onChange((event.target as HTMLInputElement).value)}
                 onclick={event => (event.target as HTMLInputElement).select()}
@@ -33,7 +36,7 @@ const ColorInput = (props: {
                         (event.target as HTMLInputElement).blur()
                     }
                 }}
-                onblur={event => props.onChange(normalizeHexColor((event.target as HTMLInputElement).value))}
+                onblur={event => props.onChange(normalizeHex((event.target as HTMLInputElement).value))}
                 ref={setInputRef}
             />
         </div>
@@ -41,17 +44,3 @@ const ColorInput = (props: {
 }
 
 export default ColorInput
-
-const normalizeHexColor = (color: string): string => {
-    if (color.startsWith("rgb")) {
-        const [r, g, b] = color.match(/\d+/g)!.map(Number)
-        return r.toString(16).padStart(2, '0') +
-            g.toString(16).padStart(2, '0') +
-            b.toString(16).padStart(2, '0')
-    }
-    color = color.replace(/^#/, '');
-    if (color.length === 3) {
-        color = color.split('').map(char => char + char).join('');
-    }
-    return color.toUpperCase();
-}

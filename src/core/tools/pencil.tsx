@@ -18,6 +18,8 @@ import NumberInput from '../../components/ui/NumberInput'
 import ToggleButton from '../../components/ui/ToggleButton'
 import ColorInput from "../../components/ui/ColorInput"
 import { makePersisted } from "@solid-primitives/storage"
+import { CurrentColorContext } from "../../state/CurrentColor"
+import { normalizeHex } from "../color_conversion"
 
 const createPencil = (): Tool => {
     const [, viewportActions] = useContext(ViewportPositionContext)
@@ -28,7 +30,7 @@ const createPencil = (): Tool => {
 
     const [shape, setShape] = makePersisted(createSignal<'circle' | 'square'>('circle'), { name: 'pencil-shape' })
     const [size, setSize] = makePersisted(createSignal(1), { name: 'pencil-size' })
-    const [color, setColor] = makePersisted(createSignal('FFFFFF'), { name: 'pencil-color' })
+    const color = useContext(CurrentColorContext)
     const [mode, setMode] = makePersisted(createSignal<BlendingMode>('normal'), { name: 'pencil-mode' })
     const [opacity, setOpacity] = makePersisted(createSignal(100), { name: 'pencil-opacity' })
 
@@ -49,7 +51,7 @@ const createPencil = (): Tool => {
             points: [pos],
             shape: shape(),
             size: size(),
-            color: `#${color()}`
+            color: normalizeHex(color.hex()),
         }
         virtualCanvasActions.add(action)
         currentAction = action
@@ -120,8 +122,8 @@ const createPencil = (): Tool => {
                         title="Stroke width"
                     />
                     <ColorInput
-                        value={color()}
-                        onChange={value => setColor(value)}
+                        value={color.hex()}
+                        onChange={value => color.setHex(value)}
                         title="Stroke color"
                     />
                 </InputGroup>
