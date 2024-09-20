@@ -6,7 +6,7 @@ export const normalizeHex = (color: string): string => {
             b.toString(16).padStart(2, '0')
     }
     color = color.replace(/^#/, '');
-    if (color.length === 3) {
+    if (color.length < 6) {
         color = color.split('').map(char => char + char).join('');
     }
     return "#" + color.toUpperCase();

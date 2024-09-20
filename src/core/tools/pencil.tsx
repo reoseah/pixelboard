@@ -32,7 +32,7 @@ const createPencil = (): Tool => {
     const [size, setSize] = makePersisted(createSignal(1), { name: 'pencil-size' })
     const color = useContext(CurrentColorContext)
     const [mode, setMode] = makePersisted(createSignal<BlendingMode>('normal'), { name: 'pencil-mode' })
-    const [opacity, setOpacity] = makePersisted(createSignal(100), { name: 'pencil-opacity' })
+    // const [opacity, setOpacity] = makePersisted(createSignal(100), { name: 'pencil-opacity' })
 
     const handleMouseDown = (e: MouseEvent) => {
         if (!isViewportClick(e)) {
@@ -166,8 +166,8 @@ const createPencil = (): Tool => {
                     <NumberInput
                         class="pencil-toolbar-opacity"
                         name="pencil-opacity"
-                        value={opacity()}
-                        onChange={value => setOpacity(value)}
+                        value={Math.floor(color.alpha() * 100)}
+                        onChange={value => color.setAlpha(value / 100)}
                         title="Not implemented yet"
                         disabled={true}
                         min={0}

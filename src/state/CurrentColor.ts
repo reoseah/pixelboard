@@ -20,10 +20,17 @@ const CurrentColor: CurrentColor = createRoot(() => {
     const [alpha, setAlpha] = makePersisted(createSignal(1), { name: "alpha" })
 
     const setHex = (hex: string) => {
-        _setHex(hex)
-        hex = normalizeHex(hex)
-        _setRgb(hexToRgb(hex))
-        _setHsv(rgbToHsv(hexToRgb(hex)))
+        let safeHex = normalizeHex(hex)
+        const hasAlpha = safeHex.length === 9
+        if (hasAlpha) {
+            setAlpha(parseInt(safeHex.slice(7, 9), 16) / 255)
+            safeHex = safeHex.slice(0, 7)
+            _setHex(safeHex)
+        } else {
+            _setHex(hex)
+        }
+        _setRgb(hexToRgb(safeHex))
+        _setHsv(rgbToHsv(hexToRgb(safeHex)))
     }
 
     const setRgb = (rgb: [number, number, number]) => {
