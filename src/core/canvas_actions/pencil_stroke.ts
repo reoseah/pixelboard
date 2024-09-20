@@ -56,12 +56,15 @@ export const PencilStrokeType: CanvasActionType<PencilStroke> = {
             const last = newAction.points[newAction.points.length - 1]
 
             const visited = new Map<number, Set<number>>()
+
             getPointsOnPath([prev, last], interval).forEach((point) => {
                 drawShape(newAction.shape, newAction.size, point.x, point.y, visited)
             })
             visited.forEach((set, x) => {
                 set.forEach((y) => {
-                    helper.set(x, y, newAction.color)
+                    if (x != prev.x || y != prev.y) {
+                        helper.set(x, y, newAction.color)
+                    }
                 })
             })
             return true
