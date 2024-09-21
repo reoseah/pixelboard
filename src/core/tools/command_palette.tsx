@@ -4,7 +4,7 @@ import CommandIcon from "../../assets/icons/command.svg"
 import SearchIcon from "../../assets/icons/search.svg"
 import Tool from "./tool"
 import { RegistryContext } from "../../state/Registry"
-import { SelectedToolContext } from "../../state/SelectedTool"
+import { CurrentToolContext } from "../../state/CurrentTool"
 import useClickOutside from "../../hooks/useClickOutside"
 import Command from "../command/command"
 import { Dynamic } from "solid-js/web"
@@ -15,7 +15,7 @@ const createCommandPalette = (): Tool => {
 
     const CommandPalette = () => {
         const { commands } = useContext(RegistryContext)
-        const [, selectTool] = useContext(SelectedToolContext)
+        const currentTool = useContext(CurrentToolContext)
         const [query, setQuery] = createSignal("")
         const [selectedEntry, setSelectedEntry] = createSignal<number>(0)
         const keymap = DefaultKeymap
@@ -41,15 +41,15 @@ const createCommandPalette = (): Tool => {
         })
 
         const [wrapper, setWrapper] = createSignal<HTMLDivElement>()
-        useClickOutside(wrapper, () => { selectTool(prevTool) })
+        useClickOutside(wrapper, () => { currentTool.selectId(prevTool) })
 
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === "Escape") {
-                selectTool(prevTool)
+                currentTool.selectId(prevTool)
             } else if (event.key === "Enter") {
                 const firstCommand = filteredCommands()[selectedEntry()]
                 if (firstCommand) {
-                    selectTool(prevTool)
+                    currentTool.selectId(prevTool)
                     firstCommand.execute()
                 }
             } else if (event.key === "ArrowDown") {
@@ -67,7 +67,7 @@ const createCommandPalette = (): Tool => {
         }
 
         const handleCommandClick = (command: Command) => {
-            selectTool(prevTool)
+            currentTool.selectId(prevTool)
             command.execute()
         }
 

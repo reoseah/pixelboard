@@ -3,7 +3,7 @@ import './App.css'
 import MainToolbar from './components/MainToolbar'
 import ViewportContainer from './components/ViewportContainer'
 import Registry, { RegistryContext } from './state/Registry'
-import { SelectedToolContext } from './state/SelectedTool'
+import { CurrentToolContext } from './state/CurrentTool'
 import VirtualCanvasComponent from './components/VirtualCanvasComponent'
 import { Dynamic } from 'solid-js/web'
 import DefaultKeymap from './state/Keymap'
@@ -15,7 +15,7 @@ function App() {
   useCommandKeybinds()
 
   const { tools } = useContext(RegistryContext)
-  const [selectedTool] = useContext(SelectedToolContext)
+  const currentTool = useContext(CurrentToolContext)
 
   return (
     <>
@@ -25,9 +25,9 @@ function App() {
       </ViewportContainer>
       <TopCenterLayout>
         <MainToolbar />
-        <Show when={tools[selectedTool()].subToolbar}>
+        <Show when={tools[currentTool.id()].subToolbar}>
           <div class="toolbar">
-            <Dynamic component={tools[selectedTool()].subToolbar} />
+            <Dynamic component={tools[currentTool.id()].subToolbar} />
           </div>
         </Show>
       </TopCenterLayout>
@@ -40,15 +40,15 @@ function App() {
 
 const ToolView = () => {
   const { tools } = useContext(RegistryContext)
-  const [selectedTool] = useContext(SelectedToolContext)
+  const currentTool = useContext(CurrentToolContext)
 
   return (
-    <Show when={tools[selectedTool()].viewportContent}>
-      <Dynamic component={tools[selectedTool()].viewportContent} />
+    <Show when={tools[currentTool.id()].viewportContent}>
+      <Dynamic component={tools[currentTool.id()].viewportContent} />
     </Show>
   )
 }
-
+1
 const useCommandKeybinds = () => {
   const handleKeyDown = (event: KeyboardEvent) => {
     const target = event.target as HTMLElement

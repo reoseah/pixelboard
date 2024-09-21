@@ -1,5 +1,5 @@
 import Registry from "../../state/Registry"
-import { SelectedTool } from "../../state/SelectedTool"
+import { CurrentTool } from "../../state/CurrentTool"
 import Command from "./command"
 
 export const createSelectToolCommand = (tool: string): Command => {
@@ -10,12 +10,10 @@ export const createSelectToolCommand = (tool: string): Command => {
             return `Select ${tools[tool].label}`
         },
         isDisabled: () => {
-            const [selectedTool] = SelectedTool
-            return selectedTool() === tool
+            return CurrentTool.id() === tool
         },
         execute: () => {
-            const [, selectTool] = SelectedTool
-            selectTool(tool)
+            CurrentTool.selectId(tool)
         }
     }
 }

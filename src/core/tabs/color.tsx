@@ -3,8 +3,7 @@ import Tab from "./tab"
 import PaletteIcon from "../../assets/icons/palette.svg"
 import ChevronDownIcon from "../../assets/icons/chevron-down.svg"
 import { Selectlike } from "../../components/ui/Select"
-import { createEffect, createMemo, createSignal, onCleanup, useContext } from "solid-js"
-import { makePersisted } from "@solid-primitives/storage"
+import { createSignal, onCleanup, useContext } from "solid-js"
 import { CurrentColorContext } from "../../state/CurrentColor"
 
 const Color: Tab = {
@@ -12,7 +11,6 @@ const Color: Tab = {
     label: "Color",
     icon: PaletteIcon,
     contents: () => {
-
         return (
             <div class="color-tab">
                 <Selectlike

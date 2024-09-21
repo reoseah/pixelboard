@@ -1,7 +1,7 @@
 import "./ViewportContainer.css"
 import { createSignal, JSXElement, onCleanup, useContext } from "solid-js"
 import { ViewportPositionContext } from "../state/ViewportPosition"
-import { SelectedToolContext } from "../state/SelectedTool"
+import { CurrentToolContext } from "../state/CurrentTool"
 
 const ViewportContainer = (props: { children: JSXElement }) => {
     const [position, positionActions] = useContext(ViewportPositionContext)
@@ -85,13 +85,13 @@ const ViewportContainer = (props: { children: JSXElement }) => {
     const translationX = () => Math.round(innerWidth() / 2 + position.x() * position.scale())
     const translationY = () => Math.round(innerHeight() / 2 + position.y() * position.scale())
 
-    const [ activeTool ] = useContext(SelectedToolContext)
+    const currentTool = useContext(CurrentToolContext)
 
     return (
         <div
             class="viewport"
             data-dragging={dragging()}
-            data-active-tool={activeTool()}
+            data-active-tool={currentTool.id()}
             onmousedown={handleMouseDown}
         >
             <svg

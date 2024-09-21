@@ -1,12 +1,12 @@
 import "./MainToolbar.css"
 import { For, useContext } from "solid-js"
 import { RegistryContext } from "../state/Registry"
-import { SelectedToolContext } from "../state/SelectedTool"
+import { CurrentToolContext } from "../state/CurrentTool"
 import DefaultKeymap, { stringifyKeybind } from "../state/Keymap"
 
 const MainToolbar = () => {
     const { tools } = useContext(RegistryContext)
-    const [selectedTool, selectTool] = useContext(SelectedToolContext)
+    const currentTool = useContext(CurrentToolContext)
 
     const toolKeys = DefaultKeymap.reduce((acc, keybinding) => {
         if (keybinding.command.match(/^select_tool\./)) {
@@ -28,8 +28,8 @@ const MainToolbar = () => {
                             title={tool.label + " - " + toolKeys[id]}
                             aria-label={tool.label + " - " + toolKeys[id]}
                             aria-keyshortcuts={toolKeys[id]}
-                            aria-pressed={selectedTool() === id}
-                            onclick={() => selectTool(id)}
+                            aria-pressed={currentTool.id() === id}
+                            onclick={() => currentTool.selectId(id)}
                         >
                             <tool.icon />
                         </button>
