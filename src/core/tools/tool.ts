@@ -3,8 +3,10 @@ import { Component } from "solid-js"
 type Tool = {
     label: string
     icon: Component
+
     subToolbar?: Component
-    viewportContent?: Component
+    viewport?: Component
+
     onSelect?: (prev: string) => void
     onDeselect?: () => void
 }

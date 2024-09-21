@@ -3,6 +3,7 @@ import { For, useContext } from "solid-js"
 import { RegistryContext } from "../state/Registry"
 import { CurrentToolContext } from "../state/CurrentTool"
 import DefaultKeymap, { stringifyKeybind } from "../state/Keymap"
+import Toolbar from "./ui/Toolbar"
 
 const MainToolbar = () => {
     const { tools } = useContext(RegistryContext)
@@ -19,24 +20,22 @@ const MainToolbar = () => {
     }, {} as Record<string, string>)
 
     return (
-        <>
-            <div class="toolbar">
-                <For each={Object.entries(tools)}>
-                    {([id, tool]) => (
-                        <button
-                            class="toolbar-button"
-                            title={tool.label + " - " + toolKeys[id]}
-                            aria-label={tool.label + " - " + toolKeys[id]}
-                            aria-keyshortcuts={toolKeys[id]}
-                            aria-pressed={currentTool.id() === id}
-                            onclick={() => currentTool.selectId(id)}
-                        >
-                            <tool.icon />
-                        </button>
-                    )}
-                </For>
-            </div>
-        </>
+        <Toolbar>
+            <For each={Object.entries(tools)}>
+                {([id, tool]) => (
+                    <button
+                        class="toolbar-button"
+                        title={tool.label + " - " + toolKeys[id]}
+                        aria-label={tool.label + " - " + toolKeys[id]}
+                        aria-keyshortcuts={toolKeys[id]}
+                        aria-pressed={currentTool.id() === id}
+                        onclick={() => currentTool.selectId(id)}
+                    >
+                        <tool.icon />
+                    </button>
+                )}
+            </For>
+        </Toolbar>
     )
 }
 

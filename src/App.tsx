@@ -1,35 +1,29 @@
-import { onCleanup, Show, useContext } from 'solid-js'
+import { Component, createMemo, onCleanup, Show, useContext } from 'solid-js'
 import './App.css'
 import MainToolbar from './components/MainToolbar'
 import ViewportContainer from './components/ViewportContainer'
 import Registry, { RegistryContext } from './state/Registry'
 import { CurrentToolContext } from './state/CurrentTool'
-import VirtualCanvasComponent from './components/VirtualCanvasComponent'
+import VirtualCanvasRenderer from './components/VirtualCanvasRenderer'
 import { Dynamic } from 'solid-js/web'
 import DefaultKeymap from './state/Keymap'
 import Sidebar from './components/Sidebar'
 import TopCenterLayout from './components/TopCenterLayout'
 import SideLayout from './components/SideLayout'
+import Tool from './core/tools/tool'
 
 function App() {
   useCommandKeybinds()
 
-  const { tools } = useContext(RegistryContext)
-  const currentTool = useContext(CurrentToolContext)
-
   return (
     <>
       <ViewportContainer>
-        <VirtualCanvasComponent />
-        <ToolView />
+        <VirtualCanvasRenderer />
+        <CurrentToolRenderer map={(tool) => tool.viewport} />
       </ViewportContainer>
       <TopCenterLayout>
         <MainToolbar />
-        <Show when={tools[currentTool.id()].subToolbar}>
-          <div class="toolbar">
-            <Dynamic component={tools[currentTool.id()].subToolbar} />
-          </div>
-        </Show>
+        <CurrentToolRenderer map={(tool) => tool.subToolbar} />
       </TopCenterLayout>
       <SideLayout>
         <Sidebar />
@@ -38,17 +32,21 @@ function App() {
   )
 }
 
-const ToolView = () => {
+const CurrentToolRenderer = (props: {
+  map: (tool: Tool) => Component | undefined
+}) => {
   const { tools } = useContext(RegistryContext)
   const currentTool = useContext(CurrentToolContext)
 
+  const component = createMemo(() => props.map(tools[currentTool.id()]))
+
   return (
-    <Show when={tools[currentTool.id()].viewportContent}>
-      <Dynamic component={tools[currentTool.id()].viewportContent} />
+    <Show when={component()}>
+      <Dynamic component={component()} />
     </Show>
   )
 }
-1
+
 const useCommandKeybinds = () => {
   const handleKeyDown = (event: KeyboardEvent) => {
     const target = event.target as HTMLElement

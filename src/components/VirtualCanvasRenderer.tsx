@@ -1,4 +1,4 @@
-import './VirtualCanvasComponent.css'
+import './VirtualCanvasRenderer.css'
 import * as Y from "yjs"
 import { createEffect, onCleanup, onMount, useContext } from 'solid-js'
 import { RegistryContext } from '../state/Registry'
@@ -8,7 +8,7 @@ import { CanvasAction, CanvasActionType, VirtualCanvasAccess } from '../core/can
 
 const tileSize = 32
 
-const VirtualCanvasComponent = () => {
+const VirtualCanvasRenderer = () => {
     const [state] = useContext(VirtualCanvasContext)
     const [viewport] = useContext(ViewportPositionContext)
     const { actionTypes } = useContext(RegistryContext)
@@ -166,7 +166,7 @@ const VirtualCanvasComponent = () => {
     )
 }
 
-export default VirtualCanvasComponent
+export default VirtualCanvasRenderer
 
 const affectsChunk = <T extends CanvasAction = any,>(type: CanvasActionType<T>, action: T, column: number, row: number, tileSize: number) => {
     const actionBounds = type.getBounds(action)

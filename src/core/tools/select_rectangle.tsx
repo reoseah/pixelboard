@@ -94,7 +94,7 @@ const createSelectRectangle = (): Tool => {
     return {
         label: "Select Rectangle",
         icon: SelectionIcon,
-        viewportContent: viewportComponent,
+        viewport: viewportComponent,
         onSelect: () => {
             document.addEventListener("mousedown", handleMouseDown)
             document.addEventListener("mousemove", handleMouseMove)

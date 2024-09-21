@@ -20,6 +20,7 @@ import ColorInput from "../../components/ui/ColorInput"
 import { makePersisted } from "@solid-primitives/storage"
 import { CurrentColorContext } from "../../state/CurrentColor"
 import { normalizeHex } from "../color_conversion"
+import Toolbar from "../../components/ui/Toolbar"
 
 const createPencil = (): Tool => {
     const [, viewportActions] = useContext(ViewportPositionContext)
@@ -88,7 +89,7 @@ const createPencil = (): Tool => {
 
     const PencilToolbar = () => {
         return (
-            <>
+            <Toolbar>
                 <InputGroup>
                     <ToggleButton
                         title="Round brush shape"
@@ -176,7 +177,7 @@ const createPencil = (): Tool => {
                         size={3}
                         unit={'%'} />
                 </InputGroup>
-            </>
+            </Toolbar>
         )
     }
 
