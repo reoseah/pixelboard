@@ -1,4 +1,4 @@
-import { Accessor, createContext, createRoot, createSignal } from "solid-js"
+import { Accessor, createContext, createRoot, createSignal, onCleanup } from "solid-js"
 import { makePersisted } from "@solid-primitives/storage"
 import Registry from "./Registry"
 
@@ -16,6 +16,15 @@ export const CurrentTool: CurrentTool = createRoot(() => {
             tool.onSelect("select")
         }
     })
+
+    if (import.meta.hot) {
+        onCleanup(() => {
+            const tool = Registry.tools[id()]
+            if (tool?.onDeselect) {
+                tool.onDeselect()
+            }
+        })
+    }
 
     const selectId = (targetId: string) => {
         const prevId = id()

@@ -1,4 +1,4 @@
-import { createContext } from "solid-js"
+import { createContext, createRoot } from "solid-js"
 
 import type Tool from "../core/tools/tool"
 import createSelect from "../core/tools/select"
@@ -27,35 +27,37 @@ export type Registry = {
     tabs: Record<string, Tab>
 }
 
-const DefaultRegistry: Registry = {
-    tools: {
-        "select": createSelect(),
-        "pencil": createPencil(),
-        "crop": createCrop(),
-        "select_rectangle": createSelectRectangle(),
-        "command_palette": createCommandPalette()
-    },
-    actionTypes: {
-        "pencil_stroke": PencilStrokeType
-    },
-    commands: {
-        "select_tool.select": createSelectToolCommand("select"),
-        "select_tool.pencil": createSelectToolCommand("pencil"),
-        "select_tool.crop": createSelectToolCommand("crop"),
-        "select_tool.select_rectangle": createSelectToolCommand("select_rectangle"),
-        "select_tool.command_palette": createSelectToolCommand("command_palette"),
-        "toggle_sidebar": ToggleSidebar,
-        "toggle_tab.menu": createTabCommand("menu"),
-        "toggle_tab.color": createTabCommand("color"),
-        "toggle_tab.settings": createTabCommand("settings"),
-        "clear_project": ClearProject,
-    },
-    tabs: {
-        "menu": MainMenu,
-        "color": Color,
-        "settings": Settings
+const DefaultRegistry: Registry = createRoot(() => {
+    return {
+        tools: {
+            "select": createSelect(),
+            "pencil": createPencil(),
+            "crop": createCrop(),
+            "select_rectangle": createSelectRectangle(),
+            "command_palette": createCommandPalette()
+        },
+        actionTypes: {
+            "pencil_stroke": PencilStrokeType
+        },
+        commands: {
+            "select_tool.select": createSelectToolCommand("select"),
+            "select_tool.pencil": createSelectToolCommand("pencil"),
+            "select_tool.crop": createSelectToolCommand("crop"),
+            "select_tool.select_rectangle": createSelectToolCommand("select_rectangle"),
+            "select_tool.command_palette": createSelectToolCommand("command_palette"),
+            "toggle_sidebar": ToggleSidebar,
+            "toggle_tab.menu": createTabCommand("menu"),
+            "toggle_tab.color": createTabCommand("color"),
+            "toggle_tab.settings": createTabCommand("settings"),
+            "clear_project": ClearProject,
+        },
+        tabs: {
+            "menu": MainMenu,
+            "color": Color,
+            "settings": Settings
+        }
     }
-}
+})
 
 export default DefaultRegistry
 

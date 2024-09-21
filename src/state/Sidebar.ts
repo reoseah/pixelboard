@@ -1,7 +1,6 @@
 import { Accessor, createContext, createRoot, createSignal } from "solid-js"
 
 export type SidebarState = {
-    // activeTab: Accessor<string | null>
     open: Accessor<boolean>
     tab: Accessor<string>
 }
