@@ -21,6 +21,7 @@ import { createTabCommand, ToggleSidebar } from "../core/command/sidebar_command
 import createCrop from "../core/tools/crop"
 import { DeleteSelection, Deselect, Reselect } from "../core/command/selection_commands"
 import { DeleteRectangleType } from "../core/canvas_actions/delete_rectangle"
+import Collaboration from "../core/tabs/collaboration"
 
 export type Registry = {
     tools: Record<string, Tool>,
@@ -60,6 +61,7 @@ const DefaultRegistry: Registry = createRoot(() => {
         tabs: {
             "menu": MainMenu,
             "color": Color,
+            "collaboration": Collaboration,
             "settings": Settings
         }
     }

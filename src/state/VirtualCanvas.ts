@@ -1,7 +1,7 @@
 import * as Y from 'yjs'
 import { CanvasAction } from '../core/canvas_actions/canvas_action'
-import { YjsState } from './Yjs'
-import { createContext } from 'solid-js'
+import { YjsContext } from './Yjs'
+import { createContext, useContext } from 'solid-js'
 
 export type VirtualCanvasState = {
     actions: Y.Array<CanvasAction>
@@ -17,9 +17,9 @@ export const VirtualCanvas: [
     state: VirtualCanvasState,
     actions: VirtualCanvasActions
 ] = (() => {
-    const ydoc = YjsState.ydoc
+    const [yjs] = useContext(YjsContext)
     const state = {
-        actions: ydoc.getArray<CanvasAction>("virtual-canvas-actions")
+        actions: yjs.ydoc.getArray<CanvasAction>("virtual-canvas-actions")
     }
 
     const add = (action: CanvasAction) => {
@@ -37,14 +37,14 @@ export const VirtualCanvas: [
         if (idx === -1) {
             throw new Error('oldAction not found')
         }
-        YjsState.ydoc.transact(() => {
+        yjs.ydoc.transact(() => {
             state.actions.delete(idx)
             state.actions.insert(idx, [newAction])
         })
     }
 
     const clear = () => {
-        YjsState.ydoc.transact(() => {
+        yjs.ydoc.transact(() => {
             state.actions.delete(0, state.actions.length)
         })
     }

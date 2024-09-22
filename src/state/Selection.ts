@@ -1,6 +1,6 @@
 import { makePersisted } from "@solid-primitives/storage"
 import { Accessor, createContext, createRoot } from "solid-js"
-import { createStore, reconcile, Store, unwrap } from "solid-js/store"
+import { createStore, reconcile, Store } from "solid-js/store"
 
 export type SelectionState = {
     parts: Store<SelectionPart[]>,
