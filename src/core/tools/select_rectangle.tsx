@@ -89,6 +89,15 @@ const createSelectRectangle = (): Tool => {
                         <animate attributeName="stroke-dashoffset" from="3" to="9" dur=".5s" repeatCount="indefinite" />
                     </rect>
                 </svg>
+                <div
+                    class="select-rectangle-dimensions"
+                    style={{
+                        left: `${(left() + width()) * viewport.scale() + 8}px`,
+                        top: `${(top() + height()) * viewport.scale() + 8}px`,
+                    }}
+                >
+                    {width()} × {height()}
+                </div>
             </Show>
         )
     }

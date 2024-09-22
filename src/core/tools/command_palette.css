@@ -97,13 +97,21 @@
     color: var(--neutral-100);
     transition: background-color .15s;
 
-    &[aria-selected="true"] {
+    &[aria-selected="true"]     {
         background-color: var(--neutral-750);
     }
 
     &:active {
         background-color: var(--primary-600);
         color: var(--primary-100);
+    }
+
+    &:disabled {
+        color: var(--neutral-400);
+        cursor: not-allowed;
+        &:hover {
+            background-color: var(--neutral-800);
+        }
     }
 }
 

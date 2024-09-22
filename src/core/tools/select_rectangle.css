@@ -7,3 +7,14 @@
     pointer-events: none;
     z-index: 50;
 }
+
+.select-rectangle-dimensions {
+    position: absolute;
+    padding: .25rem .5rem;
+    border-radius: .25rem;
+    background: var(--primary-600);
+    color: white;
+    font-size: .75rem;
+    white-space: nowrap;
+    z-index: 100;
+}

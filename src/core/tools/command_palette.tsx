@@ -20,12 +20,18 @@ const createCommandPalette = (): Tool => {
         const [selectedEntry, setSelectedEntry] = createSignal<number>(0)
         const keymap = DefaultKeymap
 
-        const filteredCommands = createMemo(() => {
+        const matchingCommands = createMemo(() => {
             const queryLower = query().toLowerCase()
 
             return Object.values(commands)
                 .filter(command => (typeof command.label === "function" ? command.label() : command.label).toLowerCase().includes(queryLower))
-                .filter(command => command.isDisabled === undefined || !command.isDisabled())
+        })
+
+        const matchingEnabledCommands = createMemo(() => {
+            return matchingCommands().filter(command => command.isDisabled === undefined || !command.isDisabled())
+        })
+        const matchingDisabledCommands = createMemo(() => {
+            return matchingCommands().filter(command => command.isDisabled !== undefined && command.isDisabled())
         })
 
         const commandToKeybinds = createMemo(() => {
@@ -47,15 +53,15 @@ const createCommandPalette = (): Tool => {
             if (event.key === "Escape") {
                 currentTool.selectId(prevTool)
             } else if (event.key === "Enter") {
-                const firstCommand = filteredCommands()[selectedEntry()]
+                const firstCommand = matchingCommands()[selectedEntry()]
                 if (firstCommand) {
                     currentTool.selectId(prevTool)
                     firstCommand.execute()
                 }
             } else if (event.key === "ArrowDown") {
-                setSelectedEntry((selectedEntry() + 1) % filteredCommands().length)
+                setSelectedEntry((selectedEntry() + 1) % matchingCommands().length)
             } else if (event.key === "ArrowUp") {
-                setSelectedEntry((selectedEntry() - 1 + filteredCommands().length) % filteredCommands().length)
+                setSelectedEntry((selectedEntry() - 1 + matchingCommands().length) % matchingCommands().length)
             }
         }
         document.addEventListener("keydown", handleKeyDown)
@@ -93,12 +99,12 @@ const createCommandPalette = (): Tool => {
                     />
                 </div>
                 <Show
-                    when={filteredCommands().length}
+                    when={matchingCommands().length}
                     fallback={<p class="command-palette-no-results">No results found</p>}
                 >
                     <h2 class="command-palette-heading">Actions</h2>
                     <ul class="command-palette-entries">
-                        <For each={filteredCommands()}>
+                        <For each={matchingEnabledCommands()}>
                             {(command, idx) => (
                                 <li>
                                     <button
@@ -122,6 +128,32 @@ const createCommandPalette = (): Tool => {
                                 </li>
                             )}
                         </For>
+                        <Show when={query().length !== 0}>
+                            <For each={matchingDisabledCommands()}>
+                                {(command, idx) => (
+                                    <li>
+                                        <button
+                                            class="command-palette-button"
+                                            onClick={() => handleCommandClick(command)}
+                                            disabled={true}
+                                            onmouseover={() => setSelectedEntry(idx())}
+                                        >
+                                            <div class="command-icon">
+                                                <Show when={command.icon}>
+                                                    <Dynamic component={command.icon} />
+                                                </Show>
+                                            </div>
+                                            <span class="command-description">{typeof command.label === "function" ? command.label() : command.label}</span>
+                                            <Show when={commandToKeybinds()[command.id]}>
+                                                <kbd class="command-keybind">
+                                                    {commandToKeybinds()[command.id][0]}
+                                                </kbd>
+                                            </Show>
+                                        </button>
+                                    </li>
+                                )}
+                            </For>
+                        </Show>
                     </ul>
                 </Show>
             </div>
@@ -129,7 +161,7 @@ const createCommandPalette = (): Tool => {
     }
 
     return {
-        label: "Actions",
+        label: "Command Palette",
         icon: CommandIcon,
         subToolbar: CommandPalette,
         onSelect: (prev: string) => {
