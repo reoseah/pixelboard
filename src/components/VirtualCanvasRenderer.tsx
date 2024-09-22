@@ -75,11 +75,30 @@ const VirtualCanvasRenderer = () => {
         ctx.fillRect(localX, localY, 1, 1)
     }
 
+    const clearRect = (x: number, y: number, width: number, height: number) => {
+        const minChunkX = Math.floor(x / tileSize)
+        const minChunkY = Math.floor(y / tileSize)
+        const maxChunkX = Math.ceil((x + width) / tileSize)
+        const maxChunkY = Math.ceil((y + height) / tileSize)
+
+        for (let column = minChunkX; column < maxChunkX; column++) {
+            for (let row = minChunkY; row < maxChunkY; row++) {
+                const ctx = getOrCreateContext(column, row)
+                const localX = Math.max(0, x - column * tileSize)
+                const localY = Math.max(0, y - row * tileSize)
+                const localWidth = Math.min(tileSize, x + width - column * tileSize) - localX
+                const localHeight = Math.min(tileSize, y + height - row * tileSize) - localY
+                ctx.clearRect(localX, localY, localWidth, localHeight)
+            }
+        }
+    }
+
     const access: VirtualCanvasAccess = {
         tileSize,
         getOrCreateContext,
         get,
-        set
+        set,
+        clearRect
     }
 
     const createLimitedAccess = (type: "blacklist" | "whitelist", tiles: Map<number, Set<number>>): VirtualCanvasAccess => {

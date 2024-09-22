@@ -61,7 +61,7 @@ const useCommandKeybinds = () => {
 
     const keybind = keymap.find(keybind => {
       const key = keybind.key
-      return event.key.toUpperCase() === key.key &&
+      return (event.key.toUpperCase() === key.key || event.code === key.key) &&
         event.ctrlKey === key.ctrl &&
         event.shiftKey === key.shift &&
         event.altKey === key.alt &&

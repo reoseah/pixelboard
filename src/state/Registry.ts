@@ -19,7 +19,8 @@ import Color from "../core/tabs/color"
 import Settings from "../core/tabs/settings"
 import { createTabCommand, ToggleSidebar } from "../core/command/sidebar_commands"
 import createCrop from "../core/tools/crop"
-import { Deselect, Reselect } from "../core/command/selection_commands"
+import { DeleteSelection, Deselect, Reselect } from "../core/command/selection_commands"
+import { DeleteRectangleType } from "../core/canvas_actions/delete_rectangle"
 
 export type Registry = {
     tools: Record<string, Tool>,
@@ -38,7 +39,8 @@ const DefaultRegistry: Registry = createRoot(() => {
             "command_palette": createCommandPalette()
         },
         actionTypes: {
-            "pencil_stroke": PencilStrokeType
+            "pencil_stroke": PencilStrokeType,
+            "delete_rectangle": DeleteRectangleType
         },
         commands: {
             "select_tool.select": createSelectToolCommand("select"),
@@ -52,7 +54,8 @@ const DefaultRegistry: Registry = createRoot(() => {
             "toggle_tab.settings": createTabCommand("settings"),
             "clear_project": ClearProject,
             "deselect": Deselect,
-            "reselect": Reselect
+            "reselect": Reselect,
+            "delete_selection": DeleteSelection
         },
         tabs: {
             "menu": MainMenu,

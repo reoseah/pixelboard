@@ -1,4 +1,3 @@
-import { Dynamic } from "solid-js/web"
 import Registry from "../../state/Registry"
 import Sidebar from "../../state/Sidebar"
 import Command from "./command"

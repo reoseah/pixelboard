@@ -1,5 +1,6 @@
 import Command from "./command"
 import Selection from "../../state/Selection"
+import { VirtualCanvas } from "../../state/VirtualCanvas"
 
 export const Deselect: Command = {
     id: "deselect",
@@ -24,5 +25,28 @@ export const Reselect: Command = {
     execute: () => {
         const [, actions] = Selection
         actions.reselect()
+    }
+}
+
+export const DeleteSelection: Command = {
+    id: "delete_selection",
+    label: () => "Delete",
+    isDisabled: () => {
+        const [selection] = Selection
+        return selection.parts.length === 0
+    },
+    execute: () => {
+        const [, canvasActions] = VirtualCanvas
+        const [selection] = Selection
+        if (selection.parts.length === 1 && selection.parts[0].type === "rectangle") {
+            canvasActions.add({
+                type: "delete_rectangle",
+                x: selection.parts[0].x,
+                y: selection.parts[0].y,
+                width: selection.parts[0].width,
+                height: selection.parts[0].height
+            })
+        }
+        // TODO  
     }
 }

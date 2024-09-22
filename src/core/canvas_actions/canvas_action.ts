@@ -20,4 +20,5 @@ export type VirtualCanvasAccess = {
 
     get: (x: number, y: number) => number
     set: (x: number, y: number, color: number | string) => void
+    clearRect: (x: number, y: number, width: number, height: number) => void
 }

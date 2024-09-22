@@ -42,7 +42,7 @@ const DefaultKeymap: Keybinding[] = [
     },
     {
         command: "select_tool.select_rectangle",
-        key: parseKeybind("R")
+        key: parseKeybind("M")
     },
     {
         command: "select_tool.crop",
@@ -77,6 +77,10 @@ const DefaultKeymap: Keybinding[] = [
     {
         command: "reselect",
         key: parseKeybind("Ctrl+Shift+D")
+    },
+    {
+        command: "delete_selection",
+        key: parseKeybind("Delete")
     }
 ]
 
