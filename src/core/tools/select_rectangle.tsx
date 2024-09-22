@@ -1,17 +1,25 @@
-import Tool from "./tool"
+import "./select_rectangle.css"
+import Tool, { isViewportClick } from "./tool"
 import SelectionIcon from "../../assets/icons/selection.svg"
 import { ViewportPositionContext } from "../../state/ViewportPosition"
 import { createSignal, Show, useContext } from "solid-js"
+import { SelectionContext } from "../../state/Selection"
 
 const createSelectRectangle = (): Tool => {
-    const [viewport, viewportActions] = useContext(ViewportPositionContext)!
+    const [viewport, viewportActions] = useContext(ViewportPositionContext)
+    const [, selectionActions] = useContext(SelectionContext)
 
     const [initialPos, setInitialPos] = createSignal<{ x: number, y: number }>({ x: 0, y: 0 })
     const [currentPos, setCurrentPos] = createSignal<{ x: number, y: number }>({ x: 0, y: 0 })
     const [dragging, setDragging] = createSignal(false)
 
+    const left = () => Math.min(Math.round(initialPos().x), Math.round(currentPos().x))
+    const top = () => Math.min(Math.round(initialPos().y), Math.round(currentPos().y))
+    const width = () => Math.abs(Math.round(currentPos().x) - Math.round(initialPos().x))
+    const height = () => Math.abs(Math.round(currentPos().y) - Math.round(initialPos().y))
+
     const handleMouseDown = (e: MouseEvent) => {
-        if (e.button !== 0) {
+        if (e.button !== 0 || !isViewportClick(e)) {
             return
         }
         const x = viewportActions.toCanvasX(e.clientX)
@@ -39,27 +47,21 @@ const createSelectRectangle = (): Tool => {
             return
         }
 
+        selectionActions.selectRectangle("replace", left(), top(), width(), height())
+
         setDragging(false)
         setInitialPos({ x: 0, y: 0 })
         setCurrentPos({ x: 0, y: 0 })
     }
 
     const viewportComponent = () => {
-        const left = () => Math.min(Math.round(initialPos().x), Math.round(currentPos().x))
-        const top = () => Math.min(Math.round(initialPos().y), Math.round(currentPos().y))
-        const width = () => Math.abs(Math.round(currentPos().x) - Math.round(initialPos().x))
-        const height = () => Math.abs(Math.round(currentPos().y) - Math.round(initialPos().y))
-
         return (
             <Show when={dragging()}>
                 <svg
+                    class="select-rectangle-preview"
                     style={{
-                        position: "absolute",
                         top: `${top() * viewport.scale()}px`,
                         left: `${left() * viewport.scale()}px`,
-                        "pointer-events": "none",
-                        "shape-rendering": "crispEdges",
-                        "z-index": 50
                     }}
                     width={width() * viewport.scale() + 1}
                     height={height() * viewport.scale() + 1}

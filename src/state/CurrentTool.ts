@@ -10,6 +10,10 @@ export type CurrentTool = {
 export const CurrentTool: CurrentTool = createRoot(() => {
     const [id, setId] = makePersisted(createSignal("select"), { name: "selected-tool" })
 
+    if (id() === "command_palette") {
+        setId("select")
+    }
+
     requestAnimationFrame(() => {
         const tool = Registry.tools[id()]
         if (tool?.onSelect) {

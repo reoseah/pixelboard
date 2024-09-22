@@ -1,0 +1,9 @@
+[data-active-tool="select_rectangle"] {
+    cursor: crosshair;
+}
+
+.select-rectangle-preview {
+    position: absolute;
+    pointer-events: none;
+    z-index: 50;
+}

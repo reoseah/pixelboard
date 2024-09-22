@@ -19,6 +19,7 @@ import Color from "../core/tabs/color"
 import Settings from "../core/tabs/settings"
 import { createTabCommand, ToggleSidebar } from "../core/command/sidebar_commands"
 import createCrop from "../core/tools/crop"
+import { Deselect, Reselect } from "../core/command/selection_commands"
 
 export type Registry = {
     tools: Record<string, Tool>,
@@ -50,6 +51,8 @@ const DefaultRegistry: Registry = createRoot(() => {
             "toggle_tab.color": createTabCommand("color"),
             "toggle_tab.settings": createTabCommand("settings"),
             "clear_project": ClearProject,
+            "deselect": Deselect,
+            "reselect": Reselect
         },
         tabs: {
             "menu": MainMenu,

@@ -52,7 +52,7 @@ const DefaultKeymap: Keybinding[] = [
         command: "select_tool.command_palette",
         key: parseKeybind("Ctrl+K")
     },
-    
+
     {
         command: "toggle_sidebar",
         key: parseKeybind("Ctrl+B")
@@ -69,6 +69,15 @@ const DefaultKeymap: Keybinding[] = [
         command: "toggle_tab.settings",
         key: parseKeybind("Alt+S")
     },
+
+    {
+        command: "deselect",
+        key: parseKeybind("Ctrl+D")
+    },
+    {
+        command: "reselect",
+        key: parseKeybind("Ctrl+Shift+D")
+    }
 ]
 
 export default DefaultKeymap

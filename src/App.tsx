@@ -11,6 +11,7 @@ import Sidebar from './components/Sidebar'
 import TopCenterLayout from './components/TopCenterLayout'
 import SideLayout from './components/SideLayout'
 import Tool from './core/tools/tool'
+import { SelectionRenderer } from './components/SelectionRenderer'
 
 function App() {
   useCommandKeybinds()
@@ -20,6 +21,7 @@ function App() {
       <ViewportContainer>
         <VirtualCanvasRenderer />
         <CurrentToolRenderer map={(tool) => tool.viewport} />
+        <SelectionRenderer />
       </ViewportContainer>
       <TopCenterLayout>
         <MainToolbar />
