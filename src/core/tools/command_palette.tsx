@@ -53,15 +53,15 @@ const createCommandPalette = (): Tool => {
             if (event.key === "Escape") {
                 currentTool.selectId(prevTool)
             } else if (event.key === "Enter") {
-                const firstCommand = matchingCommands()[selectedEntry()]
+                const firstCommand = matchingEnabledCommands()[selectedEntry()]
                 if (firstCommand) {
                     currentTool.selectId(prevTool)
                     firstCommand.execute()
                 }
             } else if (event.key === "ArrowDown") {
-                setSelectedEntry((selectedEntry() + 1) % matchingCommands().length)
+                setSelectedEntry((selectedEntry() + 1) % matchingEnabledCommands().length)
             } else if (event.key === "ArrowUp") {
-                setSelectedEntry((selectedEntry() - 1 + matchingCommands().length) % matchingCommands().length)
+                setSelectedEntry((selectedEntry() - 1 + matchingEnabledCommands().length) % matchingEnabledCommands().length)
             }
         }
         document.addEventListener("keydown", handleKeyDown)
