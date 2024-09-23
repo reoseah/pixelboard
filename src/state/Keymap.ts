@@ -66,6 +66,10 @@ const DefaultKeymap: Keybinding[] = [
         key: parseKeybind("Alt+C")
     },
     {
+        command: "toggle_tab.collaboration",
+        key: parseKeybind("Alt+O")
+    },
+    {
         command: "toggle_tab.settings",
         key: parseKeybind("Alt+S")
     },

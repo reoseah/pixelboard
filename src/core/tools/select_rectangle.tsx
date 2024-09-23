@@ -69,8 +69,8 @@ const createSelectRectangle = (): Tool => {
                     <rect
                         x={.5}
                         y={.5}
-                        width={width() * viewport.scale()}
-                        height={height() * viewport.scale()}
+                        width={Math.max(2, width() * viewport.scale())}
+                        height={Math.max(2, height() * viewport.scale())}
                         stroke="white"
                         stroke-width="1"
                         stroke-dasharray="3 3"
@@ -80,8 +80,8 @@ const createSelectRectangle = (): Tool => {
                     <rect
                         x={.5}
                         y={.5}
-                        width={width() * viewport.scale()}
-                        height={height() * viewport.scale()}
+                        width={Math.max(2, width() * viewport.scale())}
+                        height={Math.max(2, height() * viewport.scale())}
                         stroke="black"
                         stroke-width="1"
                         stroke-dasharray="3 3"

@@ -52,6 +52,19 @@
     --infused-800: #222D3D;
     --infused-900: #161F2B;
     --infused-950: #0B1018;
+
+    /* Tailwind Red */
+    --danger-50: #fef2f2;
+    --danger-100: #fee2e2;
+    --danger-200: #fecaca;
+    --danger-300: #fca5a5;
+    --danger-400: #f87171;
+    --danger-500: #ef4444;
+    --danger-600: #dc2626;
+    --danger-700: #b91c1c;
+    --danger-800: #991b1b;
+    --danger-900: #7f1d1d;
+    --danger-950: #450a0a;
 }
 
 input,

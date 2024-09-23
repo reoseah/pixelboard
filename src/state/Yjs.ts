@@ -1,19 +1,8 @@
 import * as Y from 'yjs'
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { WebrtcProvider } from 'y-webrtc'
-import { Accessor, createContext, createEffect, createRoot, onCleanup } from 'solid-js'
-import { createStore, reconcile, unwrap } from 'solid-js/store'
-
-export type YjsState = {
-    ydoc: Y.Doc,
-    persistence: IndexeddbPersistence,
-    room: Accessor<string>,
-    webrtcProvider: () => WebrtcProvider | undefined
-}
-
-export type YjsActions = {
-    startSession: () => void
-}
+import { Accessor, createContext, createEffect, createRoot, createSignal, onCleanup } from 'solid-js'
+import { createStore, reconcile } from 'solid-js/store'
 
 const useSearchParams = <T extends Record<string, string>>() => {
     const [searchParams, setSearchParamsInternal] = createStore<Partial<T>>({})
@@ -35,7 +24,7 @@ const useSearchParams = <T extends Record<string, string>>() => {
     })
 
     const setSearchParams = (params: Partial<T>) => {
-        const searchParams = new URLSearchParams(window.location.search)
+        const searchParams = new URLSearchParams()
         for (const key in params) {
             searchParams.set(key, params[key] || '')
         }
@@ -71,9 +60,25 @@ const userNamePool = [
     "Valiant Vulture",
     "Wise Wolf",
     "Xenial Xerus",
-    "Youthful  Yak",
+    "Youthful Yak",
     "Zealous Zebra"
 ]
+
+export type YjsState = {
+    ydoc: Y.Doc,
+    persistence: IndexeddbPersistence,
+    webrtcNoSignalling: WebrtcProvider,
+
+    room: Accessor<string | null>,
+    webrtcProvider: () => WebrtcProvider | undefined,
+    userName: Accessor<string | undefined>
+}
+
+export type YjsActions = {
+    startSession: () => void,
+    endSession: () => void,
+    getShareUrl: () => string | undefined
+}
 
 export const Yjs: [
     state: YjsState,
@@ -81,43 +86,73 @@ export const Yjs: [
 ] = createRoot(() => {
     const ydoc = new Y.Doc()
     const persistence = new IndexeddbPersistence('project', ydoc)
+    const webrtcNoSignalling = new WebrtcProvider("browser-tabs", ydoc, { signaling: [] })
+
     const [searchParams, setSearchParams] = useSearchParams<{
         room?: string
     }>()
-    let webrtcProvider: WebrtcProvider = new WebrtcProvider("browser-tabs", ydoc, { signaling: [] })
+    const [userName, setUserName] = createSignal<string>()
+    let webrtcProvider: WebrtcProvider | undefined = undefined
 
     const startSession = () => {
         const room = crypto.randomUUID()
         setSearchParams({ room })
     }
 
-    createEffect(() => {
+    const endSession = () => {
+        setSearchParams({})
+    }
+
+    const getShareUrl = () => {
         const room = searchParams.room
         if (!room) {
             return
         }
 
-        webrtcProvider?.disconnect()
+        return `${window.location.origin}?room=${room}`
+    }
 
-        webrtcProvider = new WebrtcProvider(room, ydoc)
+    createEffect(() => {
+        const room = searchParams.room
+        if (!room) {
+            webrtcProvider?.disconnect()
+            webrtcProvider?.destroy()
+            return
+        }
+
+        webrtcProvider?.disconnect()
+        webrtcProvider?.destroy()
+
+        webrtcProvider = new WebrtcProvider(room, ydoc, {
+            filterBcConns: true,
+        })
+
+        if (!userName()) {
+            setUserName(userNamePool[Math.floor(Math.random() * userNamePool.length)])
+        }
         webrtcProvider.awareness.setLocalStateField('user', {
-            name: 'user-' + Math.floor(Math.random() * 100)
+            name: userName()
         })
         webrtcProvider.connect()
     })
 
     onCleanup(() => {
-        webrtcProvider.disconnect()
+        webrtcProvider?.disconnect()
+        webrtcProvider?.destroy()
     })
 
     return [{
         ydoc,
         persistence,
+        webrtcNoSignalling,
         room: () => searchParams.room || '',
-        webrtcProvider: () => webrtcProvider
+        webrtcProvider: () => webrtcProvider,
+        userName
     },
     {
-        startSession
+        startSession,
+        endSession,
+        getShareUrl
     }]
 })
 
