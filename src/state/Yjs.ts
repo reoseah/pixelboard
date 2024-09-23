@@ -7,16 +7,16 @@ import { createStore, reconcile, unwrap } from 'solid-js/store'
 export type YjsState = {
     ydoc: Y.Doc,
     persistence: IndexeddbPersistence,
-    room?: Accessor<string>,
+    room: Accessor<string>,
     webrtcProvider: () => WebrtcProvider | undefined
 }
 
 export type YjsActions = {
-    createRoom: (room: string) => void
+    startSession: () => void
 }
 
 const useSearchParams = <T extends Record<string, string>>() => {
-    const [searchParams, setSearchParams] = createStore<Partial<T>>({})
+    const [searchParams, setSearchParamsInternal] = createStore<Partial<T>>({})
 
     const update = () => {
         const searchParams = new URLSearchParams(window.location.search)
@@ -24,7 +24,7 @@ const useSearchParams = <T extends Record<string, string>>() => {
         for (const [key, value] of searchParams) {
             params[key] = value || ''
         }
-        setSearchParams(reconcile(params as T))
+        setSearchParamsInternal(reconcile(params as T))
     }
 
     update()
@@ -34,8 +34,46 @@ const useSearchParams = <T extends Record<string, string>>() => {
         window.removeEventListener('popstate', update)
     })
 
+    const setSearchParams = (params: Partial<T>) => {
+        const searchParams = new URLSearchParams(window.location.search)
+        for (const key in params) {
+            searchParams.set(key, params[key] || '')
+        }
+        window.history.pushState({}, '', `${window.location.pathname}?${searchParams}`)
+        update()
+    }
+
     return [searchParams, setSearchParams] as const
 }
+
+const userNamePool = [
+    "Authentic Anthelope",
+    "Brave Bear",
+    "Curious Camel",
+    "Daring Dog",
+    "Energetic Elephant",
+    "Fearless Fox",
+    "Gallant Giraffe",
+    "Honest Hedgehog",
+    "Inquisitive Iguana",
+    "Jolly Jaguar",
+    "Keen Kangaroo",
+    "Lively Lemur",
+    "Mighty Moose",
+    "Noble Narwhal",
+    "Optimistic Owl",
+    "Playful Panda",
+    "Quick Quokka",
+    "Resilient Rabbit",
+    "Spirited Squirrel",
+    "Tenacious Tiger",
+    "Unique Unicorn",
+    "Valiant Vulture",
+    "Wise Wolf",
+    "Xenial Xerus",
+    "Youthful  Yak",
+    "Zealous Zebra"
+]
 
 export const Yjs: [
     state: YjsState,
@@ -46,30 +84,30 @@ export const Yjs: [
     const [searchParams, setSearchParams] = useSearchParams<{
         room?: string
     }>()
-    let webrtcProvider: WebrtcProvider | undefined = undefined
+    let webrtcProvider: WebrtcProvider = new WebrtcProvider("browser-tabs", ydoc, { signaling: [] })
 
-    const createRoom = (room: string) => {
+    const startSession = () => {
+        const room = crypto.randomUUID()
         setSearchParams({ room })
     }
 
     createEffect(() => {
-        if (!searchParams.room) {
+        const room = searchParams.room
+        if (!room) {
             return
         }
 
-        webrtcProvider = new WebrtcProvider(searchParams.room, ydoc)
+        webrtcProvider?.disconnect()
+
+        webrtcProvider = new WebrtcProvider(room, ydoc)
         webrtcProvider.awareness.setLocalStateField('user', {
             name: 'user-' + Math.floor(Math.random() * 100)
         })
         webrtcProvider.connect()
-
-        webrtcProvider.on('synced', () => {
-            console.log('synced')
-        })
     })
 
     onCleanup(() => {
-        webrtcProvider?.disconnect()
+        webrtcProvider.disconnect()
     })
 
     return [{
@@ -79,7 +117,7 @@ export const Yjs: [
         webrtcProvider: () => webrtcProvider
     },
     {
-        createRoom
+        startSession
     }]
 })
 
