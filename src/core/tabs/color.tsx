@@ -36,6 +36,7 @@ const Color: Tab = {
                         <Match when={mode() === "rgb"}>
                             <NumberInput
                                 class="w-3.5rem"
+                                name="red"
                                 value={color.rgb()[0]}
                                 onChange={value => color.setRgb([value, color.rgb()[1], color.rgb()[2]])}
                                 min={0}
@@ -44,6 +45,7 @@ const Color: Tab = {
                             />
                             <NumberInput
                                 class="w-3.5rem"
+                                name="green"
                                 value={color.rgb()[1]}
                                 onChange={value => color.setRgb([color.rgb()[0], value, color.rgb()[2]])}
                                 min={0}
@@ -52,6 +54,7 @@ const Color: Tab = {
                             />
                             <NumberInput
                                 class="w-3.5rem"
+                                name="blue"
                                 value={color.rgb()[2]}
                                 onChange={value => color.setRgb([color.rgb()[0], color.rgb()[1], value])}
                                 min={0}
@@ -62,6 +65,7 @@ const Color: Tab = {
                         <Match when={mode() === "hsv"}>
                             <NumberInput
                                 class="w-3.5rem"
+                                name="hue"
                                 value={Math.round(color.hsv()[0])}
                                 onChange={value => color.setHsv([value, color.hsv()[1], color.hsv()[2]])}
                                 min={0}
@@ -70,6 +74,7 @@ const Color: Tab = {
                             />
                             <NumberInput
                                 class="w-3.5rem"
+                                name="saturation"
                                 value={Math.round(color.hsv()[1])}
                                 onChange={value => color.setHsv([color.hsv()[0], value, color.hsv()[2]])}
                                 min={0}
@@ -78,6 +83,7 @@ const Color: Tab = {
                             />
                             <NumberInput
                                 class="w-3.5rem"
+                                name="value"
                                 value={Math.round(color.hsv()[2])}
                                 onChange={value => color.setHsv([color.hsv()[0], color.hsv()[1], value])}
                                 min={0}

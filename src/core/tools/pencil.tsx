@@ -142,7 +142,6 @@ const createPencil = (): Tool => {
                                     <For each={group}>
                                         {m => (
                                             <Option
-                                                value={modeNames[m]}
                                                 selected={mode() === m}
                                                 onClick={() => {
                                                     setMode(m)
