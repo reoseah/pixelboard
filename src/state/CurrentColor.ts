@@ -20,8 +20,8 @@ const CurrentColor: CurrentColor = createRoot(() => {
     const [alpha, setAlpha] = makePersisted(createSignal(1), { name: "alpha" })
 
     const setHex = (hex: string) => {
+        const hasAlpha = hex.length > 7
         let safeHex = normalizeHex(hex)
-        const hasAlpha = safeHex.length === 9
         if (hasAlpha) {
             setAlpha(parseInt(safeHex.slice(7, 9), 16) / 255)
             safeHex = safeHex.slice(0, 7)

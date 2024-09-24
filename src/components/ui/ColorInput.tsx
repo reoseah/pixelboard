@@ -33,6 +33,7 @@ const ColorInput = (props: {
                 disabled={props.disabled}
                 oninput={event => props.onChange((event.target as HTMLInputElement).value)}
                 onclick={event => (event.target as HTMLInputElement).select()}
+                maxlength="6"
                 onkeydown={event => {
                     if (event.key === "Enter" || event.key === "Escape") {
                         (event.target as HTMLInputElement).blur()
