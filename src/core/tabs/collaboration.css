@@ -1,14 +1,7 @@
-.tab {
-    padding: .75rem;
-    display: flex;
-    flex-direction: column;
-    gap: .75rem;
-}
-
 .tab-title {
+    font-size: .875rem;
     font-weight: 400;
     text-transform: uppercase;
-    font-size: .875rem;
 }
 
 .tab-description {
@@ -18,82 +11,6 @@
     display: flex;
     flex-direction: column;
     gap: .25rem;
-}
-
-button.primary {
-    height: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: .875rem;
-    padding-inline: 0.75rem;
-    background-color: var(--primary-600);
-    color: white;
-    border: none;
-    border-radius: .25rem;
-
-    &:hover {
-        background-color: var(--primary-700);
-    }
-
-    &:active {
-        background-color: var(--primary-800);
-    }
-
-    &:focus-visible {
-        outline: none;
-        background-color: var(--primary-700);
-    }
-}
-
-button.outline {
-    height: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: .875rem;
-    padding-inline: 0.4375rem;
-    background-color: transparent;
-    color: var(--primary-400);
-    border: 0.0625rem solid var(--primary-500);
-    border-radius: .25rem;
-
-    &:hover {
-        color: var(--neutral-900);
-        background-color: var(--primary-500);
-    }
-
-    &:active {
-        color: var(--neutral-900);
-        background-color: var(--primary-600);
-        border: 0.0625rem solid var(--primary-600);
-    }
-
-    &:focus-visible {
-        outline: none;
-        background-color: var(--primary-600);
-    }
-
-    &.danger {
-        color: var(--danger-400);
-        border: 0.0625rem solid var(--danger-500);
-
-        &:hover {
-            color: var(--neutral-900);
-            background-color: var(--danger-500);
-        }
-
-        &:active {
-            color: var(--neutral-900);
-            background-color: var(--danger-600);
-            border: 0.0625rem solid var(--danger-600);
-        }
-
-        &:focus-visible {
-            outline: none;
-            background-color: var(--danger-600);
-        }
-    }
 }
 
 .text-field {
@@ -115,7 +32,7 @@ button.outline {
     border-radius: .25rem;
     font-size: .875rem;
     color: var(--neutral-100);
-    padding-inline: 0.4375rem;
+    padding-inline: .4375rem;
     height: 2rem;
     background: var(--neutral-750);
     border: 0.0625rem solid var(--neutral-750);

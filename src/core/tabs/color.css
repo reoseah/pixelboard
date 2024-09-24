@@ -1,75 +1,7 @@
 .color-tab {
-    padding: .25rem;
+    padding: .75rem;
     display: grid;
-    gap: .25rem;
-}
-
-.color-tab-mode {
-    position: relative;
-}
-
-.color-tab-mode-trigger {
-    appearance: none;
-    background: transparent;
-    border: none;
-    width: 100%;
-    height: 2rem;
-    display: flex;
-    align-items: center;
-    font-weight: 500;
-    padding-inline: .5rem;
-    border-radius: .25rem;
-    gap: .5rem;
-
-    &:hover {
-        background: var(--neutral-750);
-    }
-
-    &:focus-visible {
-        outline: none;
-        box-shadow: 0 0 0 1px var(--primary-500);
-    }
-
-    &:active {
-        background: var(--neutral-700);
-    }
-
-    &[aria-expanded="true"] {
-        background: var(--neutral-700);
-    }
-}
-
-.color-tab-mode-menu {
-    position: absolute;
-    top: calc(100% + 0.0625rem);
-    left: -.25rem;
-    z-index: 100;
-    min-width: calc(100% + .5rem);
-    padding: .1875rem;
-    display: grid;
-    align-items: center;
-    background: var(--neutral-900);
-    border: .0625px solid var(--neutral-750);
-    border-radius: .375rem;
-}
-
-.color-tab-mode-option {
-    appearance: none;
-    background: transparent;
-    border: none;
-    text-align: left;
-    height: 1.75rem;
-    padding-inline: .5rem;
-    border-radius: .25rem;
-    font-size: .875rem;
-
-    &:hover {
-        background: var(--neutral-800);
-    }
-
-    &:active {
-        background: var(--neutral-750);
-    }
+    gap: .75rem;
 }
 
 .color-selector,
@@ -78,16 +10,14 @@
 }
 
 .color-selector {
-    width: calc(100% - .5rem);
+    width: 100%;
     aspect-ratio: 1 / 1;
     border-radius: .25rem;
-    margin-inline: .25rem;
 }
 
 .hue-slider {
-    height: .625rem;
-    margin: .25rem;
-    border-radius: 100rem;
+    height: 1rem;
+    border-radius: .25rem;
     background: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
 }
 
@@ -101,4 +31,10 @@
     border-radius: 50%;
     border: .125rem solid white;
     translate: -50% -50%;
+}
+
+.hue-slider-thumb {
+    width: .375rem;
+    height: 1rem;
+    border-radius: 10rem;
 }

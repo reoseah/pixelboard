@@ -5,6 +5,7 @@ import ChevronDownIcon from "../../assets/icons/chevron-down.svg"
 import { Selectlike } from "../../components/ui/Select"
 import { createSignal, onCleanup, useContext } from "solid-js"
 import { CurrentColorContext } from "../../state/CurrentColor"
+import Stack from "../../components/ui/Stack"
 
 const Color: Tab = {
     place: "top",
@@ -13,7 +14,7 @@ const Color: Tab = {
     contents: () => {
         return (
             <div class="color-tab">
-                <Selectlike
+                {/* <Selectlike
                     button={
                         <>
                             <span>RGB</span>
@@ -34,9 +35,11 @@ const Color: Tab = {
                         </div>
                     )
                 }}
-                </Selectlike>
-                <ColorSelector />
-                <HueSlider />
+                </Selectlike> */}
+                <Stack spacing={.5}>
+                    <ColorSelector />
+                    <HueSlider />
+                </Stack>
                 Color selection and palette (WIP)
             </div>
         )
