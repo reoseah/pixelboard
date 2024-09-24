@@ -4,11 +4,13 @@ import Registry from "./Registry"
 
 export type CurrentTool = {
     id: Accessor<string>,
-    selectId: (id: string) => void
+    selectId: (id: string) => void,
+    prevId: Accessor<string>
 }
 
 export const CurrentTool: CurrentTool = createRoot(() => {
     const [id, setId] = makePersisted(createSignal("select"), { name: "selected-tool" })
+    const [prevId, setPrevId] = createSignal("select")
 
     if (id() === "command_palette") {
         setId("select")
@@ -41,6 +43,7 @@ export const CurrentTool: CurrentTool = createRoot(() => {
         }
 
         setId(targetId)
+        setPrevId(prevId)
 
         const tool = Registry.tools[targetId]
         if (tool?.onSelect) {
@@ -48,7 +51,7 @@ export const CurrentTool: CurrentTool = createRoot(() => {
         }
     }
 
-    return { id, selectId }
+    return { id, selectId, prevId }
 })
 
 export const CurrentToolContext = createContext(CurrentTool)

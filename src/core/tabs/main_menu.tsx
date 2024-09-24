@@ -1,15 +1,15 @@
-import "./main_menu.css"
-import MenuIcon from "../../assets/icons/menu.svg"
 import Tab from "./tab"
+import MenuIcon from "../../assets/icons/menu.svg"
+import Stack from "../../components/ui/Stack"
 
 const MainMenu: Tab = {
     place: "top",
     label: "Menu",
     icon: MenuIcon,
     contents: () => (
-        <div class="main-menu">
-            Main menu (WIP)
-        </div>
+        <Stack spacing={.75} padding={.75}>
+            Main menu (work in progress)
+        </Stack>
     )
 }
 

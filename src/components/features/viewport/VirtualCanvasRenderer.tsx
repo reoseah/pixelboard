@@ -1,10 +1,10 @@
 import './VirtualCanvasRenderer.css'
 import * as Y from "yjs"
 import { createEffect, onCleanup, onMount, useContext } from 'solid-js'
-import { RegistryContext } from '../state/Registry'
-import { VirtualCanvasContext } from '../state/VirtualCanvas'
-import { ViewportPositionContext } from '../state/ViewportPosition'
-import { CanvasAction, CanvasActionType, VirtualCanvasAccess } from '../core/canvas_actions/canvas_action'
+import { VirtualCanvasAccess, CanvasAction, CanvasActionType } from '../../../core/canvas_actions/canvas_action'
+import { RegistryContext } from '../../../state/Registry'
+import { ViewportPositionContext } from '../../../state/ViewportPosition'
+import { VirtualCanvasContext } from '../../../state/VirtualCanvas'
 
 const tileSize = 32
 

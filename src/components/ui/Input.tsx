@@ -3,11 +3,13 @@ import { splitProps } from 'solid-js'
 import { JSX } from 'solid-js/jsx-runtime'
 
 const Input = (props: {
+    small?: boolean
 } & JSX.InputHTMLAttributes<HTMLInputElement>) => {
-    const [{ class: className }, rest] = splitProps(props, ["class"])
+    const [{ class: className, small }, rest] = splitProps(props, ["class", "small"])
+    
     return (
         <input
-            class={`input${className ? ` ${className}` : ""}`}
+            class={`input${small ? " small" : ""}${className ? " " + className : ""}`}
             {...rest}
         />
     )

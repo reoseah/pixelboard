@@ -1,5 +1,5 @@
-import { JSXElement } from "solid-js"
 import "./TopCenterLayout.css"
+import { JSXElement } from "solid-js"
 
 const TopCenterLayout = (props: { children: JSXElement }) => {
     return (

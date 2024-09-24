@@ -1,0 +1,39 @@
+.color-tab {
+    padding: .75rem;
+    display: grid;
+    gap: .75rem;
+}
+
+.color-selector,
+.hue-slider {
+    position: relative;
+}
+
+.color-selector {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: .25rem;
+}
+
+.hue-slider {
+    height: 1rem;
+    border-radius: .25rem;
+    background: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
+}
+
+.color-selector-thumb,
+.hue-slider-thumb {
+    position: absolute;
+    pointer-events: none;
+    width: .75rem;
+    height: .75rem;
+    border-radius: 50%;
+    border: .125rem solid white;
+    translate: -50% -50%;
+}
+
+.hue-slider-thumb {
+    width: .625rem;
+    height: 1.25rem;
+    border-radius: 10rem;
+}

@@ -1,9 +1,9 @@
 import "./Sidebar.css"
 import { For, Show, useContext } from "solid-js"
 import { Dynamic } from "solid-js/web"
-import { RegistryContext } from "../state/Registry"
-import { SidebarContext } from "../state/Sidebar"
-import DefaultKeymap, { stringifyKeybind } from "../state/Keymap"
+import { SidebarContext } from "../../../state/Sidebar"
+import { RegistryContext } from "../../../state/Registry"
+import DefaultKeymap, { stringifyKeybind } from "../../../state/Keymap"
 
 const Sidebar = () => {
     const [state, actions] = useContext(SidebarContext)

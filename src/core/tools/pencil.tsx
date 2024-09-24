@@ -1,5 +1,19 @@
 import "./pencil.css"
 import { createSignal, For, Show, useContext } from 'solid-js'
+import { makePersisted } from "@solid-primitives/storage"
+import Tool, { isViewportClick } from './tool'
+import { ViewportPositionContext } from '../../state/ViewportPosition'
+import { CurrentColorContext } from "../../state/CurrentColor"
+import { VirtualCanvasContext } from '../../state/VirtualCanvas'
+import { PencilStroke } from '../canvas_actions/pencil_stroke'
+import { normalizeHex } from "../color_conversion"
+import { BlendingMode, modeGroups, modeNames } from '../blending_modes'
+import { Select, Option, OptionDivider } from '../../components/ui/Select'
+import InputGroup from '../../components/ui/InputGroup'
+import NumberInput from '../../components/ui/NumberInput'
+import ToggleButton from '../../components/ui/ToggleButton'
+import ColorInput from "../../components/ui/ColorInput"
+import Toolbar from "../../components/ui/Toolbar"
 import PencilIcon from '../../assets/icons/pencil.svg'
 import CircleIcon from "../../assets/icons/circle.svg"
 import SquareIcon from "../../assets/icons/square.svg"
@@ -7,20 +21,6 @@ import CircleFilledIcon from "../../assets/icons/circle-filled.svg"
 import SquareFilledIcon from "../../assets/icons/square-filled.svg"
 import StrokeWidthIcon from "../../assets/icons/stroke-width.svg"
 import DropIcon from "../../assets/icons/drop.svg"
-import Tool, { isViewportClick } from './tool'
-import { ViewportPositionContext } from '../../state/ViewportPosition'
-import { PencilStroke } from '../canvas_actions/pencil_stroke'
-import { VirtualCanvasContext } from '../../state/VirtualCanvas'
-import { BlendingMode, modeGroups, modeNames } from './blending_modes'
-import { Select, Option, OptionDivider } from '../../components/ui/Select'
-import InputGroup from '../../components/ui/InputGroup'
-import NumberInput from '../../components/ui/NumberInput'
-import ToggleButton from '../../components/ui/ToggleButton'
-import ColorInput from "../../components/ui/ColorInput"
-import { makePersisted } from "@solid-primitives/storage"
-import { CurrentColorContext } from "../../state/CurrentColor"
-import { normalizeHex } from "../color_conversion"
-import Toolbar from "../../components/ui/Toolbar"
 
 const createPencil = (): Tool => {
     const [, viewportActions] = useContext(ViewportPositionContext)

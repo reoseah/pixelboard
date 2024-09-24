@@ -12,18 +12,23 @@
     flex-shrink: 1;
     min-width: 0;
 
-    &:hover:not(:focus) {
-        border: 0.0625rem solid var(--neutral-675);
-    }
-
-    &:focus {
-        border: .0625rem solid var(--primary-500);
+    &.small {
+        height: 1.5rem;
+        font-size: .75rem;
     }
 
     &:read-only {
         background: transparent;
         border: 0.0625rem solid var(--neutral-750);
         color: var(--neutral-300);
+    }
+
+    &:hover:not(:focus) {
+        border: 0.0625rem solid var(--neutral-675);
+    }
+
+    &:focus {
+        border: .0625rem solid var(--primary-500);
     }
 
     &::placeholder {

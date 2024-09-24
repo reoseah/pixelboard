@@ -1,9 +1,9 @@
 import "./MainToolbar.css"
 import { For, useContext } from "solid-js"
-import { RegistryContext } from "../state/Registry"
-import { CurrentToolContext } from "../state/CurrentTool"
-import DefaultKeymap, { stringifyKeybind } from "../state/Keymap"
-import Toolbar from "./ui/Toolbar"
+import { CurrentToolContext } from "../../../state/CurrentTool"
+import DefaultKeymap, { stringifyKeybind } from "../../../state/Keymap"
+import { RegistryContext } from "../../../state/Registry"
+import Toolbar from "../../ui/Toolbar"
 
 const MainToolbar = () => {
     const { tools } = useContext(RegistryContext)
