@@ -3,6 +3,7 @@ import { IndexeddbPersistence } from 'y-indexeddb'
 import { WebrtcProvider } from 'y-webrtc'
 import { Accessor, createContext, createEffect, createRoot, createSignal, onCleanup } from 'solid-js'
 import { createStore, reconcile } from 'solid-js/store'
+import { makePersisted } from '@solid-primitives/storage'
 
 const useSearchParams = <T extends Record<string, string>>() => {
     const [searchParams, setSearchParamsInternal] = createStore<Partial<T>>({})
@@ -77,7 +78,8 @@ export type YjsState = {
 export type YjsActions = {
     startSession: () => void,
     endSession: () => void,
-    getShareUrl: () => string | undefined
+    getShareUrl: () => string | undefined,
+    setUserName: (name: string) => void
 }
 
 export const Yjs: [
@@ -91,7 +93,7 @@ export const Yjs: [
     const [searchParams, setSearchParams] = useSearchParams<{
         room?: string
     }>()
-    const [userName, setUserName] = createSignal<string>()
+    const [userName, setUserNameInternal] = makePersisted(createSignal<string>(userNamePool[Math.floor(Math.random() * userNamePool.length)]), { name: 'collaboration-username' })
     let webrtcProvider: WebrtcProvider | undefined = undefined
 
     const startSession = () => {
@@ -127,7 +129,7 @@ export const Yjs: [
             filterBcConns: true,
         })
 
-        if (!userName()) {
+        if (userName().trim() === '') {
             setUserName(userNamePool[Math.floor(Math.random() * userNamePool.length)])
         }
         webrtcProvider.awareness.setLocalStateField('user', {
@@ -135,6 +137,15 @@ export const Yjs: [
         })
         webrtcProvider.connect()
     })
+
+    const setUserName = (name: string) => {
+        setUserNameInternal(name)
+        if (webrtcProvider) {
+            webrtcProvider.awareness.setLocalStateField('user', {
+                name
+            })
+        }
+    }
 
     onCleanup(() => {
         webrtcProvider?.disconnect()
@@ -152,7 +163,8 @@ export const Yjs: [
     {
         startSession,
         endSession,
-        getShareUrl
+        getShareUrl,
+        setUserName
     }]
 })
 

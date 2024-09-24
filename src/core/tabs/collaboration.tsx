@@ -34,7 +34,7 @@ const Collaboration: Tab = {
                     <Match when={yjs.room()}>
                         <Stack spacing={.25}>
                             <Text size="medium">Your name</Text>
-                            <input class="text-field-input" id="your-name" type="text" value={yjs.userName()} />
+                            <input class="text-field-input" id="your-name" type="text" value={yjs.userName()} onchange={(e) => yjsActions.setUserName(e.currentTarget.value)} />
                         </Stack>
                         <Stack spacing={.25}>
                             <Text size="medium">Link</Text>
