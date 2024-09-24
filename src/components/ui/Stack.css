@@ -3,10 +3,8 @@
     flex-direction: column;
     --spacing: 0;
     --padding: 0;
-    --margin: 0;
     gap: var(--spacing);
     padding: var(--padding);
-    margin: var(--margin);
 
     &.row {
         flex-direction: row;

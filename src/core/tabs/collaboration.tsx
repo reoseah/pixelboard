@@ -6,6 +6,7 @@ import { YjsContext } from "../../state/Yjs"
 import Button from "../../components/ui/Button"
 import Stack from "../../components/ui/Stack"
 import Text from "../../components/ui/Text"
+import Input from "../../components/ui/Input"
 
 const Collaboration: Tab = {
     place: "top",
@@ -34,12 +35,12 @@ const Collaboration: Tab = {
                     <Match when={yjs.room()}>
                         <Stack spacing={.25}>
                             <Text size="medium">Your name</Text>
-                            <input class="text-field-input" id="your-name" type="text" value={yjs.userName()} onchange={(e) => yjsActions.setUserName(e.currentTarget.value)} />
+                            <Input id="your-name" type="text" value={yjs.userName()} onchange={(e) => yjsActions.setUserName(e.currentTarget.value)} />
                         </Stack>
                         <Stack spacing={.25}>
                             <Text size="medium">Link</Text>
                             <Stack direction="row" spacing={.5}>
-                                <input class="text-field-input" id="link" type="text" readonly value={yjsActions.getShareUrl()}
+                                <Input id="link" type="text" readonly value={yjsActions.getShareUrl()}
                                     onclick={(e) => {
                                         e.preventDefault()
                                         e.currentTarget.select()

@@ -1,0 +1,33 @@
+.input {
+    border: none;
+    outline: none;
+    background: none;
+    border-radius: .25rem;
+    font-size: .875rem;
+    color: var(--neutral-100);
+    padding-inline: .5rem;
+    height: 2rem;
+    background: var(--neutral-750);
+    border: 0.0625rem solid var(--neutral-750);
+    flex-shrink: 1;
+    min-width: 0;
+
+    &:hover:not(:focus) {
+        border: 0.0625rem solid var(--neutral-675);
+    }
+
+    &:focus {
+        border: .0625rem solid var(--primary-500);
+    }
+
+    &:read-only {
+        background: transparent;
+        border: 0.0625rem solid var(--neutral-750);
+        color: var(--neutral-300);
+    }
+
+    &::placeholder {
+        color: var(--neutral-400);
+        opacity: 1;
+    }
+}
