@@ -113,3 +113,11 @@ kbd {
 .neutral-400 {
     color: var(--neutral-400);
 }
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.w-3\.5rem {
+    width: 3.5rem;
+}

@@ -20,7 +20,6 @@ const MenuDivider = () => {
 }
 
 const MenuOption = (props: {
-    value: string
     selected?: boolean
     onClick: () => void
     children: string

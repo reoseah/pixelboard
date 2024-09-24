@@ -24,17 +24,16 @@
 .color-selector-thumb,
 .hue-slider-thumb {
     position: absolute;
-    box-sizing: content-box;
     pointer-events: none;
-    width: .5rem;
-    height: .5rem;
+    width: .75rem;
+    height: .75rem;
     border-radius: 50%;
     border: .125rem solid white;
     translate: -50% -50%;
 }
 
 .hue-slider-thumb {
-    width: .375rem;
-    height: 1rem;
+    width: .625rem;
+    height: 1.25rem;
     border-radius: 10rem;
 }

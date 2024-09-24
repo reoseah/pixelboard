@@ -29,6 +29,10 @@
     outline: none;
   }
 
+  &:not(:has(>svg:first-child)) {
+    padding-left: .5rem;
+  }
+
   &>:not(svg) {
     flex: 1;
   }
