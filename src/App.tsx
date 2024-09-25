@@ -7,8 +7,8 @@ import Tool from './core/tools/tool'
 import { CurrentToolContext } from './state/CurrentTool'
 import SideLayout from './components/features/sidebar/SideLayout'
 import Sidebar from './components/features/sidebar/Sidebar'
-import MainToolbar from './components/features/tools/MainToolbar'
-import TopCenterLayout from './components/features/tools/TopCenterLayout'
+import MainToolbar from './components/features/toolbar/MainToolbar'
+import TopCenterLayout from './components/features/toolbar/TopCenterLayout'
 import SelectionRenderer from './components/features/viewport/SelectionRenderer'
 import ViewportContainer from './components/features/viewport/ViewportContainer'
 import VirtualCanvasRenderer from './components/features/viewport/VirtualCanvasRenderer'
@@ -30,6 +30,7 @@ function App() {
       <SideLayout>
         <Sidebar />
       </SideLayout>
+      <CurrentToolRenderer map={(tool) => tool.use} />
     </>
   )
 }

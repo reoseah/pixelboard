@@ -4,11 +4,9 @@ type Tool = {
     label: string
     icon: Component
 
+    use?: Component & (() => undefined)
     subToolbar?: Component
     viewport?: Component
-
-    onSelect?: (prev: string) => void
-    onDeselect?: () => void
 }
 
 export default Tool

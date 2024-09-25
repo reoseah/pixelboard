@@ -3,24 +3,24 @@ import { createContext, createRoot } from "solid-js"
 import type Tool from "../core/tools/tool"
 import createSelect from "../core/tools/select"
 import createPencil from "../core/tools/pencil"
+import SelectRectangle from "../core/tools/select_rectangle"
+import createCrop from "../core/tools/crop"
 
 import { type CanvasActionType } from "../core/canvas_actions/canvas_action"
 import { PencilStrokeType } from "../core/canvas_actions/pencil_stroke"
+import { DeleteRectangleType } from "../core/canvas_actions/delete_rectangle"
 
 import type Command from "../core/command/command"
-import createSelectRectangle from "../core/tools/select_rectangle"
 import createCommandPalette from "../core/tools/command_palette"
 import { ClearProject } from "../core/command/virtual_canvas_commands"
+import { DeleteSelection, Deselect, Reselect } from "../core/command/selection_commands"
+import { createTabCommand, ToggleSidebar } from "../core/command/sidebar_commands"
 import { createSelectToolCommand } from "../core/command/tool_commands"
 
 import type Tab from "../core/tabs/tab"
 import MainMenu from "../core/tabs/main_menu"
 import Color from "../core/tabs/color"
 import Settings from "../core/tabs/settings"
-import { createTabCommand, ToggleSidebar } from "../core/command/sidebar_commands"
-import createCrop from "../core/tools/crop"
-import { DeleteSelection, Deselect, Reselect } from "../core/command/selection_commands"
-import { DeleteRectangleType } from "../core/canvas_actions/delete_rectangle"
 import Collaboration from "../core/tabs/collaboration"
 
 export type Registry = {
@@ -36,7 +36,7 @@ const DefaultRegistry: Registry = createRoot(() => {
             "select": createSelect(),
             "pencil": createPencil(),
             "crop": createCrop(),
-            "select_rectangle": createSelectRectangle(),
+            "select_rectangle": SelectRectangle,
             "command_palette": createCommandPalette()
         },
         actionTypes: {

@@ -1,5 +1,5 @@
 import "./pencil.css"
-import { createSignal, For, Show, useContext } from 'solid-js'
+import { createSignal, For, onCleanup, Show, useContext } from 'solid-js'
 import { makePersisted } from "@solid-primitives/storage"
 import Tool, { isViewportClick } from './tool'
 import { ViewportPositionContext } from '../../state/ViewportPosition'
@@ -183,16 +183,17 @@ const createPencil = (): Tool => {
         label: "Pencil",
         icon: PencilIcon,
         subToolbar: PencilToolbar,
-        onSelect: () => {
+        use: () => {
             document.addEventListener("mousedown", handleMouseDown)
             document.addEventListener("mousemove", handleMouseMove)
             document.addEventListener("mouseup", handleMouseUp)
-        },
-        onDeselect: () => {
-            document.removeEventListener("mousedown", handleMouseDown)
-            document.removeEventListener("mousemove", handleMouseMove)
-            document.removeEventListener("mouseup", handleMouseUp)
-            currentAction = null
+
+            onCleanup(() => {
+                document.removeEventListener("mousedown", handleMouseDown)
+                document.removeEventListener("mousemove", handleMouseMove)
+                document.removeEventListener("mouseup", handleMouseUp)
+                currentAction = null
+            })
         }
     }
 }
