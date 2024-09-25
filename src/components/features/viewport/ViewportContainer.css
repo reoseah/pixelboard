@@ -5,8 +5,9 @@
     isolation: isolate;
     overflow: hidden;
 
-    [data-active-tool="pencil"],
-    [data-active-tool="select_rectangle"] {
+    &[data-active-tool="pencil"],
+    &[data-active-tool="crop"],
+    &[data-active-tool="select_rectangle"] {
         cursor: crosshair;
     }
 

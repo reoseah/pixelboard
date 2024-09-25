@@ -9,12 +9,12 @@ import NumberInput from "../../ui/NumberInput"
 import { Select, Option, OptionDivider } from "../../ui/Select"
 import Stack from "../../ui/Stack"
 import ToggleButton from "../../ui/ToggleButton"
-import CircleIcon from "../../assets/icons/circle.svg"
-import SquareIcon from "../../assets/icons/square.svg"
-import CircleFilledIcon from "../../assets/icons/circle-filled.svg"
-import SquareFilledIcon from "../../assets/icons/square-filled.svg"
-import StrokeWidthIcon from "../../assets/icons/stroke-width.svg"
-import DropIcon from "../../assets/icons/drop.svg"
+import CircleIcon from "../../../assets/icons/circle.svg"
+import SquareIcon from "../../../assets/icons/square.svg"
+import CircleFilledIcon from "../../../assets/icons/circle-filled.svg"
+import SquareFilledIcon from "../../../assets/icons/square-filled.svg"
+import StrokeWidthIcon from "../../../assets/icons/stroke-width.svg"
+import DropIcon from "../../../assets/icons/drop.svg"
 
 const PencilToolbar = () => {
     const color = useContext(CurrentColorContext)
