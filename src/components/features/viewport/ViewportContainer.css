@@ -5,9 +5,15 @@
     isolation: isolate;
     overflow: hidden;
 
+    [data-active-tool="pencil"],
+    [data-active-tool="select_rectangle"] {
+        cursor: crosshair;
+    }
+
     &[data-dragging="true"] {
         cursor: grabbing;
     }
+
 }
 
 .viewport-pixel-grid {
