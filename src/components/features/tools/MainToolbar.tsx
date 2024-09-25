@@ -3,7 +3,7 @@ import { For, useContext } from "solid-js"
 import { CurrentToolContext } from "../../../state/CurrentTool"
 import DefaultKeymap, { stringifyKeybind } from "../../../state/Keymap"
 import { RegistryContext } from "../../../state/Registry"
-import Toolbar from "../../ui/Toolbar"
+import Stack from "../../ui/Stack"
 
 const MainToolbar = () => {
     const { tools } = useContext(RegistryContext)
@@ -20,7 +20,7 @@ const MainToolbar = () => {
     }, {} as Record<string, string>)
 
     return (
-        <Toolbar>
+        <Stack class="island" spacing={.25} padding={.1875} direction="row">
             <For each={Object.entries(tools)}>
                 {([id, tool]) => (
                     <button
@@ -35,7 +35,7 @@ const MainToolbar = () => {
                     </button>
                 )}
             </For>
-        </Toolbar>
+        </Stack>
     )
 }
 

@@ -13,7 +13,6 @@ import InputGroup from '../../components/ui/InputGroup'
 import NumberInput from '../../components/ui/NumberInput'
 import ToggleButton from '../../components/ui/ToggleButton'
 import ColorInput from "../../components/ui/ColorInput"
-import Toolbar from "../../components/ui/Toolbar"
 import PencilIcon from '../../assets/icons/pencil.svg'
 import CircleIcon from "../../assets/icons/circle.svg"
 import SquareIcon from "../../assets/icons/square.svg"
@@ -21,6 +20,7 @@ import CircleFilledIcon from "../../assets/icons/circle-filled.svg"
 import SquareFilledIcon from "../../assets/icons/square-filled.svg"
 import StrokeWidthIcon from "../../assets/icons/stroke-width.svg"
 import DropIcon from "../../assets/icons/drop.svg"
+import Stack from "../../components/ui/Stack"
 
 const createPencil = (): Tool => {
     const [, viewportActions] = useContext(ViewportPositionContext)
@@ -88,7 +88,7 @@ const createPencil = (): Tool => {
 
     const PencilToolbar = () => {
         return (
-            <Toolbar>
+            <Stack class="island" spacing={.25} padding={.1875} direction="row">
                 <InputGroup>
                     <ToggleButton
                         title="Round brush shape"
@@ -175,7 +175,7 @@ const createPencil = (): Tool => {
                         size={3}
                         unit={'%'} />
                 </InputGroup>
-            </Toolbar>
+            </Stack>
         )
     }
 

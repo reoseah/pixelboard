@@ -2,68 +2,8 @@ import * as Y from 'yjs'
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { WebrtcProvider } from 'y-webrtc'
 import { Accessor, createContext, createEffect, createRoot, createSignal, onCleanup } from 'solid-js'
-import { createStore, reconcile } from 'solid-js/store'
 import { makePersisted } from '@solid-primitives/storage'
-
-const useSearchParams = <T extends Record<string, string>>() => {
-    const [searchParams, setSearchParamsInternal] = createStore<Partial<T>>({})
-
-    const update = () => {
-        const searchParams = new URLSearchParams(window.location.search)
-        const params: Record<string, string> = {}
-        for (const [key, value] of searchParams) {
-            params[key] = value || ''
-        }
-        setSearchParamsInternal(reconcile(params as T))
-    }
-
-    update()
-
-    window.addEventListener('popstate', update)
-    onCleanup(() => {
-        window.removeEventListener('popstate', update)
-    })
-
-    const setSearchParams = (params: Partial<T>) => {
-        const searchParams = new URLSearchParams()
-        for (const key in params) {
-            searchParams.set(key, params[key] || '')
-        }
-        window.history.pushState({}, '', `${window.location.pathname}?${searchParams}`)
-        update()
-    }
-
-    return [searchParams, setSearchParams] as const
-}
-
-const userNamePool = [
-    "Authentic Anthelope",
-    "Brave Bear",
-    "Curious Camel",
-    "Daring Dog",
-    "Energetic Elephant",
-    "Fearless Fox",
-    "Gallant Giraffe",
-    "Honest Hedgehog",
-    "Inquisitive Iguana",
-    "Jolly Jaguar",
-    "Keen Kangaroo",
-    "Lively Lemur",
-    "Mighty Moose",
-    "Noble Narwhal",
-    "Optimistic Owl",
-    "Playful Panda",
-    "Quick Quokka",
-    "Resilient Rabbit",
-    "Spirited Squirrel",
-    "Tenacious Tiger",
-    "Unique Unicorn",
-    "Valiant Vulture",
-    "Wise Wolf",
-    "Xenial Xerus",
-    "Youthful Yak",
-    "Zealous Zebra"
-]
+import useSearchParams from '../hooks/useSearchParams'
 
 export type YjsState = {
     ydoc: Y.Doc,
@@ -82,6 +22,39 @@ export type YjsActions = {
     setUserName: (name: string) => void
 }
 
+type YjsSearchParams = {
+    room?: string
+}
+
+const userNamePool = [
+    "Authentic Anthelope",
+    "Brave Bear",
+    "Curious Cat",
+    "Daring Dog",
+    "Energetic Elephant",
+    "Fearless Fox",
+    "Generous Gazelle",
+    "Humble Hamster",
+    "Inquisitive Iguana",
+    "Jolly Jaguar",
+    "Keen Kangaroo",
+    "Leisurely Lemur",
+    "Magnetic Mongoose",
+    "Nimble Newt",
+    "Omniscient Ocelot",
+    "Playful Panda",
+    "Quick Quokka",
+    "Resolute Racoon",
+    "Savvy Squirrel",
+    "Tenacious Tiger",
+    "Unbiased Urial",
+    "Veracious Vervet",
+    "Wise Wolf",
+    "Xenial Xerus",
+    "Youthful Yak",
+    "Zealous Zebra"
+]
+
 export const Yjs: [
     state: YjsState,
     actions: YjsActions
@@ -90,9 +63,7 @@ export const Yjs: [
     const persistence = new IndexeddbPersistence('project', ydoc)
     const webrtcNoSignalling = new WebrtcProvider("browser-tabs", ydoc, { signaling: [] })
 
-    const [searchParams, setSearchParams] = useSearchParams<{
-        room?: string
-    }>()
+    const [searchParams, setSearchParams] = useSearchParams<YjsSearchParams>()
     const [userName, setUserNameInternal] = makePersisted(createSignal<string>(userNamePool[Math.floor(Math.random() * userNamePool.length)]), { name: 'collaboration-username' })
     let webrtcProvider: WebrtcProvider | undefined = undefined
 
