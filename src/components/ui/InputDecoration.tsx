@@ -11,7 +11,10 @@ const InputDecoration = (props: {
     ] = splitProps(props, ["children", "class"])
 
     return (
-        <div class={`input-decoration${className ? ` ${className}` : ""}`}>
+        <div
+            class={`input-decoration${className ? ` ${className}` : ""}`}
+            {...rest}
+        >
             {children}
         </div>
     )
