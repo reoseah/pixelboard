@@ -110,8 +110,12 @@ kbd {
     display: none;
 }
 
-.neutral-400 {
-    color: var(--neutral-400);
+.island {
+    background: var(--neutral-825);
+    border-radius: .375rem;
+    border: .0625rem solid var(--neutral-750);
+    padding: .1875rem;
+    z-index: 200;
 }
 
 .flex-grow {
@@ -126,9 +130,7 @@ kbd {
     width: 3.5rem;
 }
 
-.island {
-    background: var(--neutral-825);
-    border-radius: .375rem;
-    border: .0625rem solid var(--neutral-750);
-    padding: .1875rem;
+.w-5rem {
+    width: 5rem;
 }
+
