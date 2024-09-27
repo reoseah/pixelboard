@@ -15,6 +15,9 @@ export const isViewportClick = (e: MouseEvent): boolean => {
     if (!(e.target as Element)?.closest(".viewport")) {
         return false
     }
+    if ((e.target as Element)?.closest(".island")) {
+        return false
+    }
     if (e.button !== 0) {
         return false
     }

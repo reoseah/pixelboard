@@ -11,12 +11,12 @@ export type CanvasActionType<T extends CanvasAction = any> = {
 }
 
 export type VirtualCanvasAccess = {
-    readonly tileSize: number
+    readonly tileSize?: number
     readonly allowList?: {
         type: "blacklist" | "whitelist"
         tiles: Map<number, Set<number>>
     }
-    getOrCreateContext: (column: number, row: number) => CanvasRenderingContext2D
+    getOrCreateContext: (column: number, row: number) => CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
 
     get: (x: number, y: number) => number
     set: (x: number, y: number, color: number | string) => void

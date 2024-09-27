@@ -1,0 +1,38 @@
+.icon-button {
+    height: 1.5rem;
+    width: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: .25rem;
+    color: var(--icon-button-color);
+    background-color: var(--icon-button-background);
+    border: none;
+
+    &:hover {
+        background-color: var(--icon-button-hover-background);
+    }
+
+    &:active {
+        background-color: var(--icon-button-active-background);
+    }
+
+    &:focus-visible {
+        outline: none;
+        background-color: var(--icon-button-hover-background);
+    }
+}
+
+button.primary {
+    --icon-button-color: white;
+    --icon-button-background: var(--primary-600);
+    --icon-button-hover-background: var(--primary-700);
+    --icon-button-active-background: var(--primary-800);
+}
+
+button.danger {
+    --icon-button-color: white;
+    --icon-button-background: var(--danger-600);
+    --icon-button-hover-background: var(--danger-700);
+    --icon-button-active-background: var(--danger-800);
+}

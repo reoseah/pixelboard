@@ -5,6 +5,7 @@ import { VirtualCanvasAccess, CanvasAction, CanvasActionType } from '../../../co
 import { RegistryContext } from '../../../state/Registry'
 import { ViewportPositionContext } from '../../../state/ViewportPosition'
 import { VirtualCanvasContext } from '../../../state/VirtualCanvas'
+import { doRectanglesIntersect } from '../../../core/rectangle'
 
 const tileSize = 32
 
@@ -196,16 +197,6 @@ const affectsChunk = <T extends CanvasAction = any,>(type: CanvasActionType<T>, 
         height: tileSize - 1
     }
     return doRectanglesIntersect(actionBounds, chunkBounds)
-}
-
-const doRectanglesIntersect = (
-    a: { x: number, y: number, width: number, height: number },
-    b: { x: number, y: number, width: number, height: number }
-) => {
-    return a.x < b.x + b.width
-        && a.x + a.width > b.x
-        && a.y < b.y + b.height
-        && a.y + a.height > b.y
 }
 
 const getAffectedChunks = <T extends CanvasAction = any,>(type: CanvasActionType<T>, action: T, tileSize: number) => {
