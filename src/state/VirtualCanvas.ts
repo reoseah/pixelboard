@@ -52,45 +52,7 @@ export const VirtualCanvas: [
             state.actions.delete(0, state.actions.length)
         })
     }
-
-    // const renderArea = (x: number, y: number, width: number, height: number, options: ImageEncodeOptions): Promise<Blob> => {
-    //     const bounds = { x, y, width, height }
-
-    //     const canvas = new OffscreenCanvas(width, height)
-    //     const ctx = canvas.getContext('2d')!
-
-    //     const access: VirtualCanvasAccess = {
-    //         getOrCreateContext() {
-    //             return ctx;
-    //         },
-    //         get(x, y) {
-    //             const imageData = ctx.getImageData(x - bounds.x, y - bounds.y, 1, 1)
-    //             return imageData.data[0]
-    //         },
-    //         set(x, y, color) {
-    //             ctx.fillStyle = color.toString()
-    //             ctx.fillRect(x - bounds.x, y - bounds.y, 1, 1)
-    //         },
-    //         clearRect(x, y, width, height) {
-    //             ctx.clearRect(x - bounds.x, y - bounds.y, width, height)
-    //         }
-    //     }
-
-    //     state.actions.forEach(action => {
-    //         const type = DefaultRegistry.actionTypes[action.type]
-    //         if (!type) {
-    //             console.error(`Unknown action type ${action.type}`, action)
-    //             return
-    //         }
-    //         const actionBounds = type.getBounds(action)
-    //         if (doRectanglesIntersect(actionBounds, bounds)) {
-    //             type.render(action, access)
-    //         }
-    //     })
-
-    //     return canvas.convertToBlob(options)
-    // }
-
+    
     const renderArea = (x: number, y: number, width: number, height: number, scale: number, options: ImageEncodeOptions): Promise<Blob> => {
         const bounds = { x, y, width, height }
 

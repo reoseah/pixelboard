@@ -19,7 +19,9 @@ export type YjsActions = {
     startSession: () => void,
     endSession: () => void,
     getShareUrl: () => string | undefined,
-    setUserName: (name: string) => void
+    setUserName: (name: string) => void,
+    serialize: () => Promise<Uint8Array>,
+    deserialize: (data: Uint8Array) => void
 }
 
 type YjsSearchParams = {
@@ -85,6 +87,28 @@ export const Yjs: [
         return `${window.location.origin}?room=${room}`
     }
 
+    const setUserName = (name: string) => {
+        setUserNameInternal(name)
+        if (webrtcProvider) {
+            webrtcProvider.awareness.setLocalStateField('user', {
+                name
+            })
+        }
+    }
+
+    const serialize = async () => {
+        console.log('Serialized', JSON.stringify(ydoc.toJSON()))
+        return Y.encodeStateAsUpdate(ydoc)
+    }
+
+    const deserialize = (data: Uint8Array) => {
+        console.log('Deserializing', JSON.stringify(ydoc.toJSON()))
+        ydoc.transact(() => {
+            Y.applyUpdate(ydoc, data)
+        })
+        console.log('Deserialized', JSON.stringify(ydoc.toJSON()))
+    }
+
     createEffect(() => {
         const room = searchParams.room
         if (!room) {
@@ -109,15 +133,6 @@ export const Yjs: [
         webrtcProvider.connect()
     })
 
-    const setUserName = (name: string) => {
-        setUserNameInternal(name)
-        if (webrtcProvider) {
-            webrtcProvider.awareness.setLocalStateField('user', {
-                name
-            })
-        }
-    }
-
     onCleanup(() => {
         webrtcProvider?.disconnect()
         webrtcProvider?.destroy()
@@ -135,7 +150,9 @@ export const Yjs: [
         startSession,
         endSession,
         getShareUrl,
-        setUserName
+        setUserName,
+        serialize,
+        deserialize
     }]
 })
 
