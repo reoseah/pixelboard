@@ -85,6 +85,7 @@ const SelectionRenderer = () => {
           <Select
             value={saveFormats.find(format => format.value === saveFormat())?.label || "Unknown"}
             class="w-3.5rem"
+            title="Export format"
           >
             {(close) => (
               <For each={saveFormats}>
@@ -103,31 +104,30 @@ const SelectionRenderer = () => {
             )}
           </Select>
 
-          <InputDecoration>
-            <ResizeIcon />
-            <Input
-              small
-              class="w-3.5rem"
-              value={saveScale() + "x"}
-              onfocus={(e) => {
-                e.currentTarget.value = saveScale().toString()
-                e.currentTarget.select()
-              }}
-              onkeydown={(e) => {
-                if (e.key === "Enter" || e.key === "Escape") {
-                  e.currentTarget.blur()
-                }
-              }}
-              onblur={(e) => {
-                const value = parseFloat(e.currentTarget.value)
-                if (!isNaN(value)) {
-                  setSaveScale(value)
-                }
-              }}
-            />
-          </InputDecoration>
+          <Input
+            small
+            class="w-2.5rem"
+            title="Export scale"
+            value={saveScale() + "x"}
+            onfocus={(e) => {
+              e.currentTarget.value = saveScale().toString()
+              e.currentTarget.select()
+            }}
+            onkeydown={(e) => {
+              if (e.key === "Enter" || e.key === "Escape") {
+                e.currentTarget.blur()
+              }
+            }}
+            onblur={(e) => {
+              const value = parseFloat(e.currentTarget.value)
+              if (!isNaN(value)) {
+                setSaveScale(value)
+              }
+            }}
+          />
 
           <IconButton
+            title="Export selection"
             onclick={() => {
               virtualCanvas.renderArea(
                 bounds().x,

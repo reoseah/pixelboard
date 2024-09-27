@@ -74,6 +74,7 @@ const PencilToolbar = () => {
             <InputGroup>
                 <Select
                     class="pencil-toolbar-mode-select"
+                    title="Blending mode"
                     value={modeNames[mode()]}
                     icon={<DropIcon />}
                 >

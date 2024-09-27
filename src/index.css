@@ -118,6 +118,10 @@ kbd {
     flex-grow: 1;
 }
 
+.w-2\.5rem {
+    width: 2.5rem;
+}
+
 .w-3\.5rem {
     width: 3.5rem;
 }

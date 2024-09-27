@@ -36,3 +36,10 @@ button.danger {
     --icon-button-hover-background: var(--danger-700);
     --icon-button-active-background: var(--danger-800);
 }
+
+button.neutral {
+    --icon-button-color: var(--neutral-100);
+    --icon-button-background: var(--neutral-750);
+    --icon-button-hover-background: var(--neutral-675);
+    --icon-button-active-background: var(--neutral-600);
+}

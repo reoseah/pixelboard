@@ -8,6 +8,7 @@ export const Select = (props: {
   value: string
   children: (close: () => void) => JSX.Element
   class?: string
+  title?: string
 }) => {
   return (
     <Selectlike
@@ -20,6 +21,7 @@ export const Select = (props: {
           <ChevronDownIcon class="neutral-400" />
         </>
       }
+      title={props.title}
       children={(setRef, close) => (<Menu ref={setRef}>{props.children(close)}</Menu>)}
       classes={{
         root: `select ${props.class ?? ''}`,
@@ -31,6 +33,7 @@ export const Select = (props: {
 
 export const Selectlike = (props: {
   button: JSX.Element
+  title?: string
   children: (setRef: (el: HTMLElement) => void, close: () => void) => JSX.Element
   classes: {
     root: string
@@ -64,6 +67,7 @@ export const Selectlike = (props: {
     >
       <button
         class={props.classes.button}
+        title={props.title}
         aria-expanded={expanded()}
         onclick={(e) => {
           e.stopImmediatePropagation()
