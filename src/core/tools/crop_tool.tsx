@@ -4,16 +4,21 @@ import Tool from './tool'
 import { ViewportPositionContext } from '../../state/ViewportPosition'
 import { SharedRectangleStateContext } from '../../state/RectangleToolsState'
 import CropPreview from '../../components/features/tools/CropPreview'
+import { BoardContext } from '../../state/BoardElements'
 
 const createCrop = (): Tool => {
     return {
-        label: "Frame/Crop",
+        label: "Crop/Frame",
         icon: CropIcon,
         viewport: CropPreview,
         use: () => {
             const [, viewport] = useContext(ViewportPositionContext)
+            const [, elements] = useContext(BoardContext)
+
             const {
+                initialPos,
                 setInitialPos,
+                currentPos,
                 setCurrentPos,
                 dragging,
                 setDragging
@@ -29,6 +34,8 @@ const createCrop = (): Tool => {
                 setInitialPos({ x, y })
                 setCurrentPos({ x, y })
                 setDragging(true)
+
+                e.preventDefault()
             }
 
             const handleMouseMove = (e: MouseEvent) => {
@@ -38,6 +45,7 @@ const createCrop = (): Tool => {
                 const x = viewport.toCanvasX(e.clientX)
                 const y = viewport.toCanvasY(e.clientY)
                 setCurrentPos({ x, y })
+                e.preventDefault()
             }
 
             const handleMouseUp = (e: MouseEvent) => {
@@ -46,6 +54,21 @@ const createCrop = (): Tool => {
                 }
                 if (!dragging()) {
                     return
+                }
+
+                const x = Math.round(Math.min(initialPos().x, currentPos().x))
+                const y = Math.round(Math.min(initialPos().y, currentPos().y))
+                const width = Math.round(Math.abs(currentPos().x - initialPos().x))
+                const height = Math.round(Math.abs(currentPos().y - initialPos().y))
+
+                if (width > 0 && height > 0) {
+                    elements.set(crypto.randomUUID(), {
+                        type: "crop",
+                        x,
+                        y,
+                        width,
+                        height
+                    })
                 }
 
                 setDragging(false)
@@ -61,9 +84,6 @@ const createCrop = (): Tool => {
                 document.removeEventListener("mousedown", handleMouseDown)
                 document.removeEventListener("mousemove", handleMouseMove)
                 document.removeEventListener("mouseup", handleMouseUp)
-                // setDragging(false)
-                // setInitialPos({ x: 0, y: 0 })
-                // setCurrentPos({ x: 0, y: 0 })
             })
         }
     }

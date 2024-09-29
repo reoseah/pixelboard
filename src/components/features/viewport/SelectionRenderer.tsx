@@ -7,9 +7,7 @@ import Stack from "../../ui/Stack"
 import IconButton from "../../ui/IconButton"
 import InputGroup from "../../ui/InputGroup"
 import Input from "../../ui/Input"
-import InputDecoration from "../../ui/InputDecoration"
 import SaveIcon from "../../../assets/icons/save.svg"
-import ResizeIcon from "../../../assets/icons/resize.svg"
 import { Select, Option } from "../../ui/Select"
 
 const saveFormats = [

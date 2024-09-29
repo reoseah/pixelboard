@@ -1,8 +1,8 @@
 import * as Y from 'yjs'
-import { CanvasAction, VirtualCanvasAccess } from '../core/canvas_actions/canvas_action'
-import { YjsContext } from './Yjs'
 import { createContext, useContext } from 'solid-js'
+import { YjsContext } from './Yjs'
 import DefaultRegistry from './Registry'
+import { CanvasAction, VirtualCanvasAccess } from '../core/canvas_actions/canvas_action'
 import { doRectanglesIntersect } from '../core/rectangle'
 
 export type VirtualCanvasState = {
@@ -90,7 +90,6 @@ export const VirtualCanvas: [
 
         return canvas.convertToBlob(options)
     }
-
 
     const actions = {
         add,

@@ -16,39 +16,14 @@ export const CurrentTool: CurrentTool = createRoot(() => {
         setId("select")
     }
 
-    requestAnimationFrame(() => {
-        const tool = Registry.tools[id()]
-        if (tool?.onSelect) {
-            tool.onSelect("select")
-        }
-    })
-
-    if (import.meta.hot) {
-        onCleanup(() => {
-            const tool = Registry.tools[id()]
-            if (tool?.onDeselect) {
-                tool.onDeselect()
-            }
-        })
-    }
-
     const selectId = (targetId: string) => {
         const prevId = id()
         if (prevId === targetId) {
             return
         }
-        const prevTool = Registry.tools[prevId]
-        if (prevTool?.onDeselect) {
-            prevTool.onDeselect()
-        }
 
         setId(targetId)
         setPrevId(prevId)
-
-        const tool = Registry.tools[targetId]
-        if (tool?.onSelect) {
-            tool.onSelect(prevId)
-        }
     }
 
     return { id, selectId, prevId }

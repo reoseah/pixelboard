@@ -1,0 +1,49 @@
+.crop {
+    position: absolute;
+    outline: .0625rem solid var(--neutral-500);
+
+    &[data-highlighted="true"] {
+        outline: .0625rem solid var(--primary-500);
+    }
+
+    &[data-selected="true"] {
+        outline: .125rem solid var(--primary-500);
+    }
+}
+
+.crop-title {
+    position: absolute;
+    left: 0;
+    top: -1.3125rem;
+    font-size: .75rem;
+    color: var(--neutral-400);
+    z-index: 100;
+    width: min-content;
+    max-width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    .crop[data-highlighted="true"] & {
+        color: var(--primary-400);
+    }
+
+    .crop[data-selected="true"] & {
+        color: var(--primary-400);
+    }
+}
+
+.crop-title-editor {
+    font-size: .75rem;
+    background-color: var(--neutral-800);
+    color: white;
+    border: 1px solid var(--primary-400);
+    outline: none;
+    padding: .125rem .25rem;
+    border-radius: .25rem;
+    max-width: 100%;
+    position: absolute;
+    left: -.3125rem;
+    top: -1.5rem;
+    box-sizing: content-box;
+}

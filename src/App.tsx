@@ -1,5 +1,5 @@
 import './App.css'
-import { Component, createMemo, onCleanup, Show, useContext } from 'solid-js'
+import { Component, createMemo, For, onCleanup, Show, useContext } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 import Registry, { RegistryContext } from './state/Registry'
 import DefaultKeymap from './state/Keymap'
@@ -12,6 +12,9 @@ import TopCenterLayout from './components/features/toolbar/TopCenterLayout'
 import SelectionRenderer from './components/features/viewport/SelectionRenderer'
 import ViewportContainer from './components/features/viewport/ViewportContainer'
 import VirtualCanvasRenderer from './components/features/viewport/VirtualCanvasRenderer'
+import { BoardContext } from './state/BoardElements'
+import { createStore, reconcile } from 'solid-js/store'
+import BoardElement from './core/board_elements/board_element'
 
 function App() {
   useCommandKeybinds()
@@ -22,6 +25,7 @@ function App() {
         <VirtualCanvasRenderer />
         <CurrentToolRenderer map={(tool) => tool.viewport} />
         <SelectionRenderer />
+        <ElementsRenderer />
       </ViewportContainer>
       <TopCenterLayout>
         <MainToolbar />
@@ -88,3 +92,25 @@ const useCommandKeybinds = () => {
 }
 
 export default App
+
+const ElementsRenderer = () => {
+  const [board] = useContext(BoardContext)
+  const { elementTypes } = useContext(RegistryContext)
+
+  const [store, setStore] = createStore<Record<string, BoardElement>>({})
+
+  board.elements.observe((event) => {
+    setStore(reconcile(board.elements.toJSON()))
+  })
+
+  return (
+    <For each={Object.entries(store)}>
+      {([id, element]) => {
+        const type = elementTypes[element.type]
+        return (
+          <Dynamic component={type.render} id={id} element={element} />
+        )
+      }}
+    </For>
+  )
+}

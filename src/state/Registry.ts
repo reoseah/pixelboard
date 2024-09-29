@@ -4,7 +4,7 @@ import type Tool from "../core/tools/tool"
 import createSelect from "../core/tools/select"
 import createPencil from "../core/tools/pencil"
 import SelectRectangle from "../core/tools/select_rectangle"
-import createCrop from "../core/tools/crop"
+import createCrop from "../core/tools/crop_tool"
 
 import { type CanvasActionType } from "../core/canvas_actions/canvas_action"
 import { PencilStrokeType } from "../core/canvas_actions/pencil_stroke"
@@ -22,10 +22,13 @@ import MainMenu from "../core/tabs/main_menu"
 import Color from "../core/tabs/color"
 import Settings from "../core/tabs/settings"
 import Collaboration from "../core/tabs/collaboration"
+import { BoardElementType } from "../core/board_elements/board_element"
+import { CropType } from "../core/board_elements/crop"
 
 export type Registry = {
     tools: Record<string, Tool>,
     actionTypes: Record<string, CanvasActionType>,
+    elementTypes: Record<string, BoardElementType>,
     commands: Record<string, Command>,
     tabs: Record<string, Tab>
 }
@@ -35,13 +38,16 @@ const DefaultRegistry: Registry = createRoot(() => {
         tools: {
             "select": createSelect(),
             "pencil": createPencil(),
-            "crop": createCrop(),
             "select_rectangle": SelectRectangle,
+            "crop": createCrop(),
             "command_palette": createCommandPalette()
         },
         actionTypes: {
             "pencil_stroke": PencilStrokeType,
             "delete_rectangle": DeleteRectangleType
+        },
+        elementTypes: {
+            "crop": CropType
         },
         commands: {
             "select_tool.select": createSelectToolCommand("select"),
