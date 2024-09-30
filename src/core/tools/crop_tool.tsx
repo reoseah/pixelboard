@@ -1,10 +1,11 @@
 import { onCleanup, useContext } from 'solid-js'
-import CropIcon from '../../assets/icons/crop.svg'
-import Tool from './tool'
+import Tool, { isViewportClick } from './tool'
 import { ViewportPositionContext } from '../../state/ViewportPosition'
-import { SharedRectangleStateContext } from '../../state/RectangleToolsState'
-import CropPreview from '../../components/features/tools/CropPreview'
+import { SharedRectangleStateContext } from '../../state/SharedRectangleState'
 import { BoardContext } from '../../state/BoardElements'
+import { CurrentToolContext } from '../../state/CurrentTool'
+import CropPreview from '../../components/features/tools/CropPreview'
+import CropIcon from '../../assets/icons/crop.svg'
 
 const createCrop = (): Tool => {
     return {
@@ -14,6 +15,7 @@ const createCrop = (): Tool => {
         use: () => {
             const [, viewport] = useContext(ViewportPositionContext)
             const [, elements] = useContext(BoardContext)
+            const currentTool = useContext(CurrentToolContext)
 
             const {
                 initialPos,
@@ -25,6 +27,9 @@ const createCrop = (): Tool => {
             } = useContext(SharedRectangleStateContext)
 
             const handleMouseDown = (e: MouseEvent) => {
+                if (!isViewportClick(e)) {
+                    return
+                }
                 if (e.button !== 0) {
                     return
                 }
@@ -74,16 +79,27 @@ const createCrop = (): Tool => {
                 setDragging(false)
                 setInitialPos({ x: 0, y: 0 })
                 setCurrentPos({ x: 0, y: 0 })
+                currentTool.selectId("select")
+            }
+
+            const handleKeyDown = (e: KeyboardEvent) => {
+                if (e.key === "Escape") {
+                    setDragging(false)
+                    setInitialPos({ x: 0, y: 0 })
+                    setCurrentPos({ x: 0, y: 0 })
+                }
             }
 
             document.addEventListener("mousedown", handleMouseDown)
             document.addEventListener("mousemove", handleMouseMove)
             document.addEventListener("mouseup", handleMouseUp)
+            document.addEventListener("keydown", handleKeyDown)
 
             onCleanup(() => {
                 document.removeEventListener("mousedown", handleMouseDown)
                 document.removeEventListener("mousemove", handleMouseMove)
                 document.removeEventListener("mouseup", handleMouseUp)
+                document.removeEventListener("keydown", handleKeyDown)
             })
         }
     }

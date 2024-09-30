@@ -2,7 +2,7 @@ import { onCleanup, useContext } from "solid-js"
 import Tool, { isViewportClick } from "./tool"
 import { ViewportPositionContext } from "../../state/ViewportPosition"
 import { SelectionContext } from "../../state/Selection"
-import { SharedRectangleStateContext } from "../../state/RectangleToolsState"
+import { SharedRectangleStateContext } from "../../state/SharedRectangleState"
 import SelectRectanglePreview from "../../components/features/tools/SelectRectanglePreview"
 import SelectionIcon from "../../assets/icons/selection.svg"
 

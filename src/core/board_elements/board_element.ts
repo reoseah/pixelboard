@@ -9,4 +9,5 @@ export default BoardElement
 
 export type BoardElementType<T extends BoardElement = any> = {
     render: Component<{ id: string, element: T }>
+    getBounds: (element: T) => { x: number, y: number, width: number, height: number }
 }

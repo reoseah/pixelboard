@@ -1,6 +1,6 @@
 import "./SelectRectanglePreview.css"
 import { useContext, Show } from "solid-js"
-import { SharedRectangleStateContext } from "../../../state/RectangleToolsState"
+import { SharedRectangleStateContext } from "../../../state/SharedRectangleState"
 import { ViewportPositionContext } from "../../../state/ViewportPosition"
 
 const SelectRectanglePreview = () => {

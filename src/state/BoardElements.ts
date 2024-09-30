@@ -1,9 +1,9 @@
 import * as Y from "yjs"
-import BoardElement from "../core/board_elements/board_element"
 import { Accessor, createRoot, createSignal } from "solid-js"
 import { createContext, useContext } from "solid-js"
 import { YjsContext } from "./Yjs"
-import { Store } from "solid-js/store"
+import BoardElement from "../core/board_elements/board_element"
+import DefaultRegistry from "./Registry"
 
 export type BoardElementsState = {
     elements: Y.Map<BoardElement>,
@@ -19,6 +19,8 @@ export type BoardElementsActions = {
     setEditingTitle: (id: string | null) => void
 
     clear: () => void
+
+    getElementsInside: (x: number, y: number, width: number, height: number) => string[]
 }
 
 export const BoardElements: [BoardElementsState, BoardElementsActions] = createRoot(() => {
@@ -47,6 +49,17 @@ export const BoardElements: [BoardElementsState, BoardElementsActions] = createR
 
         clear: () => {
             state.elements.clear()
+        },
+
+        getElementsInside: (x: number, y: number, width: number, height: number) => {
+            const elements: string[] = []
+            for (const [id, element] of state.elements) {
+                const bounds = DefaultRegistry.elementTypes[element.type].getBounds(element)
+                if (bounds.x >= x && bounds.y >= y && bounds.x + bounds.width <= x + width && bounds.y + bounds.height <= y + height) {
+                    elements.push(id)
+                }
+            }
+            return elements
         }
     }
 

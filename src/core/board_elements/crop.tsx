@@ -11,5 +11,11 @@ export type Crop = {
 }
 
 export const CropType: BoardElementType<Crop> = {
-    render: CropRenderer
+    render: CropRenderer,
+    getBounds: (crop) => ({
+        x: crop.x,
+        y: crop.y,
+        width: crop.width,
+        height: crop.height
+    }),
 }

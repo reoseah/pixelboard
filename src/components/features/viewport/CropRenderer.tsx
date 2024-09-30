@@ -16,9 +16,8 @@ const CropRenderer = (props: {
     return (
         <div
             class="crop"
-            data-node-id={props.id}
-            data-drawable
             data-selectable
+            data-element-id={props.id}
             data-selected={elements.selected().includes(props.id)}
             style={{
                 left: `${props.element.x * viewport.scale()}px`,
@@ -56,7 +55,7 @@ const FrameTitle = (props: {
         <div
             class="crop-title"
             style={style()}
-            data-frame-title
+            data-element-title
             ondblclick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
