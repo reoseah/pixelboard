@@ -1,40 +1,40 @@
 .input-decoration {
     position: relative;
 
-    &>:first-child {
+    & > :first-child {
         position: absolute;
     }
 
-    &>input {
+    & > input {
         width: 100%;
     }
 
     &:not(:has(>input.small)) {
-        &>:first-child {
+        & > :first-child {
             inset: .5rem auto .5rem .5rem;
         }
 
-        &>input {
+        & > input {
             padding-left: 2rem;
         }
     }
 
     &:has(>input.small) {
-        &>:first-child {
+        & > :first-child {
             inset: .25rem auto .25rem .25rem;
         }
 
-        &>input {
+        & > input {
             padding-left: 1.5rem;
         }
     }
 
-    .input-group>&:not(:first-child)>input {
+    .input-group >&:not(:first-child) > input {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
 
-    .input-group>&:not(:last-child)>input {
+    .input-group >&:not(:last-child) > input {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
     }

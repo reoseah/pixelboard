@@ -1,6 +1,6 @@
-import "./InputGroup.css"
+import { JSX } from 'solid-js'
 
-import { JSX } from "solid-js"
+import './InputGroup.css'
 
 export const InputGroup = (props: {
   children: JSX.Element

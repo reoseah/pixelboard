@@ -1,16 +1,16 @@
-import { Tab } from "../../../types/sidebar"
-import Stack from "../../../components/Stack"
-import SettingsIcon from "../../../assets/icons/settings.svg"
+import SettingsIcon from '../../../assets/icons/settings.svg'
+import Stack from '../../../components/Stack'
+import { Tab } from '../../../types/tab'
 
 const Settings: Tab = {
-    place: "bottom",
-    label: "Settings",
-    icon: SettingsIcon,
-    contents: () => (
-        <Stack spacing={.75} padding={.75}>
-            Settings (work in progress)
-        </Stack>
-    )
+  contents: () => (
+    <Stack padding={0.75} spacing={0.75}>
+      Settings (work in progress)
+    </Stack>
+  ),
+  icon: SettingsIcon,
+  label: 'Settings',
+  place: 'bottom',
 }
 
 export default Settings

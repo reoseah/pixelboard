@@ -1,24 +1,24 @@
 export type CanvasAction = {
-    type: string,
-    [data: string]: unknown
+  [data: string]: unknown
+  type: string
 }
 
-export type CanvasActionType<T extends CanvasAction = any> = {
-    getBounds: (action: T) => { x: number, y: number, width: number, height: number }
+export type CanvasActionType<T extends CanvasAction = CanvasAction> = {
+  getBounds: (action: T) => { height: number, width: number, x: number, y: number }
 
-    render: (action: T, canvas: VirtualCanvasAccess) => void
-    renderReplacement?: (oldAction: T, newAction: T, canvas: VirtualCanvasAccess) => boolean
+  render: (action: T, canvas: VirtualCanvasAccess) => void
+  renderReplacement?: (oldAction: T, newAction: T, canvas: VirtualCanvasAccess) => boolean
 }
 
 export type VirtualCanvasAccess = {
-    readonly tileSize?: number
-    readonly allowList?: {
-        type: "blacklist" | "whitelist"
-        tiles: Map<number, Set<number>>
-    }
-    getOrCreateContext: (column: number, row: number) => CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
+  readonly allowList?: {
+    tiles: Map<number, Set<number>>
+    type: 'blacklist' | 'whitelist'
+  }
+  clearRect: (x: number, y: number, width: number, height: number) => void
+  get: (x: number, y: number) => number
 
-    get: (x: number, y: number) => number
-    set: (x: number, y: number, color: number | string) => void
-    clearRect: (x: number, y: number, width: number, height: number) => void
+  getOrCreateContext: (column: number, row: number) => CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
+  set: (x: number, y: number, color: number | string) => void
+  readonly tileSize?: number
 }

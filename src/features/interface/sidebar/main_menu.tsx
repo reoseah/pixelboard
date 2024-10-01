@@ -1,12 +1,12 @@
-import { Tab } from "../../../types/sidebar"
-import MenuIcon from "../../../assets/icons/menu.svg"
-import MainMenuPanel from "./MainMenuPanel"
+import MenuIcon from '../../../assets/icons/menu.svg'
+import { Tab } from '../../../types/tab'
+import MainMenuPanel from './MainMenuPanel'
 
 const MainMenu: Tab = {
-    place: "top",
-    label: "Menu",
-    icon: MenuIcon,
-    contents: MainMenuPanel
+  contents: MainMenuPanel,
+  icon: MenuIcon,
+  label: 'Menu',
+  place: 'top',
 }
 
 export default MainMenu

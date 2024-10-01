@@ -1,23 +1,24 @@
-import "./InputDecoration.css"
-import { JSXElement, splitProps } from "solid-js"
+import { JSXElement, splitProps } from 'solid-js'
+
+import './InputDecoration.css'
 
 const InputDecoration = (props: {
-    children: JSXElement,
-    class?: string,
+  children: JSXElement
+  class?: string
 }) => {
-    const [
-        { children, class: className },
-        rest
-    ] = splitProps(props, ["children", "class"])
+  const [
+    { children, class: className },
+    rest,
+  ] = splitProps(props, ['children', 'class'])
 
-    return (
-        <div
-            class={`input-decoration${className ? ` ${className}` : ""}`}
-            {...rest}
-        >
-            {children}
-        </div>
-    )
+  return (
+    <div
+      class={`input-decoration${className ? ` ${className}` : ''}`}
+      {...rest}
+    >
+      {children}
+    </div>
+  )
 }
 
 export default InputDecoration

@@ -1,9 +1,9 @@
-import { Component } from "solid-js"
+import { Component } from 'solid-js'
 
 export type Command = {
-    id: string,
-    label: string | (() => string)
-    icon?: Component
-    isDisabled?: () => boolean
-    execute: () => void | Promise<void>
+  execute: () => Promise<void> | void
+  icon?: Component
+  id: string
+  isDisabled?: () => boolean
+  label: (() => string) | string
 }

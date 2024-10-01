@@ -1,19 +1,20 @@
-import "./SelectionRenderer.css"
-import { createMemo, createSignal, For, Show, useContext } from "solid-js"
-import SaveIcon from "../../assets/icons/save.svg"
-import { ViewportPositionContext } from "../../state/ViewportPositionContext"
-import { VirtualCanvasContext } from "../../state/VirtualCanvasContext"
-import IconButton from "../../components/IconButton"
-import Input from "../../components/Input"
-import InputGroup from "../../components/InputGroup"
-import Stack from "../../components/Stack"
-import { Select, Option } from "../../components/Select"
-import CanvasSelectionContext from "../../state/CanvasSelectionContext"
+import { createMemo, createSignal, For, Show, useContext } from 'solid-js'
+
+import SaveIcon from '../../assets/icons/save.svg'
+import IconButton from '../../components/IconButton'
+import Input from '../../components/Input'
+import InputGroup from '../../components/InputGroup'
+import { Option, Select } from '../../components/Select'
+import Stack from '../../components/Stack'
+import CanvasSelectionContext from '../../state/CanvasSelectionContext'
+import { ViewportPositionContext } from '../../state/ViewportPositionContext'
+import { VirtualCanvasContext } from '../../state/VirtualCanvasContext'
+import './SelectionRenderer.css'
 
 const saveFormats = [
-  { value: "image/png", label: "PNG" },
+  { label: 'PNG', value: 'image/png' },
   // { value: "image/jpeg", label: "JPEG" },
-  { value: "image/webp", label: "WebP" },
+  { label: 'WebP', value: 'image/webp' },
 ]
 
 const SelectionRenderer = () => {
@@ -23,45 +24,57 @@ const SelectionRenderer = () => {
   const bounds = createMemo(selection.getBounds)
 
   const [saveScale, setSaveScale] = createSignal(1)
-  const [saveFormat, setSaveFormat] = createSignal("image/png")
+  const [saveFormat, setSaveFormat] = createSignal('image/png')
 
   return (
     <Show when={selection.parts.length !== 0}>
       <svg
         class="selection-renderer"
-        width={bounds().width * viewport.scale() + 1}
         height={bounds().height * viewport.scale() + 1}
         style={{
           left: `${bounds().x * viewport.scale()}px`,
           top: `${bounds().y * viewport.scale()}px`,
         }}
+        width={bounds().width * viewport.scale() + 1}
       >
         <For each={selection.parts}>
-          {(part) => (
-            <Show when={part.type === "rectangle"}>
+          {part => (
+            <Show when={part.type === 'rectangle'}>
               <rect
-                x={part.x - bounds().x + .5}
-                y={part.y - bounds().y + .5}
-                width={part.width * viewport.scale()}
-                height={part.height * viewport.scale()}
                 fill="none"
+                height={part.height * viewport.scale()}
                 stroke="black"
                 stroke-dasharray="3 3"
                 stroke-dashoffset="0"
+                width={part.width * viewport.scale()}
+                x={part.x - bounds().x + 0.5}
+                y={part.y - bounds().y + 0.5}
               >
-                <animate attributeName="stroke-dashoffset" from="0" to="6" dur=".5s" repeatCount="indefinite" />
+                <animate
+                  attributeName="stroke-dashoffset"
+                  dur=".5s"
+                  from="0"
+                  repeatCount="indefinite"
+                  to="6"
+                />
               </rect>
               <rect
-                x={part.x - bounds().x + .5}
-                y={part.y - bounds().y + .5}
-                width={part.width * viewport.scale()}
-                height={part.height * viewport.scale()}
                 fill="none"
+                height={part.height * viewport.scale()}
                 stroke="white"
                 stroke-dasharray="3 3"
                 stroke-dashoffset="3"
+                width={part.width * viewport.scale()}
+                x={part.x - bounds().x + 0.5}
+                y={part.y - bounds().y + 0.5}
               >
-                <animate attributeName="stroke-dashoffset" from="3" to="9" dur=".5s" repeatCount="indefinite" />
+                <animate
+                  attributeName="stroke-dashoffset"
+                  dur=".5s"
+                  from="3"
+                  repeatCount="indefinite"
+                  to="9"
+                />
               </rect>
             </Show>
           )}
@@ -69,31 +82,31 @@ const SelectionRenderer = () => {
       </svg>
       <Stack
         class="island"
-        spacing={.25}
-        padding={.1875}
         direction="row"
+        padding={0.1875}
+        spacing={0.25}
         style={{
-          position: "absolute",
           left: `${bounds().x * viewport.scale() + bounds().width * viewport.scale() / 2}px`,
+          position: 'absolute',
           top: `${bounds().y * viewport.scale() + bounds().height * viewport.scale() + 8}px`,
-          transform: "translate(-50%, 0)",
+          transform: 'translate(-50%, 0)',
         }}
       >
         <InputGroup>
           <Select
-            value={saveFormats.find(format => format.value === saveFormat())?.label || "Unknown"}
             class="w-3.5rem"
             title="Export format"
+            value={saveFormats.find(format => format.value === saveFormat())?.label || 'Unknown'}
           >
-            {(close) => (
+            {close => (
               <For each={saveFormats}>
-                {(format) => (
+                {format => (
                   <Option
-                    selected={format.value === saveFormat()}
                     onClick={() => {
                       setSaveFormat(format.value)
                       close()
                     }}
+                    selected={format.value === saveFormat()}
                   >
                     {format.label}
                   </Option>
@@ -103,29 +116,28 @@ const SelectionRenderer = () => {
           </Select>
 
           <Input
-            small
             class="w-2.5rem"
-            title="Export scale"
-            value={saveScale() + "x"}
-            onfocus={(e) => {
-              e.currentTarget.value = saveScale().toString()
-              e.currentTarget.select()
-            }}
-            onkeydown={(e) => {
-              if (e.key === "Enter" || e.key === "Escape") {
-                e.currentTarget.blur()
-              }
-            }}
             onblur={(e) => {
               const value = parseFloat(e.currentTarget.value)
               if (!isNaN(value)) {
                 setSaveScale(value)
               }
             }}
+            onfocus={(e) => {
+              e.currentTarget.value = saveScale().toString()
+              e.currentTarget.select()
+            }}
+            onkeydown={(e) => {
+              if (e.key === 'Enter' || e.key === 'Escape') {
+                e.currentTarget.blur()
+              }
+            }}
+            small
+            title="Export scale"
+            value={saveScale() + 'x'}
           />
 
           <IconButton
-            title="Export selection"
             onclick={() => {
               canvas.renderArea(
                 bounds().x,
@@ -134,18 +146,19 @@ const SelectionRenderer = () => {
                 bounds().height,
                 saveScale(),
                 {
+                  quality: 1,
                   type: saveFormat(),
-                  quality: 1
-                }
-              ).then(blob => {
+                },
+              ).then((blob) => {
                 const url = URL.createObjectURL(blob)
                 const a = document.createElement('a')
                 a.href = url
-                a.download = "selection." + saveFormat().split("/")[1]
+                a.download = 'selection.' + saveFormat().split('/')[1]
                 a.click()
                 URL.revokeObjectURL(url)
               })
             }}
+            title="Export selection"
           >
             <SaveIcon />
           </IconButton>

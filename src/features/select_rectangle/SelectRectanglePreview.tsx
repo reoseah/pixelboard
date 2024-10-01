@@ -1,12 +1,13 @@
-import "./SelectRectanglePreview.css"
-import { useContext, Show } from "solid-js"
-import { RectangleDragContext } from "../../state/RectangleDragContext"
-import { ViewportPositionContext } from "../../state/ViewportPositionContext"
+import { Show, useContext } from 'solid-js'
+
+import { RectangleDragContext } from '../../state/RectangleDragContext'
+import { ViewportPositionContext } from '../../state/ViewportPositionContext'
+import './SelectRectanglePreview.css'
 
 const SelectRectanglePreview = () => {
   const viewport = useContext(ViewportPositionContext)
 
-  const { initialPos, currentPos, dragging, } = useContext(RectangleDragContext)
+  const { currentPos, dragging, initialPos } = useContext(RectangleDragContext)
 
   const left = () => Math.min(Math.round(initialPos().x), Math.round(currentPos().x))
   const top = () => Math.min(Math.round(initialPos().y), Math.round(currentPos().y))
@@ -17,34 +18,37 @@ const SelectRectanglePreview = () => {
     <Show when={dragging()}>
       <svg
         class="select-rectangle-preview"
+        fill="none"
+        height={height() * viewport.scale() + 1}
         style={{
-          top: `${top() * viewport.scale()}px`,
           left: `${left() * viewport.scale()}px`,
+          top: `${top() * viewport.scale()}px`,
         }}
         width={width() * viewport.scale() + 1}
-        height={height() * viewport.scale() + 1}
-        fill="none" >
+      >
         <rect
-          x={.5}
-          y={.5}
-          width={Math.max(2, width() * viewport.scale())}
           height={Math.max(2, height() * viewport.scale())}
           stroke="white"
-          stroke-width="1"
           stroke-dasharray="3 3"
-          stroke-dashoffset="0" >
-          <animate attributeName="stroke-dashoffset" from="0" to="6" dur=".5s" repeatCount="indefinite" />
+          stroke-dashoffset="0"
+          stroke-width="1"
+          width={Math.max(2, width() * viewport.scale())}
+          x={0.5}
+          y={0.5}
+        >
+          <animate attributeName="stroke-dashoffset" dur=".5s" from="0" repeatCount="indefinite" to="6" />
         </rect>
         <rect
-          x={.5}
-          y={.5}
-          width={Math.max(2, width() * viewport.scale())}
           height={Math.max(2, height() * viewport.scale())}
           stroke="black"
-          stroke-width="1"
           stroke-dasharray="3 3"
-          stroke-dashoffset="3" >
-          <animate attributeName="stroke-dashoffset" from="3" to="9" dur=".5s" repeatCount="indefinite" />
+          stroke-dashoffset="3"
+          stroke-width="1"
+          width={Math.max(2, width() * viewport.scale())}
+          x={0.5}
+          y={0.5}
+        >
+          <animate attributeName="stroke-dashoffset" dur=".5s" from="3" repeatCount="indefinite" to="9" />
         </rect>
       </svg>
       <div
@@ -54,7 +58,10 @@ const SelectRectanglePreview = () => {
           top: `${(top() + height()) * viewport.scale() + 8}px`,
         }}
       >
-        {width()} × {height()}
+        {width()}
+        {' '}
+        ×
+        {height()}
       </div>
     </Show>
   )

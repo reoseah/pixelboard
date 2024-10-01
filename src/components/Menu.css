@@ -8,7 +8,7 @@
     font-weight: 400;
     padding: .1875rem;
 
-    .select>& {
+    .select >& {
         position: absolute;
         top: calc(100% + .0625rem);
         left: -.25rem;
@@ -35,7 +35,7 @@
     border: none;
     background: transparent;
 
-    &>svg {
+    & > svg {
         justify-self: center;
         color: var(--neutral-300);
     }

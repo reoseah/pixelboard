@@ -1,21 +1,21 @@
-import "./Text.css"
+import { splitProps } from 'solid-js'
+import { JSX } from 'solid-js/jsx-runtime'
 
-import { JSX } from "solid-js/jsx-runtime"
-import { splitProps } from "solid-js"
+import './Text.css'
 
 const Text = (props: {
-    size?: 'small' | 'medium' | 'large',
-    muted?: boolean,
-} & JSX.HTMLAttributes<HTMLDivElement>
+  muted?: boolean
+  size?: 'large' | 'medium' | 'small'
+} & JSX.HTMLAttributes<HTMLDivElement>,
 ) => {
-    const [{ size = "medium", muted = false, class: className }, rest] = splitProps(props, ['size', 'muted', 'class'])
+  const [{ class: className, muted = false, size = 'medium' }, rest] = splitProps(props, ['size', 'muted', 'class'])
 
-    return (
-        <div
-            class={`text text-${size}${muted ? ' text-muted' : ''}${className ? ` ${className}` : ""}`}
-            {...rest}
-        />
-    )
+  return (
+    <div
+      class={`text text-${size}${muted ? ' text-muted' : ''}${className ? ` ${className}` : ''}`}
+      {...rest}
+    />
+  )
 }
 
 export default Text

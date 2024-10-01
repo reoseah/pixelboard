@@ -1,26 +1,28 @@
-import "./CommandPalette.css"
-import { useContext, createSignal, createMemo, onCleanup, Show, For } from "solid-js"
-import { JSX } from "solid-js/jsx-runtime"
-import { Dynamic } from "solid-js/web"
-import SearchIcon from "../../assets/icons/search.svg"
-import { Command } from "../../types/commands"
-import { CurrentToolContext } from "../../state/CurrentToolContext"
-import DefaultKeymap, { stringifyShortcut } from "../../state/Keymap"
-import { RegistryContext } from "../../state/RegistryContext"
-import useClickOutside from "../../hooks/useClickOutside"
+import { createMemo, createSignal, For, onCleanup, Show, useContext } from 'solid-js'
+import { JSX } from 'solid-js/jsx-runtime'
+import { Dynamic } from 'solid-js/web'
+
+import SearchIcon from '../../assets/icons/search.svg'
+import useClickOutside from '../../hooks/useClickOutside'
+import { CurrentToolContext } from '../../state/CurrentToolContext'
+import KeymapContext from '../../state/KeymapContext'
+import { RegistryContext } from '../../state/RegistryContext'
+import { Command } from '../../types/commands'
+import { stringifyShortcut } from '../../types/key_shortcut'
+import './CommandPalette.css'
 
 const CommandPalette = () => {
   const { commands } = useContext(RegistryContext)
   const currentTool = useContext(CurrentToolContext)
-  const [query, setQuery] = createSignal("")
+  const [query, setQuery] = createSignal('')
   const [selectedEntry, setSelectedEntry] = createSignal<number>(0)
-  const keymap = DefaultKeymap
+  const keymap = useContext(KeymapContext)
 
   const matchingCommands = createMemo(() => {
     const queryLower = query().toLowerCase()
 
     return Object.values(commands)
-      .filter(command => (typeof command.label === "function" ? command.label() : command.label).toLowerCase().includes(queryLower))
+      .filter(command => (typeof command.label === 'function' ? command.label() : command.label).toLowerCase().includes(queryLower))
   })
 
   const matchingEnabledCommands = createMemo(() => {
@@ -35,7 +37,8 @@ const CommandPalette = () => {
     for (const keybinding of keymap) {
       if (keybinds[keybinding.command]) {
         keybinds[keybinding.command].push(stringifyShortcut(keybinding.key))
-      } else {
+      }
+      else {
         keybinds[keybinding.command] = [stringifyShortcut(keybinding.key)]
       }
     }
@@ -43,25 +46,30 @@ const CommandPalette = () => {
   })
 
   const [wrapper, setWrapper] = createSignal<HTMLDivElement>()
-  useClickOutside(wrapper, () => { currentTool.selectId(currentTool.prevId()) })
+  useClickOutside(wrapper, () => {
+    currentTool.selectId(currentTool.prevId())
+  })
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === "Escape") {
+    if (event.key === 'Escape') {
       currentTool.selectId(currentTool.prevId())
-    } else if (event.key === "Enter") {
+    }
+    else if (event.key === 'Enter') {
       const firstCommand = matchingEnabledCommands()[selectedEntry()]
       if (firstCommand) {
         currentTool.selectId(currentTool.prevId())
         firstCommand.execute()
       }
-    } else if (event.key === "ArrowDown") {
+    }
+    else if (event.key === 'ArrowDown') {
       setSelectedEntry((selectedEntry() + 1) % matchingEnabledCommands().length)
-    } else if (event.key === "ArrowUp") {
+    }
+    else if (event.key === 'ArrowUp') {
       setSelectedEntry((selectedEntry() - 1 + matchingEnabledCommands().length) % matchingEnabledCommands().length)
     }
   }
-  document.addEventListener("keydown", handleKeyDown)
-  onCleanup(() => document.removeEventListener("keydown", handleKeyDown))
+  document.addEventListener('keydown', handleKeyDown)
+  onCleanup(() => document.removeEventListener('keydown', handleKeyDown))
 
   const handleInput: JSX.InputEventHandlerUnion<HTMLInputElement, InputEvent> = (event) => {
     setQuery(event.target.value)
@@ -78,25 +86,25 @@ const CommandPalette = () => {
       <div class="command-palette-search">
         <SearchIcon />
         <input
-          type="text"
-          placeholder="Search"
+          autocomplete="off"
+          id="command-palette-search"
           maxlength="150"
-          spellcheck={false}
-          ref={el => requestAnimationFrame(() => el.focus())}
           oninput={handleInput}
-          onkeydown={e => {
-            if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+          onkeydown={(e) => {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
               e.preventDefault()
               e.stopPropagation()
             }
           }}
-          id="command-palette-search"
-          autocomplete="off"
+          placeholder="Search"
+          ref={el => requestAnimationFrame(() => el.focus())}
+          spellcheck={false}
+          type="text"
         />
       </div>
       <Show
-        when={matchingCommands().length}
         fallback={<p class="command-palette-no-results">No results found</p>}
+        when={matchingCommands().length}
       >
         <h2 class="command-palette-heading">Actions</h2>
         <ul class="command-palette-entries">
@@ -104,9 +112,9 @@ const CommandPalette = () => {
             {(command, idx) => (
               <li>
                 <button
+                  aria-selected={selectedEntry() === idx()}
                   class="command-palette-button"
                   onClick={() => handleCommandClick(command)}
-                  aria-selected={selectedEntry() === idx()}
                   onmouseover={() => setSelectedEntry(idx())}
                 >
                   <div class="command-icon">
@@ -114,7 +122,11 @@ const CommandPalette = () => {
                       <Dynamic component={command.icon} />
                     </Show>
                   </div>
-                  <span class="command-description">{typeof command.label === "function" ? command.label() : command.label}</span>
+                  <span
+                    class="command-description"
+                  >
+                    {typeof command.label === 'function' ? command.label() : command.label}
+                  </span>
                   <Show when={commandToKeybinds()[command.id]}>
                     <kbd class="command-keybind">
                       {commandToKeybinds()[command.id][0]}
@@ -130,8 +142,8 @@ const CommandPalette = () => {
                 <li>
                   <button
                     class="command-palette-button"
-                    onClick={() => handleCommandClick(command)}
                     disabled={true}
+                    onClick={() => handleCommandClick(command)}
                     onmouseover={() => setSelectedEntry(idx())}
                   >
                     <div class="command-icon">
@@ -139,7 +151,11 @@ const CommandPalette = () => {
                         <Dynamic component={command.icon} />
                       </Show>
                     </div>
-                    <span class="command-description">{typeof command.label === "function" ? command.label() : command.label}</span>
+                    <span
+                      class="command-description"
+                    >
+                      {typeof command.label === 'function' ? command.label() : command.label}
+                    </span>
                     <Show when={commandToKeybinds()[command.id]}>
                       <kbd class="command-keybind">
                         {commandToKeybinds()[command.id][0]}

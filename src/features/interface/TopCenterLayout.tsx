@@ -1,12 +1,13 @@
-import "./TopCenterLayout.css"
-import { JSXElement } from "solid-js"
+import { JSXElement } from 'solid-js'
+
+import './TopCenterLayout.css'
 
 const TopCenterLayout = (props: { children: JSXElement }) => {
-    return (
-        <div class="top-center-layout">
-            {props.children}
-        </div>
-    )
+  return (
+    <div class="top-center-layout">
+      {props.children}
+    </div>
+  )
 }
 
 export default TopCenterLayout

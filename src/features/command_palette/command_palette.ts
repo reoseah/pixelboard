@@ -1,13 +1,13 @@
-import { Tool } from "../../types/tools"
-import CommandIcon from "../../assets/icons/command.svg"
-import CommandPalette from "./CommandPalette"
+import CommandIcon from '../../assets/icons/command.svg'
+import { Tool } from '../../types/tool'
+import CommandPalette from './CommandPalette'
 
 const createCommandPalette = (): Tool => {
-    return {
-        label: "Command Palette",
-        icon: CommandIcon,
-        subToolbar: CommandPalette
-    }
+  return {
+    icon: CommandIcon,
+    label: 'Command Palette',
+    subToolbar: CommandPalette,
+  }
 }
 
 export default createCommandPalette

@@ -1,17 +1,20 @@
-import "./Sidebar.css"
-import { For, Show, useContext } from "solid-js"
-import { Dynamic } from "solid-js/web"
-import DefaultKeymap, { stringifyShortcut } from "../../../state/Keymap"
-import { RegistryContext } from "../../../state/RegistryContext"
-import { SidebarContext } from "../../../state/SidebarContext"
+import { For, Show, useContext } from 'solid-js'
+import { Dynamic } from 'solid-js/web'
+
+import KeymapContext from '../../../state/KeymapContext'
+import { RegistryContext } from '../../../state/RegistryContext'
+import { SidebarContext } from '../../../state/SidebarContext'
+import { stringifyShortcut } from '../../../types/key_shortcut'
+import './Sidebar.css'
 
 const Sidebar = () => {
   const context = useContext(SidebarContext)
   const { tabs } = useContext(RegistryContext)
+  const keymap = useContext(KeymapContext)
 
-  const tabKeys = DefaultKeymap.reduce((acc, keybinding) => {
+  const tabKeys = keymap.reduce((acc, keybinding) => {
     if (keybinding.command.match(/^toggle_tab\./)) {
-      const tab = keybinding.command.replace(/^toggle_tab\./, "")
+      const tab = keybinding.command.replace(/^toggle_tab\./, '')
       if (tabs[tab]) {
         acc[tab] = stringifyShortcut(keybinding.key)
       }
@@ -20,19 +23,19 @@ const Sidebar = () => {
   }, {} as Record<string, string>)
 
   const TabGroup = (props: {
-    place: "top" | "bottom",
+    place: 'bottom' | 'top'
   }) => {
-    const filtered = Object.entries(tabs).filter(([_, tab]) => tab.place === props.place)
+    const filtered = Object.entries(tabs).filter(([, tab]) => tab.place === props.place)
 
     return (
       <div class="sidebar-tab-group">
         <For each={filtered}>
           {([id, tab]) => (
             <button
-              title={`${tab.label} - ${tabKeys[id]}`}
-              class="sidebar-tab"
               aria-pressed={context.isOpen() && context.tab() === id}
+              class="sidebar-tab"
               onclick={() => context.toggle(id)}
+              title={`${tab.label} - ${tabKeys[id]}`}
             >
               <tab.icon />
             </button>
@@ -57,6 +60,5 @@ const Sidebar = () => {
     </div>
   )
 }
-
 
 export default Sidebar

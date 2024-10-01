@@ -1,42 +1,45 @@
-import "./MainToolbar.css"
-import { For, useContext } from "solid-js"
-import { CurrentToolContext } from "../../../state/CurrentToolContext"
-import DefaultKeymap, { stringifyShortcut } from "../../../state/Keymap"
-import { RegistryContext } from "../../../state/RegistryContext"
-import Stack from "../../../components/Stack"
+import { For, useContext } from 'solid-js'
+
+import Stack from '../../../components/Stack'
+import { CurrentToolContext } from '../../../state/CurrentToolContext'
+import KeymapContext from '../../../state/KeymapContext'
+import { RegistryContext } from '../../../state/RegistryContext'
+import { stringifyShortcut } from '../../../types/key_shortcut'
+import './MainToolbar.css'
 
 const MainToolbar = () => {
-    const { tools } = useContext(RegistryContext)
-    const currentTool = useContext(CurrentToolContext)
+  const { tools } = useContext(RegistryContext)
+  const currentTool = useContext(CurrentToolContext)
+  const keymap = useContext(KeymapContext)
 
-    const toolKeys = DefaultKeymap.reduce((acc, keybinding) => {
-        if (keybinding.command.match(/^select_tool\./)) {
-            const tool = keybinding.command.replace(/^select_tool\./, "")
-            if (tools[tool]) {
-                acc[tool] = stringifyShortcut(keybinding.key)
-            }
-        }
-        return acc
-    }, {} as Record<string, string>)
+  const toolKeys = keymap.reduce((acc, keybinding) => {
+    if (keybinding.command.match(/^select_tool\./)) {
+      const tool = keybinding.command.replace(/^select_tool\./, '')
+      if (tools[tool]) {
+        acc[tool] = stringifyShortcut(keybinding.key)
+      }
+    }
+    return acc
+  }, {} as Record<string, string>)
 
-    return (
-        <Stack class="island" spacing={.25} padding={.1875} direction="row">
-            <For each={Object.entries(tools)}>
-                {([id, tool]) => (
-                    <button
-                        class="toolbar-button"
-                        title={tool.label + " - " + toolKeys[id]}
-                        aria-label={tool.label + " - " + toolKeys[id]}
-                        aria-keyshortcuts={toolKeys[id]}
-                        aria-pressed={currentTool.id() === id}
-                        onclick={() => currentTool.selectId(id)}
-                    >
-                        <tool.icon />
-                    </button>
-                )}
-            </For>
-        </Stack>
-    )
+  return (
+    <Stack class="island" direction="row" padding={0.1875} spacing={0.25}>
+      <For each={Object.entries(tools)}>
+        {([id, tool]) => (
+          <button
+            aria-keyshortcuts={toolKeys[id]}
+            aria-label={tool.label + ' - ' + toolKeys[id]}
+            aria-pressed={currentTool.id() === id}
+            class="toolbar-button"
+            onclick={() => currentTool.selectId(id)}
+            title={tool.label + ' - ' + toolKeys[id]}
+          >
+            <tool.icon />
+          </button>
+        )}
+      </For>
+    </Stack>
+  )
 }
 
 export default MainToolbar

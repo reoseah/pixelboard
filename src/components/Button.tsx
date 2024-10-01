@@ -1,21 +1,22 @@
-import './Button.css'
 import { splitProps } from 'solid-js'
 import { JSX } from 'solid-js/jsx-runtime'
 
+import './Button.css'
+
 // TODO: add a small variant with a height of 1.75rem that can be used in toolbars
 const Button = (props: {
-    variant?: 'contained' | 'outline',
-    color?: 'primary' | 'danger',
-} & JSX.ButtonHTMLAttributes<HTMLButtonElement>
+  color?: 'danger' | 'primary'
+  variant?: 'contained' | 'outline'
+} & JSX.ButtonHTMLAttributes<HTMLButtonElement>,
 ) => {
-    const [{ variant = "contained", color = "primary" }, rest] = splitProps(props, ['variant', 'color'])
+  const [{ color = 'primary', variant = 'contained' }, rest] = splitProps(props, ['variant', 'color'])
 
-    return (
-        <button
-            class={`button ${variant} ${color}`}
-            {...rest}
-        />
-    )
+  return (
+    <button
+      class={`button ${variant} ${color}`}
+      {...rest}
+    />
+  )
 }
 
 export default Button

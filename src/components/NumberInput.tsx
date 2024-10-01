@@ -1,19 +1,20 @@
+import { JSX, onCleanup, Show } from 'solid-js'
+
 import './NumberInput.css'
-import { Show, JSX, onCleanup } from 'solid-js'
 
 export const NumberInput = (props: {
-  value: number
-  onChange: (value: number) => void
-  min?: number
-  max?: number
-  step?: number
-  size?: number
   class?: string
-  icon?: JSX.Element
-  unit?: JSX.Element
-  title?: string
   disabled?: boolean
+  icon?: JSX.Element
+  max?: number
+  min?: number
   name?: string
+  onChange: (value: number) => void
+  size?: number
+  step?: number
+  title?: string
+  unit?: JSX.Element
+  value: number
 }) => {
   let ref!: HTMLElement
 
@@ -30,8 +31,8 @@ export const NumberInput = (props: {
   return (
     <label
       class={`number-input-container ${props.class ?? ''}`}
-      title={props.title}
       ref={el => ref = el}
+      title={props.title}
     >
       <Show when={props.icon}>
         <div class="input-icon">
@@ -39,25 +40,16 @@ export const NumberInput = (props: {
         </div>
       </Show>
       <input
-        type="number"
         class="number-input"
-        value={props.value}
-        name={props.name}
-        min={props.min}
-        max={props.max}
-        step={props.step}
-        size={props.size}
         disabled={props.disabled}
+        max={props.max}
+        min={props.min}
+        name={props.name}
         onclick={event => (event.target as HTMLInputElement).select()}
-        onkeydown={event => {
-          if (event.key === 'Enter' || event.key === 'Escape') {
-            (event.target as HTMLInputElement).blur();
-          }
-        }}
-        onfocus={event => {
+        onfocus={(event) => {
           const handleClickOutside = (event: MouseEvent) => {
             if (!event.composedPath().includes(event.target!)) {
-              (event.target as HTMLInputElement).blur();
+              (event.target as HTMLInputElement).blur()
             }
           }
           document.addEventListener('click', handleClickOutside)
@@ -66,6 +58,15 @@ export const NumberInput = (props: {
           }, { once: true })
         }}
         oninput={event => props.onChange(Number((event.target as HTMLInputElement).value))}
+        onkeydown={(event) => {
+          if (event.key === 'Enter' || event.key === 'Escape') {
+            (event.target as HTMLInputElement).blur()
+          }
+        }}
+        size={props.size}
+        step={props.step}
+        type="number"
+        value={props.value}
       />
       <Show when={props.unit}>
         <div class="number-input-unit">

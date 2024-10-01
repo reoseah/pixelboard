@@ -1,18 +1,19 @@
-import "./Select.css"
-import { createSignal, onCleanup, Show, JSX } from "solid-js"
-import ChevronDownIcon from "../assets/icons/chevron-down.svg"
-import Menu from "./Menu"
+import { createSignal, JSX, onCleanup, Show } from 'solid-js'
+
+import ChevronDownIcon from '../assets/icons/chevron-down.svg'
+import Menu from './Menu'
+import './Select.css'
 
 export const Select = (props: {
-  icon?: JSX.Element
-  value: string
   children: (close: () => void) => JSX.Element
   class?: string
+  icon?: JSX.Element
   title?: string
+  value: string
 }) => {
   return (
     <Selectlike
-      button={
+      button={(
         <>
           <Show when={props.icon}>
             {props.icon}
@@ -20,25 +21,25 @@ export const Select = (props: {
           <span>{props.value}</span>
           <ChevronDownIcon class="neutral-400" />
         </>
-      }
-      title={props.title}
+      )}
       children={(setRef, close) => (<Menu ref={setRef}>{props.children(close)}</Menu>)}
       classes={{
+        button: `select-trigger`,
         root: `select ${props.class ?? ''}`,
-        button: `select-trigger`
       }}
+      title={props.title}
     />
   )
 }
 
 export const Selectlike = (props: {
   button: JSX.Element
-  title?: string
   children: (setRef: (el: HTMLElement) => void, close: () => void) => JSX.Element
   classes: {
-    root: string
     button: string
+    root: string
   }
+  title?: string
 }) => {
   const [expanded, setExpanded] = createSignal(false)
 
@@ -66,18 +67,18 @@ export const Selectlike = (props: {
       class={props.classes.root}
     >
       <button
-        class={props.classes.button}
-        title={props.title}
         aria-expanded={expanded()}
+        class={props.classes.button}
         onclick={(e) => {
           e.stopImmediatePropagation()
           setExpanded(!expanded())
         }}
+        title={props.title}
       >
         {props.button}
       </button>
       <Show when={expanded()}>
-        {props.children((el) => dropdownRef = el, () => setExpanded(false))}
+        {props.children(el => dropdownRef = el, () => setExpanded(false))}
       </Show>
     </div>
   )

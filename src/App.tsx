@@ -1,19 +1,20 @@
-import './App.css'
 import { Component, createMemo, For, onCleanup, Show, useContext } from 'solid-js'
 import { createStore, reconcile } from 'solid-js/store'
 import { Dynamic } from 'solid-js/web'
-import { WhiteboardContext } from './state/WhiteboardContext'
-import { CurrentToolContext } from './state/CurrentToolContext'
-import DefaultKeymap from './state/Keymap'
-import RegistryContext from './state/RegistryContext'
-import { Tool } from './types/tools'
+
+import './App.css'
 import VirtualCanvas from './features/canvas/VirtualCanvas'
+import SelectionRenderer from './features/canvas_selection/SelectionRenderer'
+import Sidebar from './features/interface/sidebar/Sidebar'
 import SideLayout from './features/interface/SideLayout'
 import MainToolbar from './features/interface/toolbar/MainToolbar'
 import TopCenterLayout from './features/interface/TopCenterLayout'
-import SelectionRenderer from './features/select_rectangle/SelectionRenderer'
 import ViewportContainer from './features/viewport/ViewportContainer'
-import Sidebar from './features/interface/sidebar/Sidebar'
+import { CurrentToolContext } from './state/CurrentToolContext'
+import KeymapContext from './state/KeymapContext'
+import RegistryContext from './state/RegistryContext'
+import { WhiteboardContext } from './state/WhiteboardContext'
+import { Tool } from './types/tool'
 import { Entity } from './types/whiteboard'
 
 function App() {
@@ -23,18 +24,18 @@ function App() {
     <>
       <ViewportContainer>
         <VirtualCanvas />
-        <CurrentToolRenderer map={(tool) => tool.viewport} />
+        <CurrentToolRenderer map={tool => tool.viewport} />
         <SelectionRenderer />
         <ElementsRenderer />
       </ViewportContainer>
       <TopCenterLayout>
         <MainToolbar />
-        <CurrentToolRenderer map={(tool) => tool.subToolbar} />
+        <CurrentToolRenderer map={tool => tool.subToolbar} />
       </TopCenterLayout>
       <SideLayout>
         <Sidebar />
       </SideLayout>
-      <CurrentToolRenderer map={(tool) => tool.use} />
+      <CurrentToolRenderer map={tool => tool.use} />
     </>
   )
 }
@@ -56,6 +57,7 @@ const CurrentToolRenderer = (props: {
 
 const useCommandKeybinds = () => {
   const { commands } = useContext(RegistryContext)
+  const keymap = useContext(KeymapContext)
 
   const handleKeyDown = (event: KeyboardEvent) => {
     const target = event.target as HTMLElement
@@ -64,15 +66,13 @@ const useCommandKeybinds = () => {
       return
     }
 
-    const keymap = DefaultKeymap
-
-    const keybind = keymap.find(keybind => {
+    const keybind = keymap.find((keybind) => {
       const key = keybind.key
-      return (event.key.toUpperCase() === key.key || event.code === key.key) &&
-        event.ctrlKey === key.ctrl &&
-        event.shiftKey === key.shift &&
-        event.altKey === key.alt &&
-        event.metaKey === key.meta
+      return (event.key.toUpperCase() === key.key || event.code === key.key)
+        && event.ctrlKey === key.ctrl
+        && event.shiftKey === key.shift
+        && event.altKey === key.alt
+        && event.metaKey === key.meta
     })
 
     if (keybind) {
@@ -109,7 +109,7 @@ const ElementsRenderer = () => {
       {([id, element]) => {
         const type = elementTypes[element.type]
         return (
-          <Dynamic component={type.render} id={id} element={element} />
+          <Dynamic component={type.render} element={element} id={id} />
         )
       }}
     </For>

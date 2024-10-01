@@ -1,28 +1,29 @@
-import "./ToggleButton.css"
-import { JSXElement } from "solid-js"
+import { JSXElement } from 'solid-js'
+
+import './ToggleButton.css'
 
 export const ToggleButton = (props: {
-    pressed: boolean
-    onClick?: (event: MouseEvent) => void
-    children: JSXElement
-    class?: string
-    disabled?: boolean
-    title?: string
-    ref?: (el: HTMLButtonElement) => void
+  children: JSXElement
+  class?: string
+  disabled?: boolean
+  onClick?: (event: MouseEvent) => void
+  pressed: boolean
+  ref?: (el: HTMLButtonElement) => void
+  title?: string
 }) => {
-    return (
-        <button
-            type="button"
-            class={`toggle-button ${props.class ?? ''}`}
-            disabled={props.disabled}
-            title={props.title}
-            aria-pressed={props.pressed}
-            onclick={props.onClick}
-            ref={props.ref}
-        >
-            {props.children}
-        </button>
-    )
+  return (
+    <button
+      aria-pressed={props.pressed}
+      class={`toggle-button ${props.class ?? ''}`}
+      disabled={props.disabled}
+      onclick={props.onClick}
+      ref={props.ref}
+      title={props.title}
+      type="button"
+    >
+      {props.children}
+    </button>
+  )
 }
 
 export default ToggleButton
