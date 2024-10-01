@@ -15,8 +15,8 @@ import createSelect from "../features/select/select"
 import { DeleteRectangleType } from "../features/select_rectangle/delete_rectangle"
 import SelectRectangle from "../features/select_rectangle/select_rectangle"
 import { Deselect, Reselect, DeleteSelection } from "../features/select_rectangle/selection_commands"
-import { BoardElementType } from "./board_element"
-import { CanvasActionType } from "./canvas_action"
+import { EntityType } from "./whiteboard/entity"
+import { CanvasActionType } from "./canvas/canvas_action"
 import Command from "./command"
 import Tab from "./tab"
 import Tool from "./tool"
@@ -24,7 +24,7 @@ import Tool from "./tool"
 export type Registry = {
     tools: Record<string, Tool>,
     actionTypes: Record<string, CanvasActionType>,
-    elementTypes: Record<string, BoardElementType>,
+    elementTypes: Record<string, EntityType>,
     commands: Record<string, Command>,
     tabs: Record<string, Tab>
 }

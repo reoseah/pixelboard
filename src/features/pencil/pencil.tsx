@@ -3,7 +3,7 @@ import { CurrentColorContext } from '../../api/CurrentColor'
 import { PencilStateContext } from '../../api/PencilState'
 import Tool, { isViewportClick } from '../../api/tool'
 import { ViewportPositionContext } from '../../api/ViewportPosition'
-import { VirtualCanvasContext } from '../../api/VirtualCanvas'
+import { VirtualCanvasContext } from '../../api/canvas/VirtualCanvasContext'
 import { normalizeHex } from '../../util/color_conversion'
 import { PencilStroke } from './pencil_stroke'
 import PencilToolbar from './PencilToolbar'
@@ -16,7 +16,7 @@ const createPencil = (): Tool => {
         subToolbar: PencilToolbar,
         use: () => {
             const [, viewportActions] = useContext(ViewportPositionContext)
-            const [, virtualCanvasActions] = useContext(VirtualCanvasContext)
+            const canvas = useContext(VirtualCanvasContext)
 
             const [lastMousePos, setLastMousePos] = createSignal<{ x: number, y: number }>({ x: 0, y: 0 })
             let currentAction: PencilStroke | null = null
@@ -43,7 +43,7 @@ const createPencil = (): Tool => {
                     size: size(),
                     color: normalizeHex(color.hex()),
                 }
-                virtualCanvasActions.add(action)
+                canvas.add(action)
                 currentAction = action
 
                 // TODO: draw straight lines when shift is pressed
@@ -62,7 +62,7 @@ const createPencil = (): Tool => {
                         ...currentAction,
                         points: [...currentAction.points, { x: newX, y: newY }]
                     }
-                    virtualCanvasActions.replace(currentAction, newAction)
+                    canvas.replace(currentAction, newAction)
                     currentAction = newAction
 
                     setLastMousePos({ x: newX, y: newY })

@@ -1,4 +1,4 @@
-import { BoardElementType } from "../../api/board_element"
+import { EntityType } from "../../api/whiteboard/entity"
 import CropRenderer from "./CropRenderer"
 
 export type Crop = {
@@ -10,7 +10,7 @@ export type Crop = {
     title: string | null
 }
 
-export const CropType: BoardElementType<Crop> = {
+export const CropType: EntityType<Crop> = {
     render: CropRenderer,
     getBounds: (crop) => ({
         x: crop.x,

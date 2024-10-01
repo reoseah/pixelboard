@@ -1,15 +1,13 @@
 import * as Y from 'yjs'
 import { createContext, useContext } from 'solid-js'
-import { YjsContext } from './Yjs'
-import DefaultRegistry from './Registry'
-import { doRectanglesIntersect } from '../util/rectangle'
+import { YjsContext } from '../Yjs'
+import DefaultRegistry from '../Registry'
+import { doRectanglesIntersect } from '../../util/rectangle'
 import { CanvasAction, VirtualCanvasAccess } from './canvas_action'
 
-export type VirtualCanvasState = {
+export type VirtualCanvasContext = {
     actions: Y.Array<CanvasAction>
-}
 
-export type VirtualCanvasActions = {
     add: (action: CanvasAction) => void
     replace: (oldAction: CanvasAction, newAction: CanvasAction) => void
     clear: () => void
@@ -17,23 +15,19 @@ export type VirtualCanvasActions = {
     renderArea: (x: number, y: number, width: number, height: number, scale: number, options: ImageEncodeOptions) => Promise<Blob>
 }
 
-export const VirtualCanvas: [
-    state: VirtualCanvasState,
-    actions: VirtualCanvasActions
-] = (() => {
+export const DefaultCanvas: VirtualCanvasContext = (() => {
     const [yjs] = useContext(YjsContext)
-    const state = {
-        actions: yjs.ydoc.getArray<CanvasAction>("virtual-canvas-actions")
-    }
+
+    const actions = yjs.ydoc.getArray<CanvasAction>("virtual-canvas-actions")
 
     const add = (action: CanvasAction) => {
-        state.actions.push([action])
+        actions.push([action])
     }
 
     const replace = (oldAction: CanvasAction, newAction: CanvasAction) => {
         let idx = -1
-        for (let i = 0; i < state.actions.length; i++) {
-            if (state.actions.get(i) === oldAction) {
+        for (let i = 0; i < actions.length; i++) {
+            if (actions.get(i) === oldAction) {
                 idx = i
                 break
             }
@@ -42,17 +36,17 @@ export const VirtualCanvas: [
             throw new Error('oldAction not found')
         }
         yjs.ydoc.transact(() => {
-            state.actions.delete(idx)
-            state.actions.insert(idx, [newAction])
+            actions.delete(idx)
+            actions.insert(idx, [newAction])
         })
     }
 
     const clear = () => {
         yjs.ydoc.transact(() => {
-            state.actions.delete(0, state.actions.length)
+            actions.delete(0, actions.length)
         })
     }
-    
+
     const renderArea = (x: number, y: number, width: number, height: number, scale: number, options: ImageEncodeOptions): Promise<Blob> => {
         const bounds = { x, y, width, height }
 
@@ -76,7 +70,7 @@ export const VirtualCanvas: [
             }
         }
 
-        state.actions.forEach(action => {
+        actions.forEach(action => {
             const type = DefaultRegistry.actionTypes[action.type]
             if (!type) {
                 console.error(`Unknown action type ${action.type}`, action)
@@ -91,17 +85,15 @@ export const VirtualCanvas: [
         return canvas.convertToBlob(options)
     }
 
-    const actions = {
+    return {
+        actions,
         add,
         replace,
         clear,
         renderArea
     }
-
-    return [
-        state,
-        actions
-    ]
 })()
 
-export const VirtualCanvasContext = createContext(VirtualCanvas)
+export const VirtualCanvasContext = createContext(DefaultCanvas)
+
+export default VirtualCanvasContext

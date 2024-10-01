@@ -5,6 +5,12 @@ import { createStore, reconcile, Store } from "solid-js/store"
 export type SelectionState = {
     parts: Store<SelectionPart[]>,
     prevParts: () => SelectionPart[] | []
+
+    getBounds: Accessor<{ x: number, y: number, width: number, height: number }>
+
+    deselect: () => void
+    reselect: () => void
+    selectRectangle: (mode: SelectionMode, x: number, y: number, width: number, height: number) => void
 }
 
 export type SelectionPart =
@@ -13,18 +19,7 @@ export type SelectionPart =
 export type SelectionMode =
     | "replace"
 
-export type SelectionActions = {
-    getBounds: Accessor<{ x: number, y: number, width: number, height: number }>
-
-    deselect: () => void
-    reselect: () => void
-    selectRectangle: (mode: SelectionMode, x: number, y: number, width: number, height: number) => void
-}
-
-const Selection: [
-    state: SelectionState,
-    actions: SelectionActions
-] = createRoot(() => {
+export const VirtualCanvasSelection: SelectionState = createRoot(() => {
     const store = createStore<SelectionPart[]>([])
     const [parts, setParts] = makePersisted(store, { name: "selection-parts" })
 
@@ -67,20 +62,16 @@ const Selection: [
         }
     }
 
-    return [
-        {
-            parts,
-            prevParts: () => prevParts
-        },
-        {
-            getBounds,
-            deselect,
-            reselect,
-            selectRectangle
-        }
-    ]
+    return {
+        parts,
+        prevParts: () => prevParts,
+        getBounds,
+        deselect,
+        reselect,
+        selectRectangle
+    }
 })
 
-export default Selection
+// export default Selection
 
-export const SelectionContext = createContext(Selection)
+export const CanvasSelectionContext = createContext(VirtualCanvasSelection)

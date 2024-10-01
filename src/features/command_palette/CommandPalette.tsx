@@ -5,7 +5,7 @@ import { Dynamic } from "solid-js/web"
 import SearchIcon from "../../assets/icons/search.svg"
 import Command from "../../api/command"
 import { CurrentToolContext } from "../../api/CurrentTool"
-import DefaultKeymap, { stringifyKeybind } from "../../api/Keymap"
+import DefaultKeymap, { stringifyShortcut } from "../../api/Keymap"
 import { RegistryContext } from "../../api/Registry"
 import useClickOutside from "../../hooks/useClickOutside"
 
@@ -34,9 +34,9 @@ const CommandPalette = () => {
     const keybinds: Record<string, string[]> = {}
     for (const keybinding of keymap) {
       if (keybinds[keybinding.command]) {
-        keybinds[keybinding.command].push(stringifyKeybind(keybinding.key))
+        keybinds[keybinding.command].push(stringifyShortcut(keybinding.key))
       } else {
-        keybinds[keybinding.command] = [stringifyKeybind(keybinding.key)]
+        keybinds[keybinding.command] = [stringifyShortcut(keybinding.key)]
       }
     }
     return keybinds

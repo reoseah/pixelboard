@@ -1,7 +1,7 @@
 import { onCleanup, useContext } from "solid-js"
 import SelectionIcon from "../../assets/icons/selection.svg"
 import Tool, { isViewportClick } from "../../api/tool"
-import { SelectionContext } from "../../api/Selection"
+import { CanvasSelectionContext } from "../../api/CanvasSelectionContext"
 import { SharedRectangleStateContext } from "../../api/SharedRectangleState"
 import { ViewportPositionContext } from "../../api/ViewportPosition"
 import SelectRectanglePreview from "./SelectRectanglePreview"
@@ -12,7 +12,7 @@ const SelectRectangle: Tool = {
     viewport: SelectRectanglePreview,
     use: () => {
         const [, viewportActions] = useContext(ViewportPositionContext)
-        const [, selectionActions] = useContext(SelectionContext)
+        const selection = useContext(CanvasSelectionContext)
 
         const {
             initialPos,
@@ -57,7 +57,7 @@ const SelectRectangle: Tool = {
             const width = Math.abs(Math.round(currentPos().x) - Math.round(initialPos().x))
             const height = Math.abs(Math.round(currentPos().y) - Math.round(initialPos().y))
 
-            selectionActions.selectRectangle("replace", left, top, width, height)
+            selection.selectRectangle("replace", left, top, width, height)
 
             setDragging(false)
             setInitialPos({ x: 0, y: 0 })

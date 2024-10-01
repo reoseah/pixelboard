@@ -1,4 +1,4 @@
-export type KeyCombination = {
+export type KeyShortcut = {
     key: string
     ctrl?: boolean
     shift?: boolean
@@ -6,8 +6,8 @@ export type KeyCombination = {
     meta?: boolean
 }
 
-export const parseKeybind = (keybind: string): KeyCombination => {
-    const keys = keybind.split("+")
+export const parseShortcut = (shortcut: string): KeyShortcut => {
+    const keys = shortcut.split("+")
     const key = keys.pop()!
     const modifiers = keys.map(key => key.toLowerCase())
     return {
@@ -19,72 +19,72 @@ export const parseKeybind = (keybind: string): KeyCombination => {
     }
 }
 
-export const stringifyKeybind = (keybind: KeyCombination): string => {
-    return `${keybind.ctrl ? "Ctrl+" : ""}${keybind.shift ? "Shift+" : ""}${keybind.alt ? "Alt+" : ""}${keybind.meta ? "Meta+" : ""}${keybind.key}`
+export const stringifyShortcut = (shortcut: KeyShortcut): string => {
+    return `${shortcut.ctrl ? "Ctrl+" : ""}${shortcut.shift ? "Shift+" : ""}${shortcut.alt ? "Alt+" : ""}${shortcut.meta ? "Meta+" : ""}${shortcut.key}`
 }
 
 export type Keybinding = {
     command: string
-    key: KeyCombination
-    mac?: KeyCombination
-    linux?: KeyCombination
-    win?: KeyCombination
+    key: KeyShortcut
+    mac?: KeyShortcut
+    linux?: KeyShortcut
+    win?: KeyShortcut
 }
 
 const DefaultKeymap: Keybinding[] = [
     {
         command: "select_tool.select",
-        key: parseKeybind("V")
+        key: parseShortcut("V")
     },
     {
         command: "select_tool.pencil",
-        key: parseKeybind("P")
+        key: parseShortcut("P")
     },
     {
         command: "select_tool.select_rectangle",
-        key: parseKeybind("M")
+        key: parseShortcut("M")
     },
     {
         command: "select_tool.crop",
-        key: parseKeybind("C")
+        key: parseShortcut("C")
     },
     {
         command: "select_tool.command_palette",
-        key: parseKeybind("Ctrl+K")
+        key: parseShortcut("Ctrl+K")
     },
 
     {
         command: "toggle_sidebar",
-        key: parseKeybind("Ctrl+B")
+        key: parseShortcut("Ctrl+B")
     },
     {
         command: "toggle_tab.menu",
-        key: parseKeybind("Alt+M")
+        key: parseShortcut("Alt+M")
     },
     {
         command: "toggle_tab.color",
-        key: parseKeybind("Alt+C")
+        key: parseShortcut("Alt+C")
     },
     {
         command: "toggle_tab.collaboration",
-        key: parseKeybind("Alt+O")
+        key: parseShortcut("Alt+O")
     },
     {
         command: "toggle_tab.settings",
-        key: parseKeybind("Alt+S")
+        key: parseShortcut("Alt+S")
     },
 
     {
         command: "deselect",
-        key: parseKeybind("Ctrl+D")
+        key: parseShortcut("Ctrl+D")
     },
     {
         command: "reselect",
-        key: parseKeybind("Ctrl+Shift+D")
+        key: parseShortcut("Ctrl+Shift+D")
     },
     {
         command: "delete_selection",
-        key: parseKeybind("Delete")
+        key: parseShortcut("Delete")
     }
 ]
 

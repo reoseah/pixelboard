@@ -1,6 +1,6 @@
 import { onCleanup, useContext } from 'solid-js'
 import CropIcon from '../../assets/icons/crop.svg'
-import { BoardContext } from '../../api/BoardElements'
+import WhiteboardContext from '../../api/whiteboard/WhiteboardContext'
 import { CurrentToolContext } from '../../api/CurrentTool'
 import { SharedRectangleStateContext } from '../../api/SharedRectangleState'
 import Tool, { isViewportClick } from '../../api/tool'
@@ -14,7 +14,7 @@ const createCrop = (): Tool => {
         viewport: CropPreview,
         use: () => {
             const [, viewport] = useContext(ViewportPositionContext)
-            const [, elements] = useContext(BoardContext)
+            const whiteboard = useContext(WhiteboardContext)
             const currentTool = useContext(CurrentToolContext)
 
             const {
@@ -67,7 +67,7 @@ const createCrop = (): Tool => {
                 const height = Math.round(Math.abs(currentPos().y - initialPos().y))
 
                 if (width > 0 && height > 0) {
-                    elements.set(crypto.randomUUID(), {
+                    whiteboard.set(crypto.randomUUID(), {
                         type: "crop",
                         x,
                         y,

@@ -1,9 +1,9 @@
 import "./SelectionRenderer.css"
 import { createMemo, createSignal, For, Show, useContext } from "solid-js"
 import SaveIcon from "../../assets/icons/save.svg"
-import { SelectionContext } from "../../api/Selection"
+import { CanvasSelectionContext } from "../../api/CanvasSelectionContext"
 import { ViewportPositionContext } from "../../api/ViewportPosition"
-import { VirtualCanvasContext } from "../../api/VirtualCanvas"
+import { VirtualCanvasContext } from "../../api/canvas/VirtualCanvasContext"
 import IconButton from "../../components/IconButton"
 import Input from "../../components/Input"
 import InputGroup from "../../components/InputGroup"
@@ -18,9 +18,9 @@ const saveFormats = [
 
 const SelectionRenderer = () => {
   const [viewport] = useContext(ViewportPositionContext)
-  const [selection, selectionActions] = useContext(SelectionContext)
-  const [, virtualCanvas] = useContext(VirtualCanvasContext)
-  const bounds = createMemo(selectionActions.getBounds)
+  const selection = useContext(CanvasSelectionContext)
+  const canvas = useContext(VirtualCanvasContext)
+  const bounds = createMemo(selection.getBounds)
 
   const [saveScale, setSaveScale] = createSignal(1)
   const [saveFormat, setSaveFormat] = createSignal("image/png")
@@ -127,7 +127,7 @@ const SelectionRenderer = () => {
           <IconButton
             title="Export selection"
             onclick={() => {
-              virtualCanvas.renderArea(
+              canvas.renderArea(
                 bounds().x,
                 bounds().y,
                 bounds().width,

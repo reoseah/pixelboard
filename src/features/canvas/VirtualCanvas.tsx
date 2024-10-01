@@ -1,16 +1,16 @@
-import './VirtualCanvasRenderer.css'
+import './VirtualCanvas.css'
 import * as Y from "yjs"
 import { createEffect, onCleanup, onMount, useContext } from 'solid-js'
-import { VirtualCanvasAccess, CanvasAction, CanvasActionType } from '../../api/canvas_action'
+import { VirtualCanvasAccess, CanvasAction, CanvasActionType } from '../../api/canvas/canvas_action'
 import { RegistryContext } from '../../api/Registry'
 import { ViewportPositionContext } from '../../api/ViewportPosition'
-import { VirtualCanvasContext } from '../../api/VirtualCanvas'
+import { VirtualCanvasContext } from '../../api/canvas/VirtualCanvasContext'
 import { doRectanglesIntersect } from '../../util/rectangle'
 
 const tileSize = 32
 
-const VirtualCanvasRenderer = () => {
-    const [state] = useContext(VirtualCanvasContext)
+const VirtualCanvas = () => {
+    const context = useContext(VirtualCanvasContext)
     const [viewport] = useContext(ViewportPositionContext)
     const { actionTypes } = useContext(RegistryContext)
 
@@ -142,7 +142,7 @@ const VirtualCanvasRenderer = () => {
                         .clearRect(0, 0, tileSize, tileSize)
                 })
             })
-            state.actions.forEach((action) => {
+            context.actions.forEach((action) => {
                 const type = actionTypes[action.type]
 
                 deletionAffectedChunks.forEach((rows, column) => {
@@ -163,10 +163,10 @@ const VirtualCanvasRenderer = () => {
         })
     }
     onMount(() => {
-        state.actions.observe(onDataChange)
+        context.actions.observe(onDataChange)
     })
     onCleanup(() => {
-        state.actions.unobserve(onDataChange)
+        context.actions.unobserve(onDataChange)
     })
 
     createEffect(() => {
@@ -186,7 +186,7 @@ const VirtualCanvasRenderer = () => {
     )
 }
 
-export default VirtualCanvasRenderer
+export default VirtualCanvas
 
 const affectsChunk = <T extends CanvasAction = any,>(type: CanvasActionType<T>, action: T, column: number, row: number, tileSize: number) => {
     const actionBounds = type.getBounds(action)

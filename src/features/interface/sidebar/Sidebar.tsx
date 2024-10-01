@@ -1,7 +1,7 @@
 import "./Sidebar.css"
 import { For, Show, useContext } from "solid-js"
 import { Dynamic } from "solid-js/web"
-import DefaultKeymap, { stringifyKeybind } from "../../../api/Keymap"
+import DefaultKeymap, { stringifyShortcut } from "../../../api/Keymap"
 import { RegistryContext } from "../../../api/Registry"
 import { SidebarContext } from "../../../api/SidebarContext"
 
@@ -13,7 +13,7 @@ const Sidebar = () => {
         if (keybinding.command.match(/^toggle_tab\./)) {
             const tab = keybinding.command.replace(/^toggle_tab\./, "")
             if (tabs[tab]) {
-                acc[tab] = stringifyKeybind(keybinding.key)
+                acc[tab] = stringifyShortcut(keybinding.key)
             }
         }
         return acc

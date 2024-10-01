@@ -1,6 +1,6 @@
 import { useContext, onCleanup, createSignal } from 'solid-js'
 import CursorIcon from '../../assets/icons/cursor.svg'
-import { BoardContext } from '../../api/BoardElements'
+import { WhiteboardContext } from '../../api/whiteboard/WhiteboardContext'
 import { SharedRectangleStateContext } from '../../api/SharedRectangleState'
 import Tool, { isViewportClick } from '../../api/tool'
 import { ViewportPositionContext } from '../../api/ViewportPosition'
@@ -22,7 +22,7 @@ const createSelect = (): Tool => {
 
             const [, viewport] = useContext(ViewportPositionContext)
 
-            const [elements, elementActions] = useContext(BoardContext)
+            const whiteboard = useContext(WhiteboardContext)
             let clickTime = 0
             let clickId: string | null = null
 
@@ -38,15 +38,15 @@ const createSelect = (): Tool => {
                     const isTitle = (e.target as Element)?.hasAttribute("data-element-title")
                     if (isTitle) {
                         if (Date.now() - clickTime < 300 && clickId === targetedId) {
-                            elementActions.setEditingTitle(targetedId)
+                            whiteboard.setEditingTitle(targetedId)
                             return
                         } else {
                             clickTime = Date.now()
                             clickId = targetedId
                         }
                     }
-                    const selection = modifySelection(elements.selected(), targetedId, e.shiftKey)
-                    elementActions.select(selection)
+                    const selection = modifySelection(whiteboard.selected(), targetedId, e.shiftKey)
+                    whiteboard.select(selection)
                     if (selection.length > 0) {
                         setToolState("move")
                         const x = viewport.toCanvasX(e.clientX)
@@ -63,7 +63,7 @@ const createSelect = (): Tool => {
                 const y = viewport.toCanvasY(e.clientY)
                 setInitialPos({ x, y })
                 setCurrentPos({ x, y })
-                elementActions.select([])
+                whiteboard.select([])
             }
 
             const handleMouseMove = (e: MouseEvent) => {
@@ -87,8 +87,8 @@ const createSelect = (): Tool => {
                         const maxX = Math.max(initialPos().x, currentPos().x)
                         const maxY = Math.max(initialPos().y, currentPos().y)
 
-                        const selection = elementActions.getElementsInside(minX, minY, maxX - minX, maxY - minY)
-                        elementActions.select(selection)
+                        const selection = whiteboard.getElementsInside(minX, minY, maxX - minX, maxY - minY)
+                        whiteboard.select(selection)
 
                         break
                     }

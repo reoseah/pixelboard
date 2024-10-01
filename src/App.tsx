@@ -2,19 +2,19 @@ import './App.css'
 import { Component, createMemo, For, onCleanup, Show, useContext } from 'solid-js'
 import { createStore, reconcile } from 'solid-js/store'
 import { Dynamic } from 'solid-js/web'
-import BoardElement from './api/board_element'
-import { BoardContext } from './api/BoardElements'
+import { WhiteboardContext } from './api/whiteboard/WhiteboardContext'
 import { CurrentToolContext } from './api/CurrentTool'
 import DefaultKeymap from './api/Keymap'
 import Registry, { RegistryContext } from './api/Registry'
 import Tool from './api/tool'
-import VirtualCanvasRenderer from './features/canvas/VirtualCanvasRenderer'
+import VirtualCanvas from './features/canvas/VirtualCanvas'
 import SideLayout from './features/interface/SideLayout'
 import MainToolbar from './features/interface/toolbar/MainToolbar'
 import TopCenterLayout from './features/interface/TopCenterLayout'
 import SelectionRenderer from './features/select_rectangle/SelectionRenderer'
 import ViewportContainer from './features/viewport/ViewportContainer'
 import Sidebar from './features/interface/sidebar/Sidebar'
+import { Entity } from './api/whiteboard/entity'
 
 function App() {
   useCommandKeybinds()
@@ -22,7 +22,7 @@ function App() {
   return (
     <>
       <ViewportContainer>
-        <VirtualCanvasRenderer />
+        <VirtualCanvas />
         <CurrentToolRenderer map={(tool) => tool.viewport} />
         <SelectionRenderer />
         <ElementsRenderer />
@@ -94,13 +94,13 @@ const useCommandKeybinds = () => {
 export default App
 
 const ElementsRenderer = () => {
-  const [board] = useContext(BoardContext)
+  const whiteboard = useContext(WhiteboardContext)
   const { elementTypes } = useContext(RegistryContext)
 
-  const [store, setStore] = createStore<Record<string, BoardElement>>({})
+  const [store, setStore] = createStore<Record<string, Entity>>({})
 
-  board.elements.observe(() => {
-    setStore(reconcile(board.elements.toJSON()))
+  whiteboard.entities.observe(() => {
+    setStore(reconcile(whiteboard.entities.toJSON()))
   })
 
   return (

@@ -1,6 +1,6 @@
 import "./CropRenderer.css"
 import { createSignal, JSX, onMount, Show, useContext } from "solid-js"
-import { BoardContext } from "../../api/BoardElements"
+import { WhiteboardContext } from "../../api/whiteboard/WhiteboardContext"
 import { CurrentToolContext } from "../../api/CurrentTool"
 import { ViewportPositionContext } from "../../api/ViewportPosition"
 import useClickOutside from "../../hooks/useClickOutside"
@@ -11,14 +11,14 @@ const CropRenderer = (props: {
     element: Crop
 }) => {
     const [viewport] = useContext(ViewportPositionContext)
-    const [elements] = useContext(BoardContext)
+    const whiteboard = useContext(WhiteboardContext)
 
     return (
         <div
             class="crop"
             data-selectable
             data-element-id={props.id}
-            data-selected={elements.selected().includes(props.id)}
+            data-selected={whiteboard.selected().includes(props.id)}
             style={{
                 left: `${props.element.x * viewport.scale()}px`,
                 top: `${props.element.y * viewport.scale()}px`,
@@ -27,7 +27,7 @@ const CropRenderer = (props: {
             }}
         >
             <Show
-                when={elements.editingTitle() === props.id}
+                when={whiteboard.editingTitle() === props.id}
                 fallback={<FrameTitle id={props.id} node={props.element} />}
             >
                 <FrameTitleEditor id={props.id} node={props.element} />
@@ -43,7 +43,7 @@ const FrameTitle = (props: {
     node: Crop
 }) => {
     const currentTool = useContext(CurrentToolContext)
-    const [, elementActions] = useContext(BoardContext)
+    const whiteboard = useContext(WhiteboardContext)
 
     const style = (): JSX.CSSProperties => currentTool.id() === "select" ? {
         "pointer-events": "auto"
@@ -60,7 +60,7 @@ const FrameTitle = (props: {
                 e.preventDefault()
                 e.stopPropagation()
                 if (currentTool.id() === "select") {
-                    elementActions.setEditingTitle(props.id)
+                    whiteboard.setEditingTitle(props.id)
                 }
             }}
         >
@@ -74,17 +74,17 @@ const FrameTitleEditor = (props: {
     node: Crop
 }) => {
     const [value, setValue] = createSignal(props.node.title ?? "Frame")
-    const [, elementActions] = useContext(BoardContext)
+    const whiteboard = useContext(WhiteboardContext)
     let input!: HTMLInputElement
     let widthHelper!: HTMLSpanElement
 
     const updateTitle = () => {
-        elementActions.set(props.id, {
+        whiteboard.set(props.id, {
             ...props.node,
             title: value().trim() || null
         })
 
-        elementActions.setEditingTitle(null)
+        whiteboard.setEditingTitle(null)
     }
 
     onMount(() => {
@@ -128,7 +128,7 @@ const FrameTitleEditor = (props: {
                     if (e.key === "Enter") updateTitle()
                     if (e.key === "Escape") {
                         setValue(props.node.title ?? "Frame")
-                        elementActions.setEditingTitle(null)
+                        whiteboard.setEditingTitle(null)
                     }
                 }}
                 ref={el => input = el}

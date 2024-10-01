@@ -1,4 +1,4 @@
-import { CanvasActionType } from "../../api/canvas_action"
+import { CanvasActionType } from "../../api/canvas/canvas_action"
 
 export type PencilStroke = {
     type: "pencil_stroke"

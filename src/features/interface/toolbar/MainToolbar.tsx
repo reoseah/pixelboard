@@ -1,7 +1,7 @@
 import "./MainToolbar.css"
 import { For, useContext } from "solid-js"
 import { CurrentToolContext } from "../../../api/CurrentTool"
-import DefaultKeymap, { stringifyKeybind } from "../../../api/Keymap"
+import DefaultKeymap, { stringifyShortcut } from "../../../api/Keymap"
 import { RegistryContext } from "../../../api/Registry"
 import Stack from "../../../components/Stack"
 
@@ -13,7 +13,7 @@ const MainToolbar = () => {
         if (keybinding.command.match(/^select_tool\./)) {
             const tool = keybinding.command.replace(/^select_tool\./, "")
             if (tools[tool]) {
-                acc[tool] = stringifyKeybind(keybinding.key)
+                acc[tool] = stringifyShortcut(keybinding.key)
             }
         }
         return acc

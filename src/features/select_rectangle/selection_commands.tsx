@@ -1,17 +1,17 @@
 import Command from "../../api/command"
-import { VirtualCanvas } from "../../api/VirtualCanvas"
-import Selection from "../../api/Selection"
+import { DefaultCanvas } from "../../api/canvas/VirtualCanvasContext"
+import { VirtualCanvasSelection } from "../../api/CanvasSelectionContext"
 
 export const Deselect: Command = {
     id: "deselect",
     label: () => "Deselect",
     isDisabled: () => {
-        const [selection] = Selection
+        const selection = VirtualCanvasSelection
         return selection.parts.length === 0
     },
     execute: () => {
-        const [, actions] = Selection
-        actions.deselect()
+        const selection = VirtualCanvasSelection
+        selection.deselect()
     }
 }
 
@@ -19,12 +19,12 @@ export const Reselect: Command = {
     id: "reselect",
     label: () => "Reselect",
     isDisabled: () => {
-        const [selection] = Selection
+        const selection = VirtualCanvasSelection
         return selection.prevParts().length === 0 || selection.parts.length !== 0
     },
     execute: () => {
-        const [, actions] = Selection
-        actions.reselect()
+        const selection = VirtualCanvasSelection
+        selection.reselect()
     }
 }
 
@@ -32,14 +32,14 @@ export const DeleteSelection: Command = {
     id: "delete_selection",
     label: () => "Delete",
     isDisabled: () => {
-        const [selection] = Selection
+        const selection = VirtualCanvasSelection
         return selection.parts.length === 0
     },
     execute: () => {
-        const [, canvasActions] = VirtualCanvas
-        const [selection] = Selection
+        const canvas = DefaultCanvas
+        const selection = VirtualCanvasSelection
         if (selection.parts.length === 1 && selection.parts[0].type === "rectangle") {
-            canvasActions.add({
+            canvas.add({
                 type: "delete_rectangle",
                 x: selection.parts[0].x,
                 y: selection.parts[0].y,

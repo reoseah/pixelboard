@@ -1,13 +1,11 @@
 import { Component } from "solid-js"
 
-type BoardElement = {
+export type Entity = {
     type: string
     [data: string]: unknown
 }
 
-export default BoardElement
-
-export type BoardElementType<T extends BoardElement = any> = {
+export type EntityType<T extends Entity = any> = {
     render: Component<{ id: string, element: T }>
     getBounds: (element: T) => { x: number, y: number, width: number, height: number }
 }
