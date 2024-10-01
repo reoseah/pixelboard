@@ -1,6 +1,6 @@
 import Command from "../../../api/command"
 import Registry from "../../../api/Registry"
-import Sidebar from "../../../api/Sidebar"
+import Sidebar from "../../../api/SidebarContext"
 import SidebarIcon from "../../../assets/icons/sidebar.svg"
 
 export const ToggleSidebar: Command = {
