@@ -1,4 +1,4 @@
-import Tool from "../../api/tool"
+import Tool from "../../api/tool/tool"
 import CommandIcon from "../../assets/icons/command.svg"
 import CommandPalette from "./CommandPalette"
 

@@ -1,4 +1,4 @@
-import Tab from "../../../api/tab"
+import Tab from "../../../api/sidebar/tab"
 import Stack from "../../../components/Stack"
 import SettingsIcon from "../../../assets/icons/settings.svg"
 

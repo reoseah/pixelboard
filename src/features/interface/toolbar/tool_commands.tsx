@@ -1,7 +1,7 @@
 import { Dynamic } from "solid-js/web"
 import Command from "../../../api/command_palette/command"
-import { CurrentTool } from "../../../api/CurrentTool"
-import Registry from "../../../api/Registry"
+import { CurrentTool } from "../../../api/tool/CurrentToolContext"
+import Registry from "../../../api/RegistryContext"
 
 export const createSelectToolCommand = (tool: string): Command => {
     return {

@@ -51,6 +51,6 @@ const CurrentColor: CurrentColor = createRoot(() => {
     }
 })
 
-export default CurrentColor
-
 export const CurrentColorContext = createContext<CurrentColor>(CurrentColor)
+
+export default CurrentColorContext

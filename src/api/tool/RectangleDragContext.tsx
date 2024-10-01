@@ -5,7 +5,7 @@ import { createContext, createRoot, createSignal } from "solid-js";
 // and crop tool.
 // It's raised from the tool components so that it can be shared between them,
 // allowing to switch between tools with shortcuts without losing the state.
-const SharedRectangleState = createRoot(() => {
+const RectangleDragState = createRoot(() => {
     const [dragging, setDragging] = createSignal(false)
     // Coordinates in project space, not the screen position,
     // apply toCanvasX/Y in ViewportPositionContext before assigning.
@@ -41,6 +41,7 @@ const SharedRectangleState = createRoot(() => {
         setCurrentPos,
         dragging,
         setDragging,
+        
         left,
         top,
         width,
@@ -48,6 +49,6 @@ const SharedRectangleState = createRoot(() => {
     }
 })
 
-export default SharedRectangleState
+export const RectangleDragContext = createContext<typeof RectangleDragState>(RectangleDragState)
 
-export const SharedRectangleStateContext = createContext<typeof SharedRectangleState>(SharedRectangleState)
+export default RectangleDragContext

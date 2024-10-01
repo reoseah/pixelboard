@@ -1,12 +1,12 @@
 import "./CropPreview.css"
 import { Show, useContext } from "solid-js"
-import { SharedRectangleStateContext } from "../../api/SharedRectangleState"
-import { ViewportPositionContext } from "../../api/ViewportPositionContext"
+import { RectangleDragContext } from "../../api/tool/RectangleDragContext"
+import { ViewportPositionContext } from "../../api/viewport/ViewportPositionContext"
 
 const CropPreview = () => {
   const viewport = useContext(ViewportPositionContext)
 
-  const { dragging, left, top, width, height } = useContext(SharedRectangleStateContext)
+  const { dragging, left, top, width, height } = useContext(RectangleDragContext)
 
   return (
     <Show when={dragging()}>

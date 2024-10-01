@@ -1,10 +1,10 @@
 import { onCleanup, useContext } from 'solid-js'
 import CropIcon from '../../assets/icons/crop.svg'
 import WhiteboardContext from '../../api/whiteboard/WhiteboardContext'
-import { CurrentToolContext } from '../../api/CurrentTool'
-import { SharedRectangleStateContext } from '../../api/SharedRectangleState'
-import Tool, { isViewportClick } from '../../api/tool'
-import { ViewportPositionContext } from '../../api/ViewportPositionContext'
+import { CurrentToolContext } from '../../api/tool/CurrentToolContext'
+import { RectangleDragContext } from '../../api/tool/RectangleDragContext'
+import Tool, { isViewportClick } from '../../api/tool/tool'
+import { ViewportPositionContext } from '../../api/viewport/ViewportPositionContext'
 import CropPreview from './CropPreview'
 
 const createCrop = (): Tool => {
@@ -24,7 +24,7 @@ const createCrop = (): Tool => {
                 setCurrentPos,
                 dragging,
                 setDragging
-            } = useContext(SharedRectangleStateContext)
+            } = useContext(RectangleDragContext)
 
             const handleMouseDown = (e: MouseEvent) => {
                 if (!isViewportClick(e)) {

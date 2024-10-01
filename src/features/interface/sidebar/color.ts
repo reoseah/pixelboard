@@ -1,4 +1,4 @@
-import Tab from "../../../api/tab"
+import Tab from "../../../api/sidebar/tab"
 import PaletteIcon from "../../../assets/icons/palette.svg"
 import ColorPanel from "./ColorPanel"
 

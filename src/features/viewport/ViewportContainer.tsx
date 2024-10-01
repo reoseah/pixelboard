@@ -1,7 +1,7 @@
 import "./ViewportContainer.css"
 import { createSignal, JSXElement, onCleanup, useContext } from "solid-js"
-import { CurrentToolContext } from "../../api/CurrentTool"
-import { ViewportPositionContext } from "../../api/ViewportPositionContext"
+import { CurrentToolContext } from "../../api/tool/CurrentToolContext"
+import { ViewportPositionContext } from "../../api/viewport/ViewportPositionContext"
 
 const ViewportContainer = (props: { children: JSXElement }) => {
     const viewport = useContext(ViewportPositionContext)

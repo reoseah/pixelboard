@@ -1,6 +1,6 @@
 import Command from "../../../api/command_palette/command"
-import Registry from "../../../api/Registry"
-import Sidebar from "../../../api/SidebarContext"
+import Registry from "../../../api/RegistryContext"
+import Sidebar from "../../../api/sidebar/SidebarContext"
 import SidebarIcon from "../../../assets/icons/sidebar.svg"
 
 export const ToggleSidebar: Command = {
@@ -9,8 +9,8 @@ export const ToggleSidebar: Command = {
     label: () => "Toggle Sidebar",
     isDisabled: () => false,
     execute: () => {
-        const [, actions] = Sidebar
-        actions.toggle()
+        const sidebar = Sidebar
+        sidebar.toggle()
     }
 }
 
@@ -23,7 +23,7 @@ export const createTabCommand = (tab: string): Command => ({
     },
     isDisabled: () => false,
     execute: () => {
-        const [, actions] = Sidebar
-        actions.toggle(tab)
+        const sidebar = Sidebar
+        sidebar.toggle(tab)
     }
 })

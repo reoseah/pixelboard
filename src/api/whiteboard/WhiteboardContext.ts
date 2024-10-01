@@ -1,7 +1,7 @@
 import * as Y from "yjs"
 import { Accessor, createRoot, createSignal, createContext, useContext } from "solid-js"
 import { YjsContext } from "../Yjs"
-import DefaultRegistry from "../Registry"
+import DefaultRegistry from "../RegistryContext"
 import { Entity } from "./entity"
 
 export type WhiteboardState = {

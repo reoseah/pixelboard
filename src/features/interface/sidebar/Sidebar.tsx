@@ -2,76 +2,61 @@ import "./Sidebar.css"
 import { For, Show, useContext } from "solid-js"
 import { Dynamic } from "solid-js/web"
 import DefaultKeymap, { stringifyShortcut } from "../../../api/Keymap"
-import { RegistryContext } from "../../../api/Registry"
-import { SidebarContext } from "../../../api/SidebarContext"
+import { RegistryContext } from "../../../api/RegistryContext"
+import { SidebarContext } from "../../../api/sidebar/SidebarContext"
 
 const Sidebar = () => {
-    const [state, actions] = useContext(SidebarContext)
-    const { tabs } = useContext(RegistryContext)
+  const context = useContext(SidebarContext)
+  const { tabs } = useContext(RegistryContext)
 
-    const tabKeys = DefaultKeymap.reduce((acc, keybinding) => {
-        if (keybinding.command.match(/^toggle_tab\./)) {
-            const tab = keybinding.command.replace(/^toggle_tab\./, "")
-            if (tabs[tab]) {
-                acc[tab] = stringifyShortcut(keybinding.key)
-            }
-        }
-        return acc
-    }, {} as Record<string, string>)
+  const tabKeys = DefaultKeymap.reduce((acc, keybinding) => {
+    if (keybinding.command.match(/^toggle_tab\./)) {
+      const tab = keybinding.command.replace(/^toggle_tab\./, "")
+      if (tabs[tab]) {
+        acc[tab] = stringifyShortcut(keybinding.key)
+      }
+    }
+    return acc
+  }, {} as Record<string, string>)
 
-    return (
-        <div class="sidebar">
-            <div class="sidebar-tabs">
-                <TabGroup
-                    tabs={tabs}
-                    place="top"
-                    activeTab={state.open() ? state.tab() : null}
-                    onTabClick={actions.toggle}
-                    tabKeys={tabKeys}
-                />
-                <TabGroup
-                    tabs={tabs}
-                    place="bottom"
-                    activeTab={state.open() ? state.tab() : null}
-                    onTabClick={actions.toggle}
-                    tabKeys={tabKeys}
-                />
-            </div>
-            <Show when={state.open()}>
-                <div class="sidebar-divider"></div>
-                <div class="sidebar-content">
-                    <Dynamic component={tabs[state.tab()!].contents} />
-                </div>
-            </Show>
-        </div>
-    )
-}
-
-const TabGroup = (props: {
-    tabs: Record<string, any>,
+  const TabGroup = (props: {
     place: "top" | "bottom",
-    activeTab: string | null,
-    onTabClick: (activityId: string) => void,
-    tabKeys: Record<string, string>,
-}) => {
-    const filtered = Object.entries(props.tabs).filter(([_, tab]) => tab.place === props.place)
+  }) => {
+    const filtered = Object.entries(tabs).filter(([_, tab]) => tab.place === props.place)
 
     return (
-        <div class="sidebar-tab-group">
-            <For each={filtered}>
-                {([id, tab]) => (
-                    <button
-                        title={`${tab.label} - ${props.tabKeys[id]}`}
-                        class="sidebar-tab"
-                        aria-pressed={props.activeTab === id}
-                        onclick={() => props.onTabClick(id)}
-                    >
-                        <tab.icon />
-                    </button>
-                )}
-            </For>
-        </div>
+      <div class="sidebar-tab-group">
+        <For each={filtered}>
+          {([id, tab]) => (
+            <button
+              title={`${tab.label} - ${tabKeys[id]}`}
+              class="sidebar-tab"
+              aria-pressed={context.isOpen() && context.tab() === id}
+              onclick={() => context.toggle(id)}
+            >
+              <tab.icon />
+            </button>
+          )}
+        </For>
+      </div>
     )
+  }
+
+  return (
+    <div class="sidebar">
+      <div class="sidebar-tabs">
+        <TabGroup place="top" />
+        <TabGroup place="bottom" />
+      </div>
+      <Show when={context.isOpen()}>
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-content">
+          <Dynamic component={tabs[context.tab()!].contents} />
+        </div>
+      </Show>
+    </div>
+  )
 }
+
 
 export default Sidebar

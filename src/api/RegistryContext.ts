@@ -18,8 +18,8 @@ import { Deselect, Reselect, DeleteSelection } from "../features/select_rectangl
 import { EntityType } from "./whiteboard/entity"
 import { CanvasActionType } from "./canvas/canvas_action"
 import Command from "./command_palette/command"
-import Tab from "./tab"
-import Tool from "./tool"
+import Tab from "./sidebar/tab"
+import Tool from "./tool/tool"
 
 export type Registry = {
     tools: Record<string, Tool>,
@@ -54,6 +54,7 @@ const DefaultRegistry: Registry = createRoot(() => {
             "toggle_sidebar": ToggleSidebar,
             "toggle_tab.menu": createTabCommand("menu"),
             "toggle_tab.color": createTabCommand("color"),
+            "toggle_tab.collaboration": createTabCommand("collaboration"),
             "toggle_tab.settings": createTabCommand("settings"),
             "clear_project": ClearProject,
             "deselect": Deselect,

@@ -1,12 +1,12 @@
 import "./SelectRectanglePreview.css"
 import { useContext, Show } from "solid-js"
-import { SharedRectangleStateContext } from "../../api/SharedRectangleState"
-import { ViewportPositionContext } from "../../api/ViewportPositionContext"
+import { RectangleDragContext } from "../../api/tool/RectangleDragContext"
+import { ViewportPositionContext } from "../../api/viewport/ViewportPositionContext"
 
 const SelectRectanglePreview = () => {
   const viewport = useContext(ViewportPositionContext)
 
-  const { initialPos, currentPos, dragging, } = useContext(SharedRectangleStateContext)
+  const { initialPos, currentPos, dragging, } = useContext(RectangleDragContext)
 
   const left = () => Math.min(Math.round(initialPos().x), Math.round(currentPos().x))
   const top = () => Math.min(Math.round(initialPos().y), Math.round(currentPos().y))

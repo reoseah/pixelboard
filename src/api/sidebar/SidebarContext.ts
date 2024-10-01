@@ -1,38 +1,31 @@
 import { Accessor, createContext, createRoot, createSignal } from "solid-js"
 
 export type SidebarState = {
-    open: Accessor<boolean>
+    isOpen: Accessor<boolean>
     tab: Accessor<string>
-}
 
-export type SidebarActions = {
     toggle: (tab?: string) => void,
 }
 
-const DefaultSidebar: [
-    state: SidebarState,
-    actions: SidebarActions
-] = createRoot(() => {
-    const [open, setOpen] = createSignal(false)
+const DefaultSidebar: SidebarState = createRoot(() => {
+    const [isOpen, setOpen] = createSignal(false)
     const [tab, setTab] = createSignal("menu")
 
     const toggle = (newTab?: string) => {
         if (!newTab) {
-            setOpen(!open())
+            setOpen(!isOpen())
             return
         }
         if (newTab === tab()) {
-            setOpen(!open())
+            setOpen(!isOpen())
             return
         }
         setTab(newTab)
         setOpen(true)
     }
 
-    return [
-        { open, tab },
-        { toggle }
-    ]
+    return { isOpen, tab, toggle }
+
 })
 
 export default DefaultSidebar

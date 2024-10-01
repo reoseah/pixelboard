@@ -1,9 +1,9 @@
 import { onCleanup, useContext } from "solid-js"
 import SelectionIcon from "../../assets/icons/selection.svg"
-import Tool, { isViewportClick } from "../../api/tool"
+import Tool, { isViewportClick } from "../../api/tool/tool"
 import CanvasSelectionContext from "../../api/canvas/CanvasSelectionContext"
-import { SharedRectangleStateContext } from "../../api/SharedRectangleState"
-import { ViewportPositionContext } from "../../api/ViewportPositionContext"
+import { RectangleDragContext } from "../../api/tool/RectangleDragContext"
+import { ViewportPositionContext } from "../../api/viewport/ViewportPositionContext"
 import SelectRectanglePreview from "./SelectRectanglePreview"
 
 const SelectRectangle: Tool = {
@@ -21,7 +21,7 @@ const SelectRectangle: Tool = {
             setCurrentPos,
             dragging,
             setDragging
-        } = useContext(SharedRectangleStateContext)
+        } = useContext(RectangleDragContext)
 
         const handleMouseDown = (e: MouseEvent) => {
             if (e.button !== 0 || !isViewportClick(e)) {

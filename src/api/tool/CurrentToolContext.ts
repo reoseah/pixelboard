@@ -25,7 +25,13 @@ export const CurrentTool: CurrentTool = createRoot(() => {
         setPrevId(prevId)
     }
 
-    return { id, selectId, prevId }
+    return {
+        id,
+        selectId,
+        prevId
+    }
 })
 
 export const CurrentToolContext = createContext(CurrentTool)
+
+export default CurrentToolContext

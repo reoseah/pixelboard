@@ -1,7 +1,7 @@
 import * as Y from 'yjs'
 import { createContext, useContext } from 'solid-js'
 import { YjsContext } from '../Yjs'
-import DefaultRegistry from '../Registry'
+import DefaultRegistry from '../RegistryContext'
 import { doRectanglesIntersect } from '../../util/rectangle'
 import { CanvasAction, VirtualCanvasAccess } from './canvas_action'
 

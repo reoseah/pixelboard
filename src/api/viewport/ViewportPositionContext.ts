@@ -9,6 +9,7 @@ export type ViewportPosition = {
     move: (dx: number, dy: number) => void
     zoomIn: () => void
     zoomOut: () => void
+    
     toCanvasX: (clientX: number) => number
     toCanvasY: (clientY: number) => number
 }

@@ -1,7 +1,7 @@
 import "./SelectionRenderer.css"
 import { createMemo, createSignal, For, Show, useContext } from "solid-js"
 import SaveIcon from "../../assets/icons/save.svg"
-import { ViewportPositionContext } from "../../api/ViewportPositionContext"
+import { ViewportPositionContext } from "../../api/viewport/ViewportPositionContext"
 import { VirtualCanvasContext } from "../../api/canvas/VirtualCanvasContext"
 import IconButton from "../../components/IconButton"
 import Input from "../../components/Input"
