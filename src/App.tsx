@@ -1,20 +1,20 @@
 import './App.css'
 import { Component, createMemo, For, onCleanup, Show, useContext } from 'solid-js'
-import { Dynamic } from 'solid-js/web'
-import Registry, { RegistryContext } from './state/Registry'
-import DefaultKeymap from './state/Keymap'
-import Tool from './core/tools/tool'
-import { CurrentToolContext } from './state/CurrentTool'
-import SideLayout from './components/features/sidebar/SideLayout'
-import Sidebar from './components/features/sidebar/Sidebar'
-import MainToolbar from './components/features/toolbar/MainToolbar'
-import TopCenterLayout from './components/features/toolbar/TopCenterLayout'
-import SelectionRenderer from './components/features/viewport/SelectionRenderer'
-import ViewportContainer from './components/features/viewport/ViewportContainer'
-import VirtualCanvasRenderer from './components/features/viewport/VirtualCanvasRenderer'
-import { BoardContext } from './state/BoardElements'
 import { createStore, reconcile } from 'solid-js/store'
-import BoardElement from './core/board_elements/board_element'
+import { Dynamic } from 'solid-js/web'
+import BoardElement from './api/board_element'
+import { BoardContext } from './api/BoardElements'
+import { CurrentToolContext } from './api/CurrentTool'
+import DefaultKeymap from './api/Keymap'
+import Registry, { RegistryContext } from './api/Registry'
+import Tool from './api/tool'
+import VirtualCanvasRenderer from './features/canvas/VirtualCanvasRenderer'
+import SideLayout from './features/interface/SideLayout'
+import MainToolbar from './features/interface/toolbar/MainToolbar'
+import TopCenterLayout from './features/interface/TopCenterLayout'
+import SelectionRenderer from './features/select_rectangle/SelectionRenderer'
+import ViewportContainer from './features/viewport/ViewportContainer'
+import Sidebar from './features/interface/sidebar/Sidebar'
 
 function App() {
   useCommandKeybinds()
@@ -99,7 +99,7 @@ const ElementsRenderer = () => {
 
   const [store, setStore] = createStore<Record<string, BoardElement>>({})
 
-  board.elements.observe((event) => {
+  board.elements.observe(() => {
     setStore(reconcile(board.elements.toJSON()))
   })
 
