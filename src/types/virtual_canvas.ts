@@ -3,7 +3,8 @@ export type CanvasAction = {
   type: string
 }
 
-export type CanvasActionType<T extends CanvasAction = CanvasAction> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type CanvasActionType<T extends CanvasAction = any> = {
   getBounds: (action: T) => { height: number, width: number, x: number, y: number }
 
   render: (action: T, canvas: VirtualCanvasAccess) => void

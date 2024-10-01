@@ -21,8 +21,8 @@ const Stack = <T extends ValidComponent = 'div'>(props: {
     spacing,
   }, rest] = splitProps(props, ['as', 'direction', 'spacing', 'padding', 'class', 'style'])
 
-  // @ts-expect-error TypeScript fails to infer this correctly
   return (
+    // @ts-expect-error TypeScript fails to infer this correctly
     <Dynamic
       class={`stack ${direction}${className ? ` ${className}` : ''}`}
       component={as}

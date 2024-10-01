@@ -122,7 +122,8 @@ const VirtualCanvas = () => {
     }
   }
 
-  const onDataChange = (event: Y.YEvent<Y.Array<CanvasAction>>) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onDataChange = (event: Y.YEvent<Y.Array<any>>) => {
     if (isReplacementOfLastElement(event)) {
       const oldAction = event.changes.deleted.values().next().value!.content.getContent()[0]
       const newAction = event.changes.added.values().next().value!.content.getContent()[0]
@@ -190,7 +191,7 @@ const VirtualCanvas = () => {
 
 export default VirtualCanvas
 
-const affectsChunk = <T extends CanvasAction = CanvasAction >(type: CanvasActionType<T>, action: T, column: number, row: number, tileSize: number) => {
+const affectsChunk = <T extends CanvasAction = CanvasAction>(type: CanvasActionType<T>, action: T, column: number, row: number, tileSize: number) => {
   const actionBounds = type.getBounds(action)
   const chunkBounds = {
     height: tileSize - 1,
@@ -201,7 +202,7 @@ const affectsChunk = <T extends CanvasAction = CanvasAction >(type: CanvasAction
   return doRectanglesIntersect(actionBounds, chunkBounds)
 }
 
-const getAffectedChunks = <T extends CanvasAction = CanvasAction >(type: CanvasActionType<T>, action: T, tileSize: number) => {
+const getAffectedChunks = <T extends CanvasAction = CanvasAction>(type: CanvasActionType<T>, action: T, tileSize: number) => {
   if (!type) {
     return []
   }
