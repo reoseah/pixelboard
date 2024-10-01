@@ -42,7 +42,7 @@ export const DefaultRegistry: Registry = createRoot(() => {
       'deselect': Deselect,
       'reselect': Reselect,
       'select_tool.command_palette': createSelectToolCommand('command_palette'),
-      'select_tool.crop': createSelectToolCommand('crop'),
+      'select_tool.frame': createSelectToolCommand('frame'),
       'select_tool.pencil': createSelectToolCommand('pencil'),
       'select_tool.select': createSelectToolCommand('select'),
       'select_tool.select_rectangle': createSelectToolCommand('select_rectangle'),
@@ -55,18 +55,20 @@ export const DefaultRegistry: Registry = createRoot(() => {
     elementTypes: {
       crop: FrameType,
     },
+    /* eslint-disable perfectionist/sort-objects */
     tabs: {
-      collaboration: Collaboration,
-      color: Color,
       menu: MainMenu,
+      color: Color,
+      collaboration: Collaboration,
       settings: Settings,
     },
+    /* eslint-disable perfectionist/sort-objects */
     tools: {
-      command_palette: CommandPalette,
-      frame: Frame,
-      pencil: createPencil(),
       select: createSelect(),
+      pencil: createPencil(),
       select_rectangle: SelectRectangle,
+      frame: Frame,
+      command_palette: CommandPalette,
     },
   }
 })

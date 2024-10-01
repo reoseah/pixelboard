@@ -17,15 +17,15 @@ const DefaultKeymap: Keybinding[] = [
   },
   {
     command: 'select_tool.pencil',
-    key: parseShortcut('P'),
+    key: parseShortcut('B'),
   },
   {
     command: 'select_tool.select_rectangle',
     key: parseShortcut('M'),
   },
   {
-    command: 'select_tool.crop',
-    key: parseShortcut('C'),
+    command: 'select_tool.frame',
+    key: parseShortcut('F'),
   },
   {
     command: 'select_tool.command_palette',
