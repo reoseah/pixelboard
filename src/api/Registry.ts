@@ -17,7 +17,7 @@ import SelectRectangle from "../features/select_rectangle/select_rectangle"
 import { Deselect, Reselect, DeleteSelection } from "../features/select_rectangle/selection_commands"
 import { EntityType } from "./whiteboard/entity"
 import { CanvasActionType } from "./canvas/canvas_action"
-import Command from "./command"
+import Command from "./command_palette/command"
 import Tab from "./tab"
 import Tool from "./tool"
 

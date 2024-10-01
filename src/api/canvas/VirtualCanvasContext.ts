@@ -5,7 +5,7 @@ import DefaultRegistry from '../Registry'
 import { doRectanglesIntersect } from '../../util/rectangle'
 import { CanvasAction, VirtualCanvasAccess } from './canvas_action'
 
-export type VirtualCanvasContext = {
+export type VirtualCanvasState = {
     actions: Y.Array<CanvasAction>
 
     add: (action: CanvasAction) => void
@@ -15,7 +15,7 @@ export type VirtualCanvasContext = {
     renderArea: (x: number, y: number, width: number, height: number, scale: number, options: ImageEncodeOptions) => Promise<Blob>
 }
 
-export const DefaultCanvas: VirtualCanvasContext = (() => {
+export const DefaultCanvas: VirtualCanvasState = (() => {
     const [yjs] = useContext(YjsContext)
 
     const actions = yjs.ydoc.getArray<CanvasAction>("virtual-canvas-actions")

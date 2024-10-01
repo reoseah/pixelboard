@@ -1,8 +1,8 @@
-import { makePersisted } from "@solid-primitives/storage"
 import { Accessor, createContext, createRoot } from "solid-js"
 import { createStore, reconcile, Store } from "solid-js/store"
+import { makePersisted } from "@solid-primitives/storage"
 
-export type SelectionState = {
+export type CanvasSelection = {
     parts: Store<SelectionPart[]>,
     prevParts: () => SelectionPart[] | []
 
@@ -19,7 +19,7 @@ export type SelectionPart =
 export type SelectionMode =
     | "replace"
 
-export const VirtualCanvasSelection: SelectionState = createRoot(() => {
+export const VirtualCanvasSelection: CanvasSelection = createRoot(() => {
     const store = createStore<SelectionPart[]>([])
     const [parts, setParts] = makePersisted(store, { name: "selection-parts" })
 
@@ -72,6 +72,6 @@ export const VirtualCanvasSelection: SelectionState = createRoot(() => {
     }
 })
 
-// export default Selection
-
 export const CanvasSelectionContext = createContext(VirtualCanvasSelection)
+
+export default CanvasSelectionContext

@@ -2,7 +2,7 @@ import "./CropRenderer.css"
 import { createSignal, JSX, onMount, Show, useContext } from "solid-js"
 import { WhiteboardContext } from "../../api/whiteboard/WhiteboardContext"
 import { CurrentToolContext } from "../../api/CurrentTool"
-import { ViewportPositionContext } from "../../api/ViewportPosition"
+import { ViewportPositionContext } from "../../api/ViewportPositionContext"
 import useClickOutside from "../../hooks/useClickOutside"
 import { Crop } from "./crop"
 
@@ -10,7 +10,7 @@ const CropRenderer = (props: {
     id: string,
     element: Crop
 }) => {
-    const [viewport] = useContext(ViewportPositionContext)
+    const viewport = useContext(ViewportPositionContext)
     const whiteboard = useContext(WhiteboardContext)
 
     return (

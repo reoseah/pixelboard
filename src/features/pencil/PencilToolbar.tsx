@@ -7,7 +7,7 @@ import SquareFilledIcon from "../../assets/icons/square-filled.svg"
 import StrokeWidthIcon from "../../assets/icons/stroke-width.svg"
 import DropIcon from "../../assets/icons/drop.svg"
 import { CurrentColorContext } from "../../api/CurrentColor"
-import { PencilStateContext } from "../../api/PencilState"
+import { PencilContext } from "./PencilContext"
 import ColorInput from "../../components/ColorInput"
 import InputGroup from "../../components/InputGroup"
 import NumberInput from "../../components/NumberInput"
@@ -25,7 +25,7 @@ const PencilToolbar = () => {
         setSize,
         mode,
         setMode,
-    } = useContext(PencilStateContext)
+    } = useContext(PencilContext)
 
     // TODO: use the new input component
     return (

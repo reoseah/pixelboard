@@ -4,7 +4,7 @@ import { YjsContext } from "../Yjs"
 import DefaultRegistry from "../Registry"
 import { Entity } from "./entity"
 
-export type WhiteboardContext = {
+export type WhiteboardState = {
     entities: Y.Map<Entity>,
     selected: Accessor<string[]>,
     editingTitle: Accessor<string | null>
@@ -20,7 +20,7 @@ export type WhiteboardContext = {
     getElementsInside: (x: number, y: number, width: number, height: number) => string[]
 }
 
-export const DefaultWhiteboard: WhiteboardContext = createRoot(() => {
+export const DefaultWhiteboard: WhiteboardState = createRoot(() => {
     const [yjs] = useContext(YjsContext)
 
     const entities = yjs.ydoc.getMap<Entity>("board-elements")

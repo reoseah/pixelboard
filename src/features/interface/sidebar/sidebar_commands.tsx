@@ -1,4 +1,4 @@
-import Command from "../../../api/command"
+import Command from "../../../api/command_palette/command"
 import Registry from "../../../api/Registry"
 import Sidebar from "../../../api/SidebarContext"
 import SidebarIcon from "../../../assets/icons/sidebar.svg"

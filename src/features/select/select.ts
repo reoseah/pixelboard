@@ -3,7 +3,7 @@ import CursorIcon from '../../assets/icons/cursor.svg'
 import { WhiteboardContext } from '../../api/whiteboard/WhiteboardContext'
 import { SharedRectangleStateContext } from '../../api/SharedRectangleState'
 import Tool, { isViewportClick } from '../../api/tool'
-import { ViewportPositionContext } from '../../api/ViewportPosition'
+import { ViewportPositionContext } from '../../api/ViewportPositionContext'
 
 const createSelect = (): Tool => {
     return {
@@ -20,7 +20,7 @@ const createSelect = (): Tool => {
             } = useContext(SharedRectangleStateContext)
             const [toolState, setToolState] = createSignal<"idle" | "move" | "selection_box">("idle")
 
-            const [, viewport] = useContext(ViewportPositionContext)
+            const viewport = useContext(ViewportPositionContext)
 
             const whiteboard = useContext(WhiteboardContext)
             let clickTime = 0

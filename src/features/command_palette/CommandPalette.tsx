@@ -3,7 +3,7 @@ import { useContext, createSignal, createMemo, onCleanup, Show, For } from "soli
 import { JSX } from "solid-js/jsx-runtime"
 import { Dynamic } from "solid-js/web"
 import SearchIcon from "../../assets/icons/search.svg"
-import Command from "../../api/command"
+import Command from "../../api/command_palette/command"
 import { CurrentToolContext } from "../../api/CurrentTool"
 import DefaultKeymap, { stringifyShortcut } from "../../api/Keymap"
 import { RegistryContext } from "../../api/Registry"

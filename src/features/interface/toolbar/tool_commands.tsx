@@ -1,5 +1,5 @@
 import { Dynamic } from "solid-js/web"
-import Command from "../../../api/command"
+import Command from "../../../api/command_palette/command"
 import { CurrentTool } from "../../../api/CurrentTool"
 import Registry from "../../../api/Registry"
 

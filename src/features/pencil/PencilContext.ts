@@ -1,6 +1,6 @@
 import { makePersisted } from "@solid-primitives/storage"
 import { createContext, createRoot, createSignal } from "solid-js"
-import { BlendingMode } from "../util/blending_modes"
+import { BlendingMode } from "../../util/blending_modes"
 
 const PencilState = createRoot(() => {
     const [shape, setShape] = makePersisted(createSignal<'circle' | 'square'>('circle'), { name: 'pencil-shape' })
@@ -17,6 +17,6 @@ const PencilState = createRoot(() => {
     }
 })
 
-export default PencilState
+export const PencilContext = createContext(PencilState)
 
-export const PencilStateContext = createContext(PencilState)
+export default PencilContext

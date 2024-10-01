@@ -3,7 +3,7 @@ import * as Y from "yjs"
 import { createEffect, onCleanup, onMount, useContext } from 'solid-js'
 import { VirtualCanvasAccess, CanvasAction, CanvasActionType } from '../../api/canvas/canvas_action'
 import { RegistryContext } from '../../api/Registry'
-import { ViewportPositionContext } from '../../api/ViewportPosition'
+import { ViewportPositionContext } from '../../api/ViewportPositionContext'
 import { VirtualCanvasContext } from '../../api/canvas/VirtualCanvasContext'
 import { doRectanglesIntersect } from '../../util/rectangle'
 
@@ -11,7 +11,7 @@ const tileSize = 32
 
 const VirtualCanvas = () => {
     const context = useContext(VirtualCanvasContext)
-    const [viewport] = useContext(ViewportPositionContext)
+    const viewport = useContext(ViewportPositionContext)
     const { actionTypes } = useContext(RegistryContext)
 
     let containerRef!: HTMLDivElement

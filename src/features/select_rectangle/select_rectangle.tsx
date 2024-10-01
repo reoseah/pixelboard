@@ -1,9 +1,9 @@
 import { onCleanup, useContext } from "solid-js"
 import SelectionIcon from "../../assets/icons/selection.svg"
 import Tool, { isViewportClick } from "../../api/tool"
-import { CanvasSelectionContext } from "../../api/CanvasSelectionContext"
+import CanvasSelectionContext from "../../api/canvas/CanvasSelectionContext"
 import { SharedRectangleStateContext } from "../../api/SharedRectangleState"
-import { ViewportPositionContext } from "../../api/ViewportPosition"
+import { ViewportPositionContext } from "../../api/ViewportPositionContext"
 import SelectRectanglePreview from "./SelectRectanglePreview"
 
 const SelectRectangle: Tool = {
@@ -11,7 +11,7 @@ const SelectRectangle: Tool = {
     icon: SelectionIcon,
     viewport: SelectRectanglePreview,
     use: () => {
-        const [, viewportActions] = useContext(ViewportPositionContext)
+        const viewport = useContext(ViewportPositionContext)
         const selection = useContext(CanvasSelectionContext)
 
         const {
@@ -27,8 +27,8 @@ const SelectRectangle: Tool = {
             if (e.button !== 0 || !isViewportClick(e)) {
                 return
             }
-            const x = viewportActions.toCanvasX(e.clientX)
-            const y = viewportActions.toCanvasY(e.clientY)
+            const x = viewport.toCanvasX(e.clientX)
+            const y = viewport.toCanvasY(e.clientY)
 
             setInitialPos({ x, y })
             setCurrentPos({ x, y })
@@ -39,8 +39,8 @@ const SelectRectangle: Tool = {
             if (!dragging()) {
                 return
             }
-            const x = viewportActions.toCanvasX(e.clientX)
-            const y = viewportActions.toCanvasY(e.clientY)
+            const x = viewport.toCanvasX(e.clientX)
+            const y = viewport.toCanvasY(e.clientY)
             setCurrentPos({ x, y })
         }
 

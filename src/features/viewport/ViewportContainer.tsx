@@ -1,10 +1,10 @@
 import "./ViewportContainer.css"
 import { createSignal, JSXElement, onCleanup, useContext } from "solid-js"
 import { CurrentToolContext } from "../../api/CurrentTool"
-import { ViewportPositionContext } from "../../api/ViewportPosition"
+import { ViewportPositionContext } from "../../api/ViewportPositionContext"
 
 const ViewportContainer = (props: { children: JSXElement }) => {
-    const [position, positionActions] = useContext(ViewportPositionContext)
+    const viewport = useContext(ViewportPositionContext)
     const { innerWidth, innerHeight } = useInnerSize()
 
     const [dragging, setDragging] = createSignal(false)
@@ -21,7 +21,7 @@ const ViewportContainer = (props: { children: JSXElement }) => {
     }
     const handleMouseMove = (e: MouseEvent) => {
         if (dragging()) {
-            positionActions.move(e.movementX / position.scale(), e.movementY / position.scale())
+            viewport.move(e.movementX / viewport.scale(), e.movementY / viewport.scale())
         }
     }
     const handleMouseUp = () => {
@@ -54,16 +54,16 @@ const ViewportContainer = (props: { children: JSXElement }) => {
         if (e.ctrlKey) {
             e.preventDefault()
             if (e.deltaY < 0) {
-                positionActions.zoomIn()
+                viewport.zoomIn()
             } else {
-                positionActions.zoomOut()
+                viewport.zoomOut()
             }
         } else {
-            const change = e.deltaY / position.scale()
+            const change = e.deltaY / viewport.scale()
             if (e.shiftKey) {
-                positionActions.move(change, 0)
+                viewport.move(change, 0)
             } else {
-                positionActions.move(0, change)
+                viewport.move(0, change)
             }
         }
     }
@@ -82,8 +82,8 @@ const ViewportContainer = (props: { children: JSXElement }) => {
         document.removeEventListener("wheel", handleWheel)
     })
 
-    const translationX = () => Math.round(innerWidth() / 2 + position.x() * position.scale())
-    const translationY = () => Math.round(innerHeight() / 2 + position.y() * position.scale())
+    const translationX = () => Math.round(innerWidth() / 2 + viewport.x() * viewport.scale())
+    const translationY = () => Math.round(innerHeight() / 2 + viewport.y() * viewport.scale())
 
     const currentTool = useContext(CurrentToolContext)
 
@@ -96,15 +96,15 @@ const ViewportContainer = (props: { children: JSXElement }) => {
         >
             <svg
                 class="viewport-pixel-grid"
-                data-hidden={position.scale() < 10}
+                data-hidden={viewport.scale() < 10}
                 width={innerWidth()}
                 height={innerHeight()}
             >
                 <defs>
                     <pattern
                         id="pixel-grid-pattern"
-                        width={position.scale()}
-                        height={position.scale()}
+                        width={viewport.scale()}
+                        height={viewport.scale()}
                         patternUnits="userSpaceOnUse"
                     >
                         <rect width="1" height="1" fill="var(--neutral-675)" />
@@ -114,7 +114,7 @@ const ViewportContainer = (props: { children: JSXElement }) => {
                     width="100%"
                     height="100%"
                     fill="url(#pixel-grid-pattern)"
-                    transform={`translate(${translationX() % position.scale()} ${translationY() % position.scale()})`}
+                    transform={`translate(${translationX() % viewport.scale()} ${translationY() % viewport.scale()})`}
                 />
             </svg>
             <div style={{

@@ -1,14 +1,14 @@
 import "./SelectionRenderer.css"
 import { createMemo, createSignal, For, Show, useContext } from "solid-js"
 import SaveIcon from "../../assets/icons/save.svg"
-import { CanvasSelectionContext } from "../../api/CanvasSelectionContext"
-import { ViewportPositionContext } from "../../api/ViewportPosition"
+import { ViewportPositionContext } from "../../api/ViewportPositionContext"
 import { VirtualCanvasContext } from "../../api/canvas/VirtualCanvasContext"
 import IconButton from "../../components/IconButton"
 import Input from "../../components/Input"
 import InputGroup from "../../components/InputGroup"
 import Stack from "../../components/Stack"
 import { Select, Option } from "../../components/Select"
+import CanvasSelectionContext from "../../api/canvas/CanvasSelectionContext"
 
 const saveFormats = [
   { value: "image/png", label: "PNG" },
@@ -17,7 +17,7 @@ const saveFormats = [
 ]
 
 const SelectionRenderer = () => {
-  const [viewport] = useContext(ViewportPositionContext)
+  const viewport = useContext(ViewportPositionContext)
   const selection = useContext(CanvasSelectionContext)
   const canvas = useContext(VirtualCanvasContext)
   const bounds = createMemo(selection.getBounds)

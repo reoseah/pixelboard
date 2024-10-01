@@ -4,7 +4,7 @@ import WhiteboardContext from '../../api/whiteboard/WhiteboardContext'
 import { CurrentToolContext } from '../../api/CurrentTool'
 import { SharedRectangleStateContext } from '../../api/SharedRectangleState'
 import Tool, { isViewportClick } from '../../api/tool'
-import { ViewportPositionContext } from '../../api/ViewportPosition'
+import { ViewportPositionContext } from '../../api/ViewportPositionContext'
 import CropPreview from './CropPreview'
 
 const createCrop = (): Tool => {
@@ -13,7 +13,7 @@ const createCrop = (): Tool => {
         icon: CropIcon,
         viewport: CropPreview,
         use: () => {
-            const [, viewport] = useContext(ViewportPositionContext)
+            const viewport = useContext(ViewportPositionContext)
             const whiteboard = useContext(WhiteboardContext)
             const currentTool = useContext(CurrentToolContext)
 

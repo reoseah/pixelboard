@@ -1,8 +1,8 @@
 import { createSignal, onCleanup, useContext } from 'solid-js'
 import { CurrentColorContext } from '../../api/CurrentColor'
-import { PencilStateContext } from '../../api/PencilState'
+import { PencilContext } from './PencilContext'
 import Tool, { isViewportClick } from '../../api/tool'
-import { ViewportPositionContext } from '../../api/ViewportPosition'
+import { ViewportPositionContext } from '../../api/ViewportPositionContext'
 import { VirtualCanvasContext } from '../../api/canvas/VirtualCanvasContext'
 import { normalizeHex } from '../../util/color_conversion'
 import { PencilStroke } from './pencil_stroke'
@@ -15,14 +15,14 @@ const createPencil = (): Tool => {
         icon: PencilIcon,
         subToolbar: PencilToolbar,
         use: () => {
-            const [, viewportActions] = useContext(ViewportPositionContext)
+            const viewport = useContext(ViewportPositionContext)
             const canvas = useContext(VirtualCanvasContext)
 
             const [lastMousePos, setLastMousePos] = createSignal<{ x: number, y: number }>({ x: 0, y: 0 })
             let currentAction: PencilStroke | null = null
 
             const color = useContext(CurrentColorContext)
-            const { shape, size, } = useContext(PencilStateContext)
+            const { shape, size, } = useContext(PencilContext)
 
             const handleMouseDown = (e: MouseEvent) => {
                 if (!isViewportClick(e)) {
@@ -32,8 +32,8 @@ const createPencil = (): Tool => {
                 e.preventDefault()
 
                 const pos = {
-                    x: Math.floor(viewportActions.toCanvasX(e.clientX)),
-                    y: Math.floor(viewportActions.toCanvasY(e.clientY))
+                    x: Math.floor(viewport.toCanvasX(e.clientX)),
+                    y: Math.floor(viewport.toCanvasY(e.clientY))
                 }
                 setLastMousePos(pos)
                 const action: PencilStroke = {
@@ -51,8 +51,8 @@ const createPencil = (): Tool => {
 
             const handleMouseMove = (e: MouseEvent) => {
                 if (currentAction) {
-                    let newX = Math.floor(viewportActions.toCanvasX(e.clientX))
-                    let newY = Math.floor(viewportActions.toCanvasY(e.clientY))
+                    let newX = Math.floor(viewport.toCanvasX(e.clientX))
+                    let newY = Math.floor(viewport.toCanvasY(e.clientY))
 
                     if (newX === lastMousePos().x && newY === lastMousePos().y) {
                         return
