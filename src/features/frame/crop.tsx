@@ -1,4 +1,4 @@
-import { EntityType } from "../../api/whiteboard/entity"
+import { EntityType } from "../../types/whiteboard"
 import CropRenderer from "./CropRenderer"
 
 export type Crop = {

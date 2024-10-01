@@ -1,10 +1,10 @@
 import './VirtualCanvas.css'
 import * as Y from "yjs"
 import { createEffect, onCleanup, onMount, useContext } from 'solid-js'
-import { VirtualCanvasAccess, CanvasAction, CanvasActionType } from '../../api/canvas/canvas_action'
-import { RegistryContext } from '../../api/RegistryContext'
-import { ViewportPositionContext } from '../../api/viewport/ViewportPositionContext'
-import { VirtualCanvasContext } from '../../api/canvas/VirtualCanvasContext'
+import { VirtualCanvasAccess, CanvasAction, CanvasActionType } from '../../types/virtual_canvas'
+import { RegistryContext } from '../../state/RegistryContext'
+import { ViewportPositionContext } from '../../state/ViewportPositionContext'
+import { VirtualCanvasContext } from '../../state/VirtualCanvasContext'
 import { doRectanglesIntersect } from '../../util/rectangle'
 
 const tileSize = 32

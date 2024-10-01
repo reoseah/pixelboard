@@ -1,6 +1,6 @@
 import "./CollaborationPanel.css"
 import { useContext, Switch, Match } from "solid-js"
-import { YjsContext } from "../../../api/Yjs"
+import { YjsContext } from "../../../state/Yjs"
 import Button from "../../../components/Button"
 import Input from "../../../components/Input"
 import Stack from "../../../components/Stack"

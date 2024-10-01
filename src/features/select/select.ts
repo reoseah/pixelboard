@@ -1,9 +1,9 @@
 import { useContext, onCleanup, createSignal } from 'solid-js'
 import CursorIcon from '../../assets/icons/cursor.svg'
-import { WhiteboardContext } from '../../api/whiteboard/WhiteboardContext'
-import { RectangleDragContext } from '../../api/tool/RectangleDragContext'
-import Tool, { isViewportClick } from '../../api/tool/tool'
-import { ViewportPositionContext } from '../../api/viewport/ViewportPositionContext'
+import { WhiteboardContext } from '../../state/WhiteboardContext'
+import { RectangleDragContext } from '../../state/RectangleDragContext'
+import { Tool, isViewportClick } from '../../types/tools'
+import { ViewportPositionContext } from '../../state/ViewportPositionContext'
 
 const createSelect = (): Tool => {
     return {

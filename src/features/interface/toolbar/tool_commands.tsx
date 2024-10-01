@@ -1,14 +1,14 @@
 import { Dynamic } from "solid-js/web"
-import Command from "../../../api/command_palette/command"
-import { CurrentTool } from "../../../api/tool/CurrentToolContext"
-import Registry from "../../../api/RegistryContext"
+import { Command } from "../../../types/commands"
+import { CurrentTool } from "../../../state/CurrentToolContext"
+import { DefaultRegistry } from "../../../state/RegistryContext"
 
 export const createSelectToolCommand = (tool: string): Command => {
     return {
         id: `select_tool.${tool}`,
-        icon: () => <Dynamic component={Registry.tools[tool].icon} />,
+        icon: () => <Dynamic component={DefaultRegistry.tools[tool].icon} />,
         label: () => {
-            const { tools } = Registry
+            const { tools } = DefaultRegistry
             return `Select ${tools[tool].label}`
         },
         isDisabled: () => {

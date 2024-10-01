@@ -1,8 +1,8 @@
 import * as Y from "yjs"
 import { Accessor, createRoot, createSignal, createContext, useContext } from "solid-js"
-import { YjsContext } from "../Yjs"
-import DefaultRegistry from "../RegistryContext"
-import { Entity } from "./entity"
+import { YjsContext } from "./Yjs"
+import { DefaultRegistry } from "./RegistryContext"
+import { Entity } from "../types/whiteboard"
 
 export type WhiteboardState = {
     entities: Y.Map<Entity>,

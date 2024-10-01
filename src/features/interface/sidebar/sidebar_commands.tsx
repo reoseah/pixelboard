@@ -1,6 +1,6 @@
-import Command from "../../../api/command_palette/command"
-import Registry from "../../../api/RegistryContext"
-import Sidebar from "../../../api/sidebar/SidebarContext"
+import { Command } from "../../../types/commands"
+import { DefaultRegistry } from "../../../state/RegistryContext"
+import Sidebar from "../../../state/SidebarContext"
 import SidebarIcon from "../../../assets/icons/sidebar.svg"
 
 export const ToggleSidebar: Command = {
@@ -16,9 +16,9 @@ export const ToggleSidebar: Command = {
 
 export const createTabCommand = (tab: string): Command => ({
     id: `toggle_tab.${tab}`,
-    icon: () => Registry.tabs[tab].icon({}),
+    icon: () => DefaultRegistry.tabs[tab].icon({}),
     label: () => {
-        const { tabs } = Registry
+        const { tabs } = DefaultRegistry
         return `Toggle ${tabs[tab].label} Tab`
     },
     isDisabled: () => false,

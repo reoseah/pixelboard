@@ -1,10 +1,10 @@
 import { onCleanup, useContext } from 'solid-js'
 import CropIcon from '../../assets/icons/crop.svg'
-import WhiteboardContext from '../../api/whiteboard/WhiteboardContext'
-import { CurrentToolContext } from '../../api/tool/CurrentToolContext'
-import { RectangleDragContext } from '../../api/tool/RectangleDragContext'
-import Tool, { isViewportClick } from '../../api/tool/tool'
-import { ViewportPositionContext } from '../../api/viewport/ViewportPositionContext'
+import WhiteboardContext from '../../state/WhiteboardContext'
+import { CurrentToolContext } from '../../state/CurrentToolContext'
+import { RectangleDragContext } from '../../state/RectangleDragContext'
+import { Tool, isViewportClick } from '../../types/tools'
+import { ViewportPositionContext } from '../../state/ViewportPositionContext'
 import CropPreview from './CropPreview'
 
 const createCrop = (): Tool => {

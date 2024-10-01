@@ -15,11 +15,11 @@ import createSelect from "../features/select/select"
 import { DeleteRectangleType } from "../features/select_rectangle/delete_rectangle"
 import SelectRectangle from "../features/select_rectangle/select_rectangle"
 import { Deselect, Reselect, DeleteSelection } from "../features/select_rectangle/selection_commands"
-import { EntityType } from "./whiteboard/entity"
-import { CanvasActionType } from "./canvas/canvas_action"
-import Command from "./command_palette/command"
-import Tab from "./sidebar/tab"
-import Tool from "./tool/tool"
+import { EntityType } from "../types/whiteboard"
+import { CanvasActionType } from "../types/virtual_canvas"
+import { Command } from "../types/commands"
+import { Tab } from "../types/sidebar"
+import { Tool } from "../types/tools"
 
 export type Registry = {
     tools: Record<string, Tool>,
@@ -29,7 +29,7 @@ export type Registry = {
     tabs: Record<string, Tab>
 }
 
-const DefaultRegistry: Registry = createRoot(() => {
+export const DefaultRegistry: Registry = createRoot(() => {
     return {
         tools: {
             "select": createSelect(),
@@ -70,6 +70,6 @@ const DefaultRegistry: Registry = createRoot(() => {
     }
 })
 
-export default DefaultRegistry
-
 export const RegistryContext = createContext(DefaultRegistry)
+
+export default RegistryContext

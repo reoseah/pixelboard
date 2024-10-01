@@ -1,4 +1,4 @@
-import Tab from "../../../api/sidebar/tab"
+import { Tab } from "../../../types/sidebar"
 import CollaborationIcon from "../../../assets/icons/collaboration.svg"
 import CollaborationPanel from "./CollaborationPanel"
 

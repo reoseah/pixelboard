@@ -1,8 +1,8 @@
 import "./CropRenderer.css"
 import { createSignal, JSX, onMount, Show, useContext } from "solid-js"
-import { WhiteboardContext } from "../../api/whiteboard/WhiteboardContext"
-import { CurrentToolContext } from "../../api/tool/CurrentToolContext"
-import { ViewportPositionContext } from "../../api/viewport/ViewportPositionContext"
+import { WhiteboardContext } from "../../state/WhiteboardContext"
+import { CurrentToolContext } from "../../state/CurrentToolContext"
+import { ViewportPositionContext } from "../../state/ViewportPositionContext"
 import useClickOutside from "../../hooks/useClickOutside"
 import { Crop } from "./crop"
 

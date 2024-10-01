@@ -1,7 +1,7 @@
 import "./CropPreview.css"
 import { Show, useContext } from "solid-js"
-import { RectangleDragContext } from "../../api/tool/RectangleDragContext"
-import { ViewportPositionContext } from "../../api/viewport/ViewportPositionContext"
+import { RectangleDragContext } from "../../state/RectangleDragContext"
+import { ViewportPositionContext } from "../../state/ViewportPositionContext"
 
 const CropPreview = () => {
   const viewport = useContext(ViewportPositionContext)

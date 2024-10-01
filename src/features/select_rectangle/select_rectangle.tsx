@@ -1,9 +1,9 @@
 import { onCleanup, useContext } from "solid-js"
 import SelectionIcon from "../../assets/icons/selection.svg"
-import Tool, { isViewportClick } from "../../api/tool/tool"
-import CanvasSelectionContext from "../../api/canvas/CanvasSelectionContext"
-import { RectangleDragContext } from "../../api/tool/RectangleDragContext"
-import { ViewportPositionContext } from "../../api/viewport/ViewportPositionContext"
+import { Tool, isViewportClick } from "../../types/tools"
+import CanvasSelectionContext from "../../state/CanvasSelectionContext"
+import { RectangleDragContext } from "../../state/RectangleDragContext"
+import { ViewportPositionContext } from "../../state/ViewportPositionContext"
 import SelectRectanglePreview from "./SelectRectanglePreview"
 
 const SelectRectangle: Tool = {

@@ -1,14 +1,14 @@
 import "./SelectionRenderer.css"
 import { createMemo, createSignal, For, Show, useContext } from "solid-js"
 import SaveIcon from "../../assets/icons/save.svg"
-import { ViewportPositionContext } from "../../api/viewport/ViewportPositionContext"
-import { VirtualCanvasContext } from "../../api/canvas/VirtualCanvasContext"
+import { ViewportPositionContext } from "../../state/ViewportPositionContext"
+import { VirtualCanvasContext } from "../../state/VirtualCanvasContext"
 import IconButton from "../../components/IconButton"
 import Input from "../../components/Input"
 import InputGroup from "../../components/InputGroup"
 import Stack from "../../components/Stack"
 import { Select, Option } from "../../components/Select"
-import CanvasSelectionContext from "../../api/canvas/CanvasSelectionContext"
+import CanvasSelectionContext from "../../state/CanvasSelectionContext"
 
 const saveFormats = [
   { value: "image/png", label: "PNG" },

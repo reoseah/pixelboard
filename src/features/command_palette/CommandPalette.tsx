@@ -3,10 +3,10 @@ import { useContext, createSignal, createMemo, onCleanup, Show, For } from "soli
 import { JSX } from "solid-js/jsx-runtime"
 import { Dynamic } from "solid-js/web"
 import SearchIcon from "../../assets/icons/search.svg"
-import Command from "../../api/command_palette/command"
-import { CurrentToolContext } from "../../api/tool/CurrentToolContext"
-import DefaultKeymap, { stringifyShortcut } from "../../api/Keymap"
-import { RegistryContext } from "../../api/RegistryContext"
+import { Command } from "../../types/commands"
+import { CurrentToolContext } from "../../state/CurrentToolContext"
+import DefaultKeymap, { stringifyShortcut } from "../../state/Keymap"
+import { RegistryContext } from "../../state/RegistryContext"
 import useClickOutside from "../../hooks/useClickOutside"
 
 const CommandPalette = () => {

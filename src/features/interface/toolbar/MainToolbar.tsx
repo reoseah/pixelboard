@@ -1,8 +1,8 @@
 import "./MainToolbar.css"
 import { For, useContext } from "solid-js"
-import { CurrentToolContext } from "../../../api/tool/CurrentToolContext"
-import DefaultKeymap, { stringifyShortcut } from "../../../api/Keymap"
-import { RegistryContext } from "../../../api/RegistryContext"
+import { CurrentToolContext } from "../../../state/CurrentToolContext"
+import DefaultKeymap, { stringifyShortcut } from "../../../state/Keymap"
+import { RegistryContext } from "../../../state/RegistryContext"
 import Stack from "../../../components/Stack"
 
 const MainToolbar = () => {

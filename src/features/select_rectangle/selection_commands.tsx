@@ -1,6 +1,6 @@
-import Command from "../../api/command_palette/command"
-import { DefaultCanvas } from "../../api/canvas/VirtualCanvasContext"
-import { VirtualCanvasSelection } from "../../api/canvas/CanvasSelectionContext"
+import { DefaultCanvas } from "../../state/VirtualCanvasContext"
+import { VirtualCanvasSelection } from "../../state/CanvasSelectionContext"
+import { Command } from "../../types/commands"
 
 export const Deselect: Command = {
     id: "deselect",

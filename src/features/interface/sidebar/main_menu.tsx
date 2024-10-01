@@ -1,4 +1,4 @@
-import Tab from "../../../api/sidebar/tab"
+import { Tab } from "../../../types/sidebar"
 import MenuIcon from "../../../assets/icons/menu.svg"
 import MainMenuPanel from "./MainMenuPanel"
 

@@ -2,11 +2,11 @@ import './App.css'
 import { Component, createMemo, For, onCleanup, Show, useContext } from 'solid-js'
 import { createStore, reconcile } from 'solid-js/store'
 import { Dynamic } from 'solid-js/web'
-import { WhiteboardContext } from './api/whiteboard/WhiteboardContext'
-import { CurrentToolContext } from './api/tool/CurrentToolContext'
-import DefaultKeymap from './api/Keymap'
-import Registry, { RegistryContext } from './api/RegistryContext'
-import Tool from './api/tool/tool'
+import { WhiteboardContext } from './state/WhiteboardContext'
+import { CurrentToolContext } from './state/CurrentToolContext'
+import DefaultKeymap from './state/Keymap'
+import RegistryContext from './state/RegistryContext'
+import { Tool } from './types/tools'
 import VirtualCanvas from './features/canvas/VirtualCanvas'
 import SideLayout from './features/interface/SideLayout'
 import MainToolbar from './features/interface/toolbar/MainToolbar'
@@ -14,7 +14,7 @@ import TopCenterLayout from './features/interface/TopCenterLayout'
 import SelectionRenderer from './features/select_rectangle/SelectionRenderer'
 import ViewportContainer from './features/viewport/ViewportContainer'
 import Sidebar from './features/interface/sidebar/Sidebar'
-import { Entity } from './api/whiteboard/entity'
+import { Entity } from './types/whiteboard'
 
 function App() {
   useCommandKeybinds()
@@ -55,6 +55,8 @@ const CurrentToolRenderer = (props: {
 }
 
 const useCommandKeybinds = () => {
+  const { commands } = useContext(RegistryContext)
+
   const handleKeyDown = (event: KeyboardEvent) => {
     const target = event.target as HTMLElement
     const isEditable = target.isContentEditable || target.tagName === 'INPUT' || target.tagName === 'TEXTAREA'
@@ -74,7 +76,6 @@ const useCommandKeybinds = () => {
     })
 
     if (keybind) {
-      const { commands } = Registry
       const command = commands[keybind.command]
       if (command) {
         command.execute()

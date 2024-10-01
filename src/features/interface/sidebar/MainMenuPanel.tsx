@@ -1,6 +1,6 @@
 import "./MainMenuPanel.css"
 import { useContext } from "solid-js"
-import { YjsContext } from "../../../api/Yjs"
+import { YjsContext } from "../../../state/Yjs"
 import Button from "../../../components/Button"
 import Stack from "../../../components/Stack"
 

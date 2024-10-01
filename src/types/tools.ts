@@ -1,6 +1,6 @@
 import { Component } from "solid-js"
 
-type Tool = {
+export type Tool = {
     label: string
     icon: Component
 
@@ -9,8 +9,7 @@ type Tool = {
     viewport?: Component
 }
 
-export default Tool
-
+// TODO: move this to a more appropriate location
 export const isViewportClick = (e: MouseEvent): boolean => {
     if (!(e.target as Element)?.closest(".viewport")) {
         return false

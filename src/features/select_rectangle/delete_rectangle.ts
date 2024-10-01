@@ -1,4 +1,4 @@
-import { CanvasActionType } from "../../api/canvas/canvas_action"
+import { CanvasActionType } from "../../types/virtual_canvas"
 
 export type DeleteRectangle = {
     type: "delete_rectangle"

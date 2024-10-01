@@ -1,7 +1,7 @@
 import "./ColorPanel.css"
 import { makePersisted } from "@solid-primitives/storage"
 import { createSignal, useContext, Switch, Match, onCleanup } from "solid-js"
-import { CurrentColorContext } from "../../../api/CurrentColorContext"
+import { CurrentColorContext } from "../../../state/CurrentColorContext"
 import InputGroup from "../../../components/InputGroup"
 import NumberInput from "../../../components/NumberInput"
 import Stack from "../../../components/Stack"
