@@ -1,10 +1,10 @@
 import { Match, Switch, useContext } from 'solid-js'
 
-import Button from '../../../components/Button'
-import Input from '../../../components/Input'
-import Stack from '../../../components/Stack'
-import Text from '../../../components/Text'
-import { YjsContext } from '../../../state/YjsContext'
+import Button from '../../components/Button'
+import Input from '../../components/Input'
+import Stack from '../../components/Stack'
+import Text from '../../components/Text'
+import { YjsContext } from '../../state/YjsContext'
 import './CollaborationPanel.css'
 
 const CollaborationPanel = () => {

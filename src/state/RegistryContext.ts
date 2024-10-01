@@ -1,14 +1,9 @@
 import { createContext, createRoot } from 'solid-js'
 
 import { ClearProject } from '../features/canvas/virtual_canvas_commands'
-import createCommandPalette from '../features/command_palette/command_palette'
-import { CropType } from '../features/frame/crop'
-import createCrop from '../features/frame/crop_tool'
-import Collaboration from '../features/interface/sidebar/collaboration'
-import Color from '../features/interface/sidebar/color'
-import MainMenu from '../features/interface/sidebar/main_menu'
-import Settings from '../features/interface/sidebar/settings'
-import { createTabCommand, ToggleSidebar } from '../features/interface/sidebar/sidebar_commands'
+import CommandPalette from '../features/command_palette/CommandPaletteTool'
+import { FrameType } from '../features/frame/FrameEntity'
+import Frame from '../features/frame/FrameTool'
 import { createSelectToolCommand } from '../features/interface/toolbar/tool_commands'
 import createPencil from '../features/pencil/pencil'
 import { PencilStrokeType } from '../features/pencil/pencil_stroke'
@@ -16,6 +11,11 @@ import createSelect from '../features/select/select'
 import { DeleteRectangleType } from '../features/select_rectangle/delete_rectangle'
 import SelectRectangle from '../features/select_rectangle/select_rectangle'
 import { DeleteSelection, Deselect, Reselect } from '../features/select_rectangle/selection_commands'
+import Collaboration from '../features/sidebar/Collaboration'
+import Color from '../features/sidebar/Color'
+import MainMenu from '../features/sidebar/MainMenu'
+import Settings from '../features/sidebar/Settings'
+import { createTabCommand, ToggleSidebar } from '../features/sidebar/sidebar_commands'
 import { Command } from '../types/commands'
 import { Tab } from '../types/tab'
 import { Tool } from '../types/tool'
@@ -53,7 +53,7 @@ export const DefaultRegistry: Registry = createRoot(() => {
       'toggle_tab.settings': createTabCommand('settings'),
     },
     elementTypes: {
-      crop: CropType,
+      crop: FrameType,
     },
     tabs: {
       collaboration: Collaboration,
@@ -62,8 +62,8 @@ export const DefaultRegistry: Registry = createRoot(() => {
       settings: Settings,
     },
     tools: {
-      command_palette: createCommandPalette(),
-      crop: createCrop(),
+      command_palette: CommandPalette,
+      frame: Frame,
       pencil: createPencil(),
       select: createSelect(),
       select_rectangle: SelectRectangle,

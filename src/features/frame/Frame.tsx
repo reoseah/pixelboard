@@ -4,11 +4,11 @@ import useClickOutside from '../../hooks/useClickOutside'
 import { CurrentToolContext } from '../../state/CurrentToolContext'
 import { ViewportPositionContext } from '../../state/ViewportPositionContext'
 import { WhiteboardContext } from '../../state/WhiteboardContext'
-import { Crop } from './crop'
-import './CropRenderer.css'
+import { FrameEntity } from './FrameEntity'
+import './Frame.css'
 
-const CropRenderer = (props: {
-  element: Crop
+const Frame = (props: {
+  element: FrameEntity
   id: string
 }) => {
   const viewport = useContext(ViewportPositionContext)
@@ -16,7 +16,7 @@ const CropRenderer = (props: {
 
   return (
     <div
-      class="crop"
+      class="frame"
       data-element-id={props.id}
       data-selectable
       data-selected={whiteboard.selected().includes(props.id)}
@@ -37,11 +37,11 @@ const CropRenderer = (props: {
   )
 }
 
-export default CropRenderer
+export default Frame
 
 const FrameTitle = (props: {
   id: string
-  node: Crop
+  node: FrameEntity
 }) => {
   const currentTool = useContext(CurrentToolContext)
   const whiteboard = useContext(WhiteboardContext)
@@ -56,7 +56,7 @@ const FrameTitle = (props: {
 
   return (
     <div
-      class="crop-title"
+      class="frame-title"
       data-element-title
       onDblClick={(e) => {
         e.preventDefault()
@@ -74,7 +74,7 @@ const FrameTitle = (props: {
 
 const FrameTitleEditor = (props: {
   id: string
-  node: Crop
+  node: FrameEntity
 }) => {
   const [value, setValue] = createSignal(props.node.title ?? 'Frame')
   const whiteboard = useContext(WhiteboardContext)
@@ -118,7 +118,7 @@ const FrameTitleEditor = (props: {
       />
       <input
         autocomplete="off"
-        class="crop-title-editor"
+        class="frame-title-editor"
         onBlur={updateTitle}
         onChange={updateTitle}
         onInput={(e) => {

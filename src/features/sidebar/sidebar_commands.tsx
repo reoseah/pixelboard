@@ -1,7 +1,7 @@
-import SidebarIcon from '../../../assets/icons/sidebar.svg'
-import { DefaultRegistry } from '../../../state/RegistryContext'
-import Sidebar from '../../../state/SidebarContext'
-import { Command } from '../../../types/commands'
+import SidebarIcon from '../../assets/icons/sidebar.svg'
+import { DefaultRegistry } from '../../state/RegistryContext'
+import Sidebar from '../../state/SidebarContext'
+import { Command } from '../../types/commands'
 
 export const ToggleSidebar: Command = {
   execute: () => {

@@ -1,5 +1,5 @@
-import MenuIcon from '../../../assets/icons/menu.svg'
-import { Tab } from '../../../types/tab'
+import MenuIcon from '../../assets/icons/menu.svg'
+import { Tab } from '../../types/tab'
 import MainMenuPanel from './MainMenuPanel'
 
 const MainMenu: Tab = {

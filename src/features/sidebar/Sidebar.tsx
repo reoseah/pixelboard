@@ -1,10 +1,10 @@
 import { For, Show, useContext } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 
-import KeymapContext from '../../../state/KeymapContext'
-import { RegistryContext } from '../../../state/RegistryContext'
-import { SidebarContext } from '../../../state/SidebarContext'
-import { stringifyShortcut } from '../../../types/key_shortcut'
+import KeymapContext from '../../state/KeymapContext'
+import { RegistryContext } from '../../state/RegistryContext'
+import { SidebarContext } from '../../state/SidebarContext'
+import { stringifyShortcut } from '../../types/key_shortcut'
 import './Sidebar.css'
 
 const Sidebar = () => {

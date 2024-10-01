@@ -2,9 +2,9 @@ import { Show, useContext } from 'solid-js'
 
 import { RectangleDragContext } from '../../state/RectangleDragContext'
 import { ViewportPositionContext } from '../../state/ViewportPositionContext'
-import './CropPreview.css'
+import './FramePreview.css'
 
-const CropPreview = () => {
+const FramePreview = () => {
   const viewport = useContext(ViewportPositionContext)
 
   const { dragging, height, left, top, width } = useContext(RectangleDragContext)
@@ -12,7 +12,7 @@ const CropPreview = () => {
   return (
     <Show when={dragging()}>
       <div
-        class="crop-preview"
+        class="frame-preview"
         style={{
           height: `${height() * viewport.scale()}px`,
           left: `${left() * viewport.scale()}px`,
@@ -21,7 +21,7 @@ const CropPreview = () => {
         }}
       >
         <div
-          class="crop-preview-dimensions"
+          class="frame-preview-dimensions"
           style={{
             left: `calc(${width() * viewport.scale()}px + .5rem)`,
             top: `calc(${height() * viewport.scale()}px + .5rem)`,
@@ -37,4 +37,4 @@ const CropPreview = () => {
   )
 }
 
-export default CropPreview
+export default FramePreview

@@ -1,7 +1,7 @@
 import { EntityType } from '../../types/whiteboard'
-import CropRenderer from './CropRenderer'
+import FrameRenderer from './Frame'
 
-export type Crop = {
+export type FrameEntity = {
   height: number
   title: null | string
   type: 'crop'
@@ -10,12 +10,12 @@ export type Crop = {
   y: number
 }
 
-export const CropType: EntityType<Crop> = {
+export const FrameType: EntityType<FrameEntity> = {
   getBounds: crop => ({
     height: crop.height,
     width: crop.width,
     x: crop.x,
     y: crop.y,
   }),
-  render: CropRenderer,
+  render: FrameRenderer,
 }
