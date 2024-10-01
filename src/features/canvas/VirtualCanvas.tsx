@@ -185,7 +185,7 @@ const VirtualCanvas = () => {
   })
 
   return (
-    <div ref={ref => containerRef = ref}></div>
+    <div ref={ref => containerRef = ref} />
   )
 }
 

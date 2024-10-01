@@ -58,7 +58,7 @@ const FrameTitle = (props: {
     <div
       class="crop-title"
       data-element-title
-      ondblclick={(e) => {
+      onDblClick={(e) => {
         e.preventDefault()
         e.stopPropagation()
         if (currentTool.id() === 'select') {
@@ -115,18 +115,17 @@ const FrameTitleEditor = (props: {
           'visibility': 'hidden',
           'white-space': 'pre',
         }}
-      >
-      </span>
+      />
       <input
         autocomplete="off"
         class="crop-title-editor"
-        onblur={updateTitle}
-        onchange={updateTitle}
-        oninput={(e) => {
+        onBlur={updateTitle}
+        onChange={updateTitle}
+        onInput={(e) => {
           setValue(e.currentTarget.value)
           updateWidth()
         }}
-        onkeydown={(e) => {
+        onKeyDown={(e) => {
           if (e.key === 'Enter') updateTitle()
           if (e.key === 'Escape') {
             setValue(props.node.title ?? 'Frame')

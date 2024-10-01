@@ -30,7 +30,7 @@ const ColorInput = (props: {
       >
         <input
           class="color-input-swatch-input"
-          oninput={event => props.onChange((event.target as HTMLInputElement).value.slice(1))}
+          onInput={event => props.onChange((event.target as HTMLInputElement).value.slice(1))}
           type="color"
           value={normalizeHex(value()).substring(0, 7).padEnd(7, '0')}
         />

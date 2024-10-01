@@ -45,8 +45,8 @@ export const NumberInput = (props: {
         max={props.max}
         min={props.min}
         name={props.name}
-        onclick={event => (event.target as HTMLInputElement).select()}
-        onfocus={(event) => {
+        onClick={event => (event.target as HTMLInputElement).select()}
+        onFocus={(event) => {
           const handleClickOutside = (event: MouseEvent) => {
             if (!event.composedPath().includes(event.target!)) {
               (event.target as HTMLInputElement).blur()
@@ -57,8 +57,8 @@ export const NumberInput = (props: {
             document.removeEventListener('click', handleClickOutside)
           }, { once: true })
         }}
-        oninput={event => props.onChange(Number((event.target as HTMLInputElement).value))}
-        onkeydown={(event) => {
+        onInput={event => props.onChange(Number((event.target as HTMLInputElement).value))}
+        onKeyDown={(event) => {
           if (event.key === 'Enter' || event.key === 'Escape') {
             (event.target as HTMLInputElement).blur()
           }

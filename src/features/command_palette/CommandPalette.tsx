@@ -89,8 +89,8 @@ const CommandPalette = () => {
           autocomplete="off"
           id="command-palette-search"
           maxlength="150"
-          oninput={handleInput}
-          onkeydown={(e) => {
+          onInput={handleInput}
+          onKeyDown={(e) => {
             if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
               e.preventDefault()
               e.stopPropagation()
@@ -115,7 +115,7 @@ const CommandPalette = () => {
                   aria-selected={selectedEntry() === idx()}
                   class="command-palette-button"
                   onClick={() => handleCommandClick(command)}
-                  onmouseover={() => setSelectedEntry(idx())}
+                  onMouseOver={() => setSelectedEntry(idx())}
                 >
                   <div class="command-icon">
                     <Show when={command.icon}>
@@ -144,7 +144,7 @@ const CommandPalette = () => {
                     class="command-palette-button"
                     disabled={true}
                     onClick={() => handleCommandClick(command)}
-                    onmouseover={() => setSelectedEntry(idx())}
+                    onMouseOver={() => setSelectedEntry(idx())}
                   >
                     <div class="command-icon">
                       <Show when={command.icon}>

@@ -96,7 +96,7 @@ const ViewportContainer = (props: { children: JSXElement }) => {
       class="viewport"
       data-active-tool={currentTool.id()}
       data-dragging={dragging()}
-      onmousedown={handleMouseDown}
+      onMouseDown={handleMouseDown}
     >
       <svg
         class="viewport-pixel-grid"

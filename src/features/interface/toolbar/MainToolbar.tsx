@@ -31,7 +31,7 @@ const MainToolbar = () => {
             aria-label={tool.label + ' - ' + toolKeys[id]}
             aria-pressed={currentTool.id() === id}
             class="toolbar-button"
-            onclick={() => currentTool.selectId(id)}
+            onClick={() => currentTool.selectId(id)}
             title={tool.label + ' - ' + toolKeys[id]}
           >
             <tool.icon />

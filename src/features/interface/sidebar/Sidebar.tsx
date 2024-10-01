@@ -34,7 +34,7 @@ const Sidebar = () => {
             <button
               aria-pressed={context.isOpen() && context.tab() === id}
               class="sidebar-tab"
-              onclick={() => context.toggle(id)}
+              onClick={() => context.toggle(id)}
               title={`${tab.label} - ${tabKeys[id]}`}
             >
               <tab.icon />
@@ -52,7 +52,7 @@ const Sidebar = () => {
         <TabGroup place="bottom" />
       </div>
       <Show when={context.isOpen()}>
-        <div class="sidebar-divider"></div>
+        <div class="sidebar-divider" />
         <div class="sidebar-content">
           <Dynamic component={tabs[context.tab()!].contents} />
         </div>

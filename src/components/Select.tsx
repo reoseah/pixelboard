@@ -69,7 +69,7 @@ export const Selectlike = (props: {
       <button
         aria-expanded={expanded()}
         class={props.classes.button}
-        onclick={(e) => {
+        onClick={(e) => {
           e.stopImmediatePropagation()
           setExpanded(!expanded())
         }}

@@ -155,7 +155,7 @@ const ColorSelector = () => {
   return (
     <div
       class="color-selector"
-      onmousedown={handleMouseDown}
+      onMouseDown={handleMouseDown}
       ref={el => ref = el}
       style={{
         background: `linear-gradient(transparent, black), linear-gradient(90deg, white, hwb(${color.hsv()[0]} 0% 0%))`,
@@ -170,8 +170,7 @@ const ColorSelector = () => {
           left: `${x()}%`,
           top: `${y()}%`,
         }}
-      >
-      </div>
+      />
     </div>
   )
 }
@@ -217,7 +216,7 @@ const HueSlider = () => {
   return (
     <div
       class="hue-slider"
-      onmousedown={handleMouseDown}
+      onMouseDown={handleMouseDown}
       ref={el => ref = el}
       style={{
         background: `linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta, red)`,
@@ -232,8 +231,7 @@ const HueSlider = () => {
           left: `${color.hsv()[0] / 360 * 100}%`,
           top: '50%',
         }}
-      >
-      </div>
+      />
     </div>
   )
 }
