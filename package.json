@@ -14,7 +14,8 @@
     "@floating-ui/dom": "^1.6.11",
     "@solid-primitives/storage": "^4.2.1",
     "solid-floating-ui": "^0.3.1",
-    "solid-js": "^1.8.22"
+    "solid-js": "^1.8.22",
+    "vite-plugin-circular-dependency": "^0.5.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",

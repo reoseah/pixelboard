@@ -6,13 +6,13 @@ import SearchIcon from '../../assets/icons/search.svg'
 import useClickOutside from '../../hooks/useClickOutside'
 import { CurrentToolContext } from '../../state/CurrentToolContext'
 import KeymapContext from '../../state/KeymapContext'
-import { RegistryContext } from '../../state/RegistryContext'
 import { Command } from '../../types/commands'
 import { stringifyShortcut } from '../../types/key_shortcut'
 import './CommandPalette.css'
+import CommandRegistryContext from '../../state/CommandRegistryContext'
 
 const CommandPalette = () => {
-  const { commands } = useContext(RegistryContext)
+  const { commands } = useContext(CommandRegistryContext)
   const currentTool = useContext(CurrentToolContext)
   const [query, setQuery] = createSignal('')
   const [selectedEntry, setSelectedEntry] = createSignal<number>(0)

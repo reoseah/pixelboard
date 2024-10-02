@@ -16,6 +16,7 @@ import RegistryContext from './state/RegistryContext'
 import { WhiteboardContext } from './state/WhiteboardContext'
 import { Tool } from './types/tool'
 import { Entity } from './types/whiteboard'
+import CommandRegistryContext from './state/CommandRegistryContext'
 
 function App() {
   useCommandKeybinds()
@@ -56,7 +57,7 @@ const CurrentToolRenderer = (props: {
 }
 
 const useCommandKeybinds = () => {
-  const { commands } = useContext(RegistryContext)
+  const { commands } = useContext(CommandRegistryContext)
   const keymap = useContext(KeymapContext)
 
   const handleKeyDown = (event: KeyboardEvent) => {

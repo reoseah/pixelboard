@@ -6,19 +6,19 @@ import { DefaultRegistry } from './RegistryContext'
 import { YjsContext } from './YjsContext'
 
 export type WhiteboardState = {
-  clear: () => void
-  editingTitle: Accessor<null | string>
   entities: Y.Map<Entity>
 
-  getElementsInside: (x: number, y: number, width: number, height: number) => string[]
-  remove: (id: string) => void
-
-  select: (ids: string[]) => void
-  selected: Accessor<string[]>
-
   set: (id: string, element: Entity) => void
+  remove: (id: string) => void
+  clear: () => void
 
+  getElementsInside: (x: number, y: number, width: number, height: number) => string[]
+
+  editingTitle: Accessor<null | string>
   setEditingTitle: (id: null | string) => void
+
+  selected: Accessor<string[]>
+  select: (ids: string[]) => void
 }
 
 export const DefaultWhiteboard: WhiteboardState = createRoot(() => {
