@@ -3,7 +3,7 @@ import * as Y from 'yjs'
 
 import { CanvasAction, VirtualCanvasAccess } from '../types/virtual_canvas'
 import { doRectanglesIntersect } from '../util/rectangle'
-import RegistryContext from './RegistryContext'
+import { DefaultRegistry } from './RegistryContext'
 import { YjsContext } from './YjsContext'
 
 export type VirtualCanvasState = {
@@ -19,7 +19,7 @@ export type VirtualCanvasState = {
 
 export const DefaultCanvas: VirtualCanvasState = createRoot(() => {
   const yjs = useContext(YjsContext)
-  const registry = useContext(RegistryContext)
+  // const registry = useContext(RegistryContext)
 
   const actions = yjs.ydoc().getArray<CanvasAction>('virtual-canvas-actions')
 
@@ -51,6 +51,8 @@ export const DefaultCanvas: VirtualCanvasState = createRoot(() => {
   }
 
   const getBounds = () => {
+    const registry = DefaultRegistry
+
     let minX = Infinity
     let minY = Infinity
     let maxX = -Infinity
@@ -71,6 +73,8 @@ export const DefaultCanvas: VirtualCanvasState = createRoot(() => {
   }
 
   const renderArea = (x: number, y: number, width: number, height: number, scale: number, options: ImageEncodeOptions): Promise<Blob> => {
+    const registry = DefaultRegistry
+
     const bounds = { height, width, x, y }
 
     const canvas = new OffscreenCanvas(width * scale, height * scale)
