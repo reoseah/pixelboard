@@ -4,8 +4,8 @@ import useClickOutside from '../../hooks/useClickOutside'
 import { CurrentToolContext } from '../../state/CurrentToolContext'
 import { ViewportPositionContext } from '../../state/ViewportPositionContext'
 import { WhiteboardContext } from '../../state/WhiteboardContext'
-import { FrameEntity } from './FrameEntity'
 import './Frame.css'
+import { FrameEntity } from './FrameEntity'
 
 const Frame = (props: {
   element: FrameEntity
@@ -46,13 +46,9 @@ const FrameTitle = (props: {
   const currentTool = useContext(CurrentToolContext)
   const whiteboard = useContext(WhiteboardContext)
 
-  const style = (): JSX.CSSProperties => currentTool.id() === 'select'
-    ? {
-        'pointer-events': 'auto',
-      }
-    : {
-        'pointer-events': 'none',
-      }
+  const style = (): JSX.CSSProperties => ({
+    'pointer-events': currentTool.id() === 'select' ? 'auto' : 'none',
+  })
 
   return (
     <div

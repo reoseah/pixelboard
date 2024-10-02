@@ -228,20 +228,23 @@ const isReplacementOfLastElement = (event: Y.YEvent<Y.Array<unknown>>): boolean 
 
   const last = event.changes.delta.at(-1)!
   const secondToLast = event.changes.delta.at(-2)!
-  if (last.delete === undefined || secondToLast.insert === undefined) {
-    return false
-  }
-  if ((last.delete !== 1 || secondToLast.insert!.length !== 1)
-    && (last.insert!.length !== 1 || secondToLast.delete !== 1)) {
-    return false
-  }
-  if (event.changes.delta.length === 3) {
-    const thirdToLastChange = event.changes.delta.at(0)!
-    if (thirdToLastChange.retain === undefined) {
-      return false
+
+  const lastIsInsert = last.insert !== undefined
+  const lastIsDelete = last.delete !== undefined
+  const secondToLastIsInsert = secondToLast.insert !== undefined
+  const secondToLastIsDelete = secondToLast.delete !== undefined
+
+  if (lastIsInsert && secondToLastIsDelete
+    || lastIsDelete && secondToLastIsInsert) {
+    if (event.changes.delta.length === 3) {
+      const thirdToLastChange = event.changes.delta.at(0)!
+      if (thirdToLastChange.retain === undefined) {
+        return false
+      }
     }
+    return true
   }
-  return true
+  return false
 }
 
 const getChunksAffectedByDeletions = (actionTypes: Record<string, CanvasActionType>, tileSize: number, event: Y.YEvent<Y.Array<CanvasAction>>): Map<number, Set<number>> => {

@@ -1,25 +1,27 @@
-import { createContext, useContext } from 'solid-js'
+import { createContext, createRoot, useContext } from 'solid-js'
 import * as Y from 'yjs'
 
 import { CanvasAction, VirtualCanvasAccess } from '../types/virtual_canvas'
 import { doRectanglesIntersect } from '../util/rectangle'
-import { DefaultRegistry } from './RegistryContext'
+import RegistryContext from './RegistryContext'
 import { YjsContext } from './YjsContext'
 
 export type VirtualCanvasState = {
   actions: Y.Array<CanvasAction>
 
   add: (action: CanvasAction) => void
-  clear: () => void
-  renderArea: (x: number, y: number, width: number, height: number, scale: number, options: ImageEncodeOptions) => Promise<Blob>
-
   replace: (oldAction: CanvasAction, newAction: CanvasAction) => void
+  clear: () => void
+
+  getBounds: () => { x: number; y: number; width: number; height: number }
+  renderArea: (x: number, y: number, width: number, height: number, scale: number, options: ImageEncodeOptions) => Promise<Blob>
 }
 
-export const DefaultCanvas: VirtualCanvasState = (() => {
+export const DefaultCanvas: VirtualCanvasState = createRoot(() => {
   const yjs = useContext(YjsContext)
+  const registry = useContext(RegistryContext)
 
-  const actions = yjs.ydoc.getArray<CanvasAction>('virtual-canvas-actions')
+  const actions = yjs.ydoc().getArray<CanvasAction>('virtual-canvas-actions')
 
   const add = (action: CanvasAction) => {
     actions.push([action])
@@ -36,16 +38,36 @@ export const DefaultCanvas: VirtualCanvasState = (() => {
     if (idx === -1) {
       throw new Error('oldAction not found')
     }
-    yjs.ydoc.transact(() => {
+    yjs.ydoc().transact(() => {
       actions.delete(idx)
       actions.insert(idx, [newAction])
     })
   }
 
   const clear = () => {
-    yjs.ydoc.transact(() => {
+    yjs.ydoc().transact(() => {
       actions.delete(0, actions.length)
     })
+  }
+
+  const getBounds = () => {
+    let minX = Infinity
+    let minY = Infinity
+    let maxX = -Infinity
+    let maxY = -Infinity
+    actions.forEach((action) => {
+      const type = registry.actionTypes[action.type]
+      if (!type) {
+        console.error(`Unknown action type ${action.type}`, action)
+        return
+      }
+      const bounds = type.getBounds(action)
+      minX = Math.min(minX, bounds.x)
+      minY = Math.min(minY, bounds.y)
+      maxX = Math.max(maxX, bounds.x + bounds.width)
+      maxY = Math.max(maxY, bounds.y + bounds.height)
+    })
+    return { x: minX, y: minY, width: maxX - minX, height: maxY - minY }
   }
 
   const renderArea = (x: number, y: number, width: number, height: number, scale: number, options: ImageEncodeOptions): Promise<Blob> => {
@@ -72,7 +94,7 @@ export const DefaultCanvas: VirtualCanvasState = (() => {
     }
 
     actions.forEach((action) => {
-      const type = DefaultRegistry.actionTypes[action.type]
+      const type = registry.actionTypes[action.type]
       if (!type) {
         console.error(`Unknown action type ${action.type}`, action)
         return
@@ -89,11 +111,12 @@ export const DefaultCanvas: VirtualCanvasState = (() => {
   return {
     actions,
     add,
-    clear,
-    renderArea,
     replace,
+    clear,
+    getBounds,
+    renderArea,
   }
-})()
+})
 
 export const VirtualCanvasContext = createContext(DefaultCanvas)
 

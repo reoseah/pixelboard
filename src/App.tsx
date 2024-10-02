@@ -6,9 +6,9 @@ import './App.css'
 import VirtualCanvas from './features/canvas/VirtualCanvas'
 import SelectionRenderer from './features/canvas_selection/SelectionRenderer'
 import SideLayout from './features/interface/SideLayout'
-import MainToolbar from './features/toolbar/Toolbar'
 import TopCenterLayout from './features/interface/TopCenterLayout'
 import Sidebar from './features/sidebar/Sidebar'
+import MainToolbar from './features/toolbar/Toolbar'
 import ViewportContainer from './features/viewport/ViewportContainer'
 import { CurrentToolContext } from './state/CurrentToolContext'
 import KeymapContext from './state/KeymapContext'
@@ -16,7 +16,6 @@ import RegistryContext from './state/RegistryContext'
 import { WhiteboardContext } from './state/WhiteboardContext'
 import { Tool } from './types/tool'
 import { Entity } from './types/whiteboard'
-import CommandRegistryContext from './state/CommandRegistryContext'
 
 function App() {
   useCommandKeybinds()
@@ -57,7 +56,7 @@ const CurrentToolRenderer = (props: {
 }
 
 const useCommandKeybinds = () => {
-  const { commands } = useContext(CommandRegistryContext)
+  const { commands } = useContext(RegistryContext)
   const keymap = useContext(KeymapContext)
 
   const handleKeyDown = (event: KeyboardEvent) => {

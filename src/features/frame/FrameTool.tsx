@@ -62,8 +62,10 @@ const FrameTool: Tool = {
 
       const x = Math.round(Math.min(initialPos().x, currentPos().x))
       const y = Math.round(Math.min(initialPos().y, currentPos().y))
-      const width = Math.round(Math.abs(currentPos().x - initialPos().x))
-      const height = Math.round(Math.abs(currentPos().y - initialPos().y))
+      const maxX = Math.round(Math.max(initialPos().x, currentPos().x))
+      const maxY = Math.round(Math.max(initialPos().y, currentPos().y))
+      const width = maxX - x
+      const height = maxY - y
 
       if (width > 0 && height > 0) {
         whiteboard.set(crypto.randomUUID(), {

@@ -9,10 +9,10 @@ import KeymapContext from '../../state/KeymapContext'
 import { Command } from '../../types/commands'
 import { stringifyShortcut } from '../../types/key_shortcut'
 import './CommandPalette.css'
-import CommandRegistryContext from '../../state/CommandRegistryContext'
+import RegistryContext from '../../state/RegistryContext'
 
 const CommandPalette = () => {
-  const { commands } = useContext(CommandRegistryContext)
+  const { commands } = useContext(RegistryContext)
   const currentTool = useContext(CurrentToolContext)
   const [query, setQuery] = createSignal('')
   const [selectedEntry, setSelectedEntry] = createSignal<number>(0)

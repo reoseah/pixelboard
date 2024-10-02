@@ -11,6 +11,9 @@ export type Tool = {
 
 // TODO: move this to a more appropriate location
 export const isViewportClick = (e: MouseEvent): boolean => {
+  if (!(e.target as Element)?.closest) {
+    return false
+  }
   if (!(e.target as Element)?.closest('.viewport')) {
     return false
   }

@@ -20,7 +20,7 @@ const RectangleSelection: Tool = {
 
       initialPos,
       setInitialPos,
-      
+
       currentPos,
       setCurrentPos,
     } = useContext(RectangleDragContext)

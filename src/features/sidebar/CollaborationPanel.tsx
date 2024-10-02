@@ -4,17 +4,17 @@ import Button from '../../components/Button'
 import Input from '../../components/Input'
 import Stack from '../../components/Stack'
 import Text from '../../components/Text'
-import { YjsContext } from '../../state/YjsContext'
+import YWebrtcContext from '../../state/YWebrtcContext'
 import './CollaborationPanel.css'
 
 const CollaborationPanel = () => {
-  const yjs = useContext(YjsContext)
+  const webrtc = useContext(YWebrtcContext)
 
   return (
     <Stack padding={0.75} spacing={0.75}>
       <h2 class="tab-title">Live Collaboration</h2>
       <Switch>
-        <Match when={!yjs.room()}>
+        <Match when={!webrtc.room()}>
           <Stack spacing={0.25}>
             <Text muted size="medium">
               Invite others to join your project and work together seamlessly.
@@ -25,16 +25,16 @@ const CollaborationPanel = () => {
                         </Text> */}
           </Stack>
           {/* todo: add play icon / loading indicator to this button */}
-          <Button color="primary" onclick={yjs.startSession}>Start session</Button>
+          <Button color="primary" onclick={webrtc.startSession}>Start session</Button>
         </Match>
-        <Match when={yjs.room()}>
+        <Match when={webrtc.room()}>
           <Stack spacing={0.25}>
             <Text size="medium">Your name</Text>
             <Input
               id="your-name"
-              onchange={e => yjs.setUserName(e.currentTarget.value)}
+              onchange={e => webrtc.setUserName(e.currentTarget.value)}
               type="text"
-              value={yjs.userName()}
+              value={webrtc.userName()}
             />
           </Stack>
           <Stack spacing={0.25}>
@@ -48,7 +48,7 @@ const CollaborationPanel = () => {
                 }}
                 readonly
                 type="text"
-                value={yjs.getShareUrl()}
+                value={webrtc.getShareUrl()}
               />
               <Button
                 color="primary"
@@ -71,7 +71,7 @@ const CollaborationPanel = () => {
             </Text>
           </Stack>
 
-          <Button color="danger" onclick={yjs.endSession} variant="outline">End session</Button>
+          <Button color="danger" onclick={webrtc.endSession} variant="outline">End session</Button>
         </Match>
       </Switch>
     </Stack>

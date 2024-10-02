@@ -3,9 +3,9 @@ import { CanvasActionType } from '../../types/virtual_canvas'
 // This is temporary until we have a proper canvas selection implementation,
 // at which point this will be substituted with a more advanced DeleteSelection
 export type DeleteRectangle = {
-  type: 'delete_rectangle'
-
   height: number
+
+  type: 'delete_rectangle'
   width: number
   x: number
   y: number
