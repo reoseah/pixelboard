@@ -37,7 +37,7 @@ export const ViewportPosition: ViewportPosition = createRoot(() => {
 
 export const ViewportPositionContext = createContext(ViewportPosition)
 
-export default ViewportPosition
+export default ViewportPositionContext
 
 const preferredZoomLevels = [1, 2, 3, 4, 5, 7, 10, 15, 20, 25, 30, 40, 50, 75, 100, 150]
 

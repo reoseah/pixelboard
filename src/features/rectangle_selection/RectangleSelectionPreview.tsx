@@ -2,7 +2,7 @@ import { Show, useContext } from 'solid-js'
 
 import { RectangleDragContext } from '../../state/RectangleDragContext'
 import { ViewportPositionContext } from '../../state/ViewportPositionContext'
-import './SelectRectanglePreview.css'
+import './RectangleSelectionPreview.css'
 
 const SelectRectanglePreview = () => {
   const viewport = useContext(ViewportPositionContext)

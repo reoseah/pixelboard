@@ -5,9 +5,9 @@ import CanvasSelectionContext from '../../state/CanvasSelectionContext'
 import { RectangleDragContext } from '../../state/RectangleDragContext'
 import { ViewportPositionContext } from '../../state/ViewportPositionContext'
 import { isViewportClick, Tool } from '../../types/tool'
-import SelectRectanglePreview from './SelectRectanglePreview'
+import SelectRectanglePreview from './RectangleSelectionPreview'
 
-const SelectRectangle: Tool = {
+const RectangleSelection: Tool = {
   icon: SelectionIcon,
   label: 'Select Rectangle',
   use: () => {
@@ -15,12 +15,14 @@ const SelectRectangle: Tool = {
     const selection = useContext(CanvasSelectionContext)
 
     const {
-      currentPos,
       dragging,
-      initialPos,
-      setCurrentPos,
       setDragging,
+
+      initialPos,
       setInitialPos,
+      
+      currentPos,
+      setCurrentPos,
     } = useContext(RectangleDragContext)
 
     const handleMouseDown = (e: MouseEvent) => {
@@ -72,12 +74,9 @@ const SelectRectangle: Tool = {
       document.removeEventListener('mousedown', handleMouseDown)
       document.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseup', handleMouseUp)
-      // setDragging(false)
-      // setInitialPos({ x: 0, y: 0 })
-      // setCurrentPos({ x: 0, y: 0 })
     })
   },
   viewport: SelectRectanglePreview,
 }
 
-export default SelectRectangle
+export default RectangleSelection

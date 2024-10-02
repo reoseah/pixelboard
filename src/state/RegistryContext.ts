@@ -4,13 +4,13 @@ import { ClearProject } from '../features/canvas/virtual_canvas_commands'
 import CommandPalette from '../features/command_palette/CommandPaletteTool'
 import { FrameType } from '../features/frame/FrameEntity'
 import Frame from '../features/frame/FrameTool'
-import { createSelectToolCommand } from '../features/interface/toolbar/tool_commands'
+import { createSelectToolCommand } from '../features/toolbar/tool_commands'
 import createPencil from '../features/pencil/pencil'
 import { PencilStrokeType } from '../features/pencil/pencil_stroke'
-import createSelect from '../features/select/select'
-import { DeleteRectangleType } from '../features/select_rectangle/delete_rectangle'
-import SelectRectangle from '../features/select_rectangle/select_rectangle'
-import { DeleteSelection, Deselect, Reselect } from '../features/select_rectangle/selection_commands'
+import { DeleteRectangleType } from '../features/rectangle_selection/DeleteRectangle'
+import RectangleSelection from '../features/rectangle_selection/RectangleSelection'
+import { DeleteSelection, Deselect, Reselect } from '../features/rectangle_selection/selection_commands'
+import SelectTool from '../features/select/select'
 import Collaboration from '../features/sidebar/Collaboration'
 import Color from '../features/sidebar/Color'
 import MainMenu from '../features/sidebar/MainMenu'
@@ -64,9 +64,9 @@ export const DefaultRegistry: Registry = createRoot(() => {
     },
     /* eslint-disable perfectionist/sort-objects */
     tools: {
-      select: createSelect(),
+      select: SelectTool,
       pencil: createPencil(),
-      select_rectangle: SelectRectangle,
+      select_rectangle: RectangleSelection,
       frame: Frame,
       command_palette: CommandPalette,
     },

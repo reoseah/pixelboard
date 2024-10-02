@@ -13,4 +13,11 @@ export default [
   solid.configs['flat/typescript'],
   stylistic.configs['recommended-flat'],
   perfectionist.configs['recommended-natural'],
+  {
+    rules: {
+      'perfectionist/sort-objects': {
+        partitionByNewLine: true,
+      },
+    },
+  },
 ]
