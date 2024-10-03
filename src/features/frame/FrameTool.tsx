@@ -1,7 +1,7 @@
 import { onCleanup, useContext } from 'solid-js'
 
 import CropIcon from '../../assets/icons/crop.svg'
-import { CurrentToolContext } from '../../state/CurrentToolContext'
+import CurrentTool from '../../state/CurrentTool'
 import { RectangleDragContext } from '../../state/RectangleDragContext'
 import { ViewportPositionContext } from '../../state/ViewportPositionContext'
 import WhiteboardContext from '../../state/WhiteboardContext'
@@ -14,7 +14,6 @@ const FrameTool: Tool = {
   use: () => {
     const viewport = useContext(ViewportPositionContext)
     const whiteboard = useContext(WhiteboardContext)
-    const currentTool = useContext(CurrentToolContext)
 
     const {
       currentPos,
@@ -80,7 +79,7 @@ const FrameTool: Tool = {
       setDragging(false)
       setInitialPos({ x: 0, y: 0 })
       setCurrentPos({ x: 0, y: 0 })
-      currentTool.selectId('select')
+      CurrentTool.selectId('select')
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {

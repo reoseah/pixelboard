@@ -6,7 +6,7 @@ import Input from '../../components/Input'
 import InputGroup from '../../components/InputGroup'
 import { Option, Select } from '../../components/Select'
 import Stack from '../../components/Stack'
-import CanvasSelectionContext from '../../state/CanvasSelectionContext'
+import CanasSelection from '../../state/CanvasSelection'
 import { ViewportPositionContext } from '../../state/ViewportPositionContext'
 import { VirtualCanvasContext } from '../../state/VirtualCanvasContext'
 import './SelectionRenderer.css'
@@ -19,15 +19,14 @@ const saveFormats = [
 
 const SelectionRenderer = () => {
   const viewport = useContext(ViewportPositionContext)
-  const selection = useContext(CanvasSelectionContext)
   const canvas = useContext(VirtualCanvasContext)
-  const bounds = createMemo(selection.getBounds)
+  const bounds = createMemo(CanasSelection.getBounds)
 
   const [saveScale, setSaveScale] = createSignal(1)
   const [saveFormat, setSaveFormat] = createSignal('image/png')
 
   return (
-    <Show when={selection.parts.length !== 0}>
+    <Show when={CanasSelection.parts.length !== 0}>
       <svg
         class="selection-renderer"
         height={bounds().height * viewport.scale() + 1}
@@ -37,7 +36,7 @@ const SelectionRenderer = () => {
         }}
         width={bounds().width * viewport.scale() + 1}
       >
-        <For each={selection.parts}>
+        <For each={CanasSelection.parts}>
           {part => (
             <Show when={part.type === 'rectangle'}>
               <rect

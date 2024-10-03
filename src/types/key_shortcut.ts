@@ -1,4 +1,4 @@
-export type KeyShortcut = {
+export type Keybind = {
   alt?: boolean
   ctrl?: boolean
   key: string
@@ -6,19 +6,19 @@ export type KeyShortcut = {
   shift?: boolean
 }
 
-export const parseShortcut = (shortcut: string): KeyShortcut => {
-  const keys = shortcut.split('+')
+export const parseShortcut = (keybind: string): Keybind => {
+  const keys = keybind.split('+')
   const key = keys.pop()!
   const modifiers = keys.map(key => key.toLowerCase())
   return {
-    alt: modifiers.includes('alt'),
-    ctrl: modifiers.includes('ctrl'),
     key,
-    meta: modifiers.includes('meta'),
+    ctrl: modifiers.includes('ctrl'),
     shift: modifiers.includes('shift'),
+    alt: modifiers.includes('alt'),
+    meta: modifiers.includes('meta'),
   }
 }
 
-export const stringifyShortcut = (shortcut: KeyShortcut): string => {
-  return `${shortcut.ctrl ? 'Ctrl+' : ''}${shortcut.shift ? 'Shift+' : ''}${shortcut.alt ? 'Alt+' : ''}${shortcut.meta ? 'Meta+' : ''}${shortcut.key}`
+export const stringifyShortcut = (keybind: Keybind): string => {
+  return `${keybind.ctrl ? 'Ctrl+' : ''}${keybind.shift ? 'Shift+' : ''}${keybind.alt ? 'Alt+' : ''}${keybind.meta ? 'Meta+' : ''}${keybind.key}`
 }

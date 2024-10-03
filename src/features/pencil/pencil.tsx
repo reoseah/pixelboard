@@ -1,7 +1,7 @@
 import { createSignal, onCleanup, useContext } from 'solid-js'
 
 import PencilIcon from '../../assets/icons/pencil.svg'
-import { CurrentColorContext } from '../../state/CurrentColorContext'
+import CurrentColor from '../../state/CurrentColor'
 import { ViewportPositionContext } from '../../state/ViewportPositionContext'
 import { VirtualCanvasContext } from '../../state/VirtualCanvasContext'
 import { isViewportClick, Tool } from '../../types/tool'
@@ -22,7 +22,6 @@ const createPencil = (): Tool => {
       const [lastMousePos, setLastMousePos] = createSignal<{ x: number, y: number }>({ x: 0, y: 0 })
       let currentAction: null | PencilStroke = null
 
-      const color = useContext(CurrentColorContext)
       const { shape, size } = useContext(PencilContext)
 
       const handleMouseDown = (e: MouseEvent) => {
@@ -38,7 +37,7 @@ const createPencil = (): Tool => {
         }
         setLastMousePos(pos)
         const action: PencilStroke = {
-          color: normalizeHex(color.hex()),
+          color: normalizeHex(CurrentColor.hex()),
           points: [pos],
           shape: shape(),
           size: size(),

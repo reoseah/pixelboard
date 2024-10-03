@@ -1,16 +1,14 @@
-import { createContext } from 'solid-js'
+import { Keybind, parseShortcut } from '../types/key_shortcut'
 
-import { KeyShortcut, parseShortcut } from '../types/key_shortcut'
-
-export type Keybinding = {
+export type KeymapEntry = {
   command: string
-  key: KeyShortcut
-  linux?: KeyShortcut
-  mac?: KeyShortcut
-  win?: KeyShortcut
+  key: Keybind
+  linux?: Keybind
+  mac?: Keybind
+  win?: Keybind
 }
 
-const DefaultKeymap: Keybinding[] = [
+const keymap: KeymapEntry[] = [
   {
     command: 'select_tool.select',
     key: parseShortcut('V'),
@@ -67,6 +65,4 @@ const DefaultKeymap: Keybinding[] = [
   },
 ]
 
-const KeymapContext = createContext(DefaultKeymap)
-
-export default KeymapContext
+export default keymap

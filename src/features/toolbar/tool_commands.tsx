@@ -1,6 +1,6 @@
 import { Dynamic } from 'solid-js/web'
 
-import { CurrentTool } from '../../state/CurrentToolContext'
+import CurrentTool from '../../state/CurrentTool'
 import { DefaultRegistry } from '../../state/RegistryContext'
 import { Command } from '../../types/commands'
 

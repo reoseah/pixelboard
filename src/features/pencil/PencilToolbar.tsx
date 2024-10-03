@@ -12,13 +12,12 @@ import NumberInput from '../../components/NumberInput'
 import { Option, OptionDivider, Select } from '../../components/Select'
 import Stack from '../../components/Stack'
 import ToggleButton from '../../components/ToggleButton'
-import { CurrentColorContext } from '../../state/CurrentColorContext'
+import CurrentColor from '../../state/CurrentColor'
 import { modeGroups, modeNames } from '../../util/blending_modes'
 import { PencilContext } from './PencilContext'
 import './PencilToolbar.css'
 
 const PencilToolbar = () => {
-  const color = useContext(CurrentColorContext)
   const {
     mode,
     setMode,
@@ -66,9 +65,9 @@ const PencilToolbar = () => {
         />
         <ColorInput
           name="pencil-color"
-          onChange={value => color.setHex(value)}
+          onChange={value => CurrentColor.setHex(value)}
           title="Stroke color"
-          value={color.hex()}
+          value={CurrentColor.hex()}
         />
       </InputGroup>
 
@@ -112,12 +111,12 @@ const PencilToolbar = () => {
           max={100}
           min={0}
           name="pencil-opacity"
-          onChange={value => color.setAlpha(value / 100)}
+          onChange={value => CurrentColor.setAlpha(value / 100)}
           size={3}
           step={1}
           title="Not implemented yet"
           unit="%"
-          value={Math.floor(color.alpha() * 100)}
+          value={Math.floor(CurrentColor.alpha() * 100)}
         />
       </InputGroup>
     </Stack>

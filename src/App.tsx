@@ -10,8 +10,8 @@ import TopCenterLayout from './features/interface/TopCenterLayout'
 import Sidebar from './features/sidebar/Sidebar'
 import MainToolbar from './features/toolbar/Toolbar'
 import ViewportContainer from './features/viewport/ViewportContainer'
-import { CurrentToolContext } from './state/CurrentToolContext'
-import KeymapContext from './state/KeymapContext'
+import CurrentTool from './state/CurrentTool'
+import Keymap from './state/Keymap'
 import RegistryContext from './state/RegistryContext'
 import { WhiteboardContext } from './state/WhiteboardContext'
 import { Tool } from './types/tool'
@@ -44,9 +44,8 @@ const CurrentToolRenderer = (props: {
   map: (tool: Tool) => Component | undefined
 }) => {
   const { tools } = useContext(RegistryContext)
-  const currentTool = useContext(CurrentToolContext)
 
-  const component = createMemo(() => props.map(tools[currentTool.id()]))
+  const component = createMemo(() => props.map(tools[CurrentTool.id()]))
 
   return (
     <Show when={component()}>
@@ -57,7 +56,6 @@ const CurrentToolRenderer = (props: {
 
 const useCommandKeybinds = () => {
   const { commands } = useContext(RegistryContext)
-  const keymap = useContext(KeymapContext)
 
   const handleKeyDown = (event: KeyboardEvent) => {
     const target = event.target as HTMLElement
@@ -66,7 +64,7 @@ const useCommandKeybinds = () => {
       return
     }
 
-    const keybind = keymap.find((keybind) => {
+    const keybind = Keymap.find((keybind) => {
       const key = keybind.key
       return (event.key.toUpperCase() === key.key || event.code === key.key)
         && event.ctrlKey === key.ctrl

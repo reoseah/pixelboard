@@ -1,18 +1,16 @@
 import { For, useContext } from 'solid-js'
 
 import Stack from '../../components/Stack'
-import { CurrentToolContext } from '../../state/CurrentToolContext'
-import KeymapContext from '../../state/KeymapContext'
+import CurrentTool from '../../state/CurrentTool'
+import Keymap from '../../state/Keymap'
 import { RegistryContext } from '../../state/RegistryContext'
 import { stringifyShortcut } from '../../types/key_shortcut'
 import './Toolbar.css'
 
 const MainToolbar = () => {
   const { tools } = useContext(RegistryContext)
-  const currentTool = useContext(CurrentToolContext)
-  const keymap = useContext(KeymapContext)
 
-  const toolKeys = keymap.reduce((acc, keybinding) => {
+  const toolKeys = Keymap.reduce((acc, keybinding) => {
     if (keybinding.command.match(/^select_tool\./)) {
       const tool = keybinding.command.replace(/^select_tool\./, '')
       if (tools[tool]) {
@@ -29,9 +27,9 @@ const MainToolbar = () => {
           <button
             aria-keyshortcuts={toolKeys[id]}
             aria-label={tool.label + ' - ' + toolKeys[id]}
-            aria-pressed={currentTool.id() === id}
+            aria-pressed={CurrentTool.id() === id}
             class="toolbar-button"
-            onClick={() => currentTool.selectId(id)}
+            onClick={() => CurrentTool.selectId(id)}
             title={tool.label + ' - ' + toolKeys[id]}
           >
             <tool.icon />

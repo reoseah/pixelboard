@@ -1,15 +1,15 @@
-import { VirtualCanvasSelection } from '../../state/CanvasSelectionContext'
+import CanvasSelection from '../../state/CanvasSelection'
 import { DefaultCanvas } from '../../state/VirtualCanvasContext'
 import { Command } from '../../types/commands'
 
 export const Deselect: Command = {
   execute: () => {
-    const selection = VirtualCanvasSelection
+    const selection = CanvasSelection
     selection.deselect()
   },
   id: 'deselect',
   isDisabled: () => {
-    const selection = VirtualCanvasSelection
+    const selection = CanvasSelection
     return selection.parts.length === 0
   },
   label: () => 'Deselect',
@@ -17,12 +17,12 @@ export const Deselect: Command = {
 
 export const Reselect: Command = {
   execute: () => {
-    const selection = VirtualCanvasSelection
+    const selection = CanvasSelection
     selection.reselect()
   },
   id: 'reselect',
   isDisabled: () => {
-    const selection = VirtualCanvasSelection
+    const selection = CanvasSelection
     return selection.prevParts().length === 0 || selection.parts.length !== 0
   },
   label: () => 'Reselect',
@@ -31,7 +31,7 @@ export const Reselect: Command = {
 export const DeleteSelection: Command = {
   execute: () => {
     const canvas = DefaultCanvas
-    const selection = VirtualCanvasSelection
+    const selection = CanvasSelection
     if (selection.parts.length === 1 && selection.parts[0].type === 'rectangle') {
       canvas.add({
         height: selection.parts[0].height,
@@ -45,7 +45,7 @@ export const DeleteSelection: Command = {
   },
   id: 'delete_selection',
   isDisabled: () => {
-    const selection = VirtualCanvasSelection
+    const selection = CanvasSelection
     return selection.parts.length === 0
   },
   label: () => 'Delete',

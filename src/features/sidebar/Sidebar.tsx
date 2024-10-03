@@ -1,7 +1,7 @@
 import { For, Show, useContext } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 
-import KeymapContext from '../../state/KeymapContext'
+import Keymap from '../../state/Keymap'
 import { RegistryContext } from '../../state/RegistryContext'
 import { SidebarContext } from '../../state/SidebarContext'
 import { stringifyShortcut } from '../../types/key_shortcut'
@@ -10,9 +10,8 @@ import './Sidebar.css'
 const Sidebar = () => {
   const context = useContext(SidebarContext)
   const { tabs } = useContext(RegistryContext)
-  const keymap = useContext(KeymapContext)
 
-  const tabKeys = keymap.reduce((acc, keybinding) => {
+  const tabKeys = Keymap.reduce((acc, keybinding) => {
     if (keybinding.command.match(/^toggle_tab\./)) {
       const tab = keybinding.command.replace(/^toggle_tab\./, '')
       if (tabs[tab]) {

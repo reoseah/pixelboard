@@ -1,6 +1,6 @@
 import { createSignal, JSXElement, onCleanup, useContext } from 'solid-js'
 
-import { CurrentToolContext } from '../../state/CurrentToolContext'
+import CurrentTool from '../../state/CurrentTool'
 import { ViewportPositionContext } from '../../state/ViewportPositionContext'
 import './ViewportContainer.css'
 
@@ -89,12 +89,10 @@ const ViewportContainer = (props: { children: JSXElement }) => {
   const translationX = () => Math.round(innerWidth() / 2 + viewport.x() * viewport.scale())
   const translationY = () => Math.round(innerHeight() / 2 + viewport.y() * viewport.scale())
 
-  const currentTool = useContext(CurrentToolContext)
-
   return (
     <div
       class="viewport"
-      data-active-tool={currentTool.id()}
+      data-active-tool={CurrentTool.id()}
       data-dragging={dragging()}
       onMouseDown={handleMouseDown}
     >

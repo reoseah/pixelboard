@@ -1,16 +1,15 @@
 import { makePersisted } from '@solid-primitives/storage'
-import { createSignal, Match, onCleanup, Switch, useContext } from 'solid-js'
+import { createSignal, Match, onCleanup, Switch } from 'solid-js'
 
 import InputGroup from '../../components/InputGroup'
 import NumberInput from '../../components/NumberInput'
 import { Option, Select } from '../../components/Select'
 import Stack from '../../components/Stack'
-import { CurrentColorContext } from '../../state/CurrentColorContext'
+import CurrentColor from '../../state/CurrentColor'
 import './ColorPanel.css'
 
 const ColorPanel = () => {
   const [mode, setMode] = makePersisted(createSignal<'hsv' | 'rgb'>('hsv'), { name: 'color-tab.color-mode' })
-  const color = useContext(CurrentColorContext)
 
   return (
     <Stack padding={0.75} spacing={0.75}>
@@ -51,8 +50,8 @@ const ColorPanel = () => {
               max={255}
               min={0}
               name="red"
-              onChange={value => color.setRgb([value, color.rgb()[1], color.rgb()[2]])}
-              value={color.rgb()[0]}
+              onChange={value => CurrentColor.setRgb([value, CurrentColor.rgb()[1], CurrentColor.rgb()[2]])}
+              value={CurrentColor.rgb()[0]}
             />
             <NumberInput
               class="w-3.5rem"
@@ -60,8 +59,8 @@ const ColorPanel = () => {
               max={255}
               min={0}
               name="green"
-              onChange={value => color.setRgb([color.rgb()[0], value, color.rgb()[2]])}
-              value={color.rgb()[1]}
+              onChange={value => CurrentColor.setRgb([CurrentColor.rgb()[0], value, CurrentColor.rgb()[2]])}
+              value={CurrentColor.rgb()[1]}
             />
             <NumberInput
               class="w-3.5rem"
@@ -69,8 +68,8 @@ const ColorPanel = () => {
               max={255}
               min={0}
               name="blue"
-              onChange={value => color.setRgb([color.rgb()[0], color.rgb()[1], value])}
-              value={color.rgb()[2]}
+              onChange={value => CurrentColor.setRgb([CurrentColor.rgb()[0], CurrentColor.rgb()[1], value])}
+              value={CurrentColor.rgb()[2]}
             />
           </Match>
           <Match when={mode() === 'hsv'}>
@@ -80,8 +79,8 @@ const ColorPanel = () => {
               max={360}
               min={0}
               name="hue"
-              onChange={value => color.setHsv([value, color.hsv()[1], color.hsv()[2]])}
-              value={Math.round(color.hsv()[0])}
+              onChange={value => CurrentColor.setHsv([value, CurrentColor.hsv()[1], CurrentColor.hsv()[2]])}
+              value={Math.round(CurrentColor.hsv()[0])}
             />
             <NumberInput
               class="w-3.5rem"
@@ -89,8 +88,8 @@ const ColorPanel = () => {
               max={100}
               min={0}
               name="saturation"
-              onChange={value => color.setHsv([color.hsv()[0], value, color.hsv()[2]])}
-              value={Math.round(color.hsv()[1])}
+              onChange={value => CurrentColor.setHsv([CurrentColor.hsv()[0], value, CurrentColor.hsv()[2]])}
+              value={Math.round(CurrentColor.hsv()[1])}
             />
             <NumberInput
               class="w-3.5rem"
@@ -98,8 +97,8 @@ const ColorPanel = () => {
               max={100}
               min={0}
               name="value"
-              onChange={value => color.setHsv([color.hsv()[0], color.hsv()[1], value])}
-              value={Math.round(color.hsv()[2])}
+              onChange={value => CurrentColor.setHsv([CurrentColor.hsv()[0], CurrentColor.hsv()[1], value])}
+              value={Math.round(CurrentColor.hsv()[2])}
             />
           </Match>
         </Switch>
@@ -112,10 +111,8 @@ const ColorPanel = () => {
 export default ColorPanel
 
 const ColorSelector = () => {
-  const color = useContext(CurrentColorContext)
-
-  const x = () => color.hsv()[1]
-  const y = () => 100 - color.hsv()[2]
+  const x = () => CurrentColor.hsv()[1]
+  const y = () => 100 - CurrentColor.hsv()[2]
   const [dragging, setDragging] = createSignal(false)
   let ref!: HTMLDivElement
 
@@ -124,7 +121,7 @@ const ColorSelector = () => {
     const x = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width))
     const y = Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height))
 
-    color.setHsv([color.hsv()[0], x * 100, (1 - y) * 100])
+    CurrentColor.setHsv([CurrentColor.hsv()[0], x * 100, (1 - y) * 100])
   }
 
   const handleMouseDown = (e: MouseEvent) => {
@@ -158,7 +155,7 @@ const ColorSelector = () => {
       onMouseDown={handleMouseDown}
       ref={el => ref = el}
       style={{
-        background: `linear-gradient(transparent, black), linear-gradient(90deg, white, hwb(${color.hsv()[0]} 0% 0%))`,
+        background: `linear-gradient(transparent, black), linear-gradient(90deg, white, hwb(${CurrentColor.hsv()[0]} 0% 0%))`,
         cursor: dragging() ? 'none' : 'crosshair',
       }}
     >
@@ -166,7 +163,7 @@ const ColorSelector = () => {
         class="color-selector-thumb"
         data-dragging={dragging()}
         style={{
-          background: color.hex(),
+          background: CurrentColor.hex(),
           left: `${x()}%`,
           top: `${y()}%`,
         }}
@@ -176,7 +173,6 @@ const ColorSelector = () => {
 }
 
 const HueSlider = () => {
-  const color = useContext(CurrentColorContext)
   const [dragging, setDragging] = createSignal(false)
   let ref!: HTMLDivElement
 
@@ -184,7 +180,7 @@ const HueSlider = () => {
     const rect = ref.getBoundingClientRect()
     const x = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width))
 
-    color.setHsv([x * 360, color.hsv()[1], color.hsv()[2]])
+    CurrentColor.setHsv([x * 360, CurrentColor.hsv()[1], CurrentColor.hsv()[2]])
   }
 
   const handleMouseDown = (e: MouseEvent) => {
@@ -227,8 +223,8 @@ const HueSlider = () => {
         class="hue-slider-thumb"
         data-dragging={dragging()}
         style={{
-          background: `hwb(${color.hsv()[0]} 0% 0%)`,
-          left: `${color.hsv()[0] / 360 * 100}%`,
+          background: `hwb(${CurrentColor.hsv()[0]} 0% 0%)`,
+          left: `${CurrentColor.hsv()[0] / 360 * 100}%`,
           top: '50%',
         }}
       />

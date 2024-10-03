@@ -4,8 +4,8 @@ import { Dynamic } from 'solid-js/web'
 
 import SearchIcon from '../../assets/icons/search.svg'
 import useClickOutside from '../../hooks/useClickOutside'
-import { CurrentToolContext } from '../../state/CurrentToolContext'
-import KeymapContext from '../../state/KeymapContext'
+import CurrentTool from '../../state/CurrentTool'
+import Keymap from '../../state/Keymap'
 import { Command } from '../../types/commands'
 import { stringifyShortcut } from '../../types/key_shortcut'
 import './CommandPalette.css'
@@ -13,10 +13,8 @@ import RegistryContext from '../../state/RegistryContext'
 
 const CommandPalette = () => {
   const { commands } = useContext(RegistryContext)
-  const currentTool = useContext(CurrentToolContext)
   const [query, setQuery] = createSignal('')
   const [selectedEntry, setSelectedEntry] = createSignal<number>(0)
-  const keymap = useContext(KeymapContext)
 
   const matchingCommands = createMemo(() => {
     const queryLower = query().toLowerCase()
@@ -34,7 +32,7 @@ const CommandPalette = () => {
 
   const commandToKeybinds = createMemo(() => {
     const keybinds: Record<string, string[]> = {}
-    for (const keybinding of keymap) {
+    for (const keybinding of Keymap) {
       if (keybinds[keybinding.command]) {
         keybinds[keybinding.command].push(stringifyShortcut(keybinding.key))
       }
@@ -47,17 +45,17 @@ const CommandPalette = () => {
 
   const [wrapper, setWrapper] = createSignal<HTMLDivElement>()
   useClickOutside(wrapper, () => {
-    currentTool.selectId(currentTool.prevId())
+    CurrentTool.selectId(CurrentTool.prevId())
   })
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Escape') {
-      currentTool.selectId(currentTool.prevId())
+      CurrentTool.selectId(CurrentTool.prevId())
     }
     else if (event.key === 'Enter') {
       const firstCommand = matchingEnabledCommands()[selectedEntry()]
       if (firstCommand) {
-        currentTool.selectId(currentTool.prevId())
+        CurrentTool.selectId(CurrentTool.prevId())
         firstCommand.execute()
       }
     }
@@ -77,7 +75,7 @@ const CommandPalette = () => {
   }
 
   const handleCommandClick = (command: Command) => {
-    currentTool.selectId(currentTool.prevId())
+    CurrentTool.selectId(CurrentTool.prevId())
     command.execute()
   }
 
