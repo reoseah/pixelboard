@@ -1,7 +1,7 @@
 import { createSignal } from 'solid-js'
 
-import useClickOutside from '../hooks/useClickOutside'
-import { normalizeHex } from '../util/color_conversion'
+import useClickOutside from '../../hooks/useClickOutside'
+import { normalizeHex } from '../../util/color_conversion'
 import './ColorInput.css'
 import Input from './Input'
 import InputDecoration from './InputDecoration'

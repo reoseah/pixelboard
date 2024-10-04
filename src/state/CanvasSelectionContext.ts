@@ -13,7 +13,7 @@ export type CanvasSelection = {
   selectRectangle: (mode: SelectionToolMode, x: number, y: number, width: number, height: number) => void
 }
 
-const CanvasSelectionContext = createContext<CanvasSelection>()
+const CanvasSelectionContext = createContext<CanvasSelection>(undefined as unknown as CanvasSelection)
 
 export default CanvasSelectionContext
 

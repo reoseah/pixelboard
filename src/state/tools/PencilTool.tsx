@@ -1,23 +1,23 @@
 import { createSignal, onCleanup, useContext } from 'solid-js'
 
 import PencilIcon from '../../assets/icons/pencil.svg'
+import PencilToolbar from '../../components/app/PencilToolbar'
+import { isViewportClick, Tool } from '../../types/tool'
+import { normalizeHex } from '../../util/color_conversion'
+import { PencilStroke } from '../canvas_action/pencil_stroke'
 import SelectedColorContext from '../SelectedColorContext'
 import { ViewportPositionContext } from '../ViewportPositionContext'
 import { VirtualCanvasContext } from '../VirtualCanvasContext'
-import { isViewportClick, Tool } from '../../types/tool'
-import { normalizeHex } from '../../util/color_conversion'
-import { PencilStroke } from '../../features/pencil/pencil_stroke'
-import { PencilContext } from '../../features/pencil/PencilContext'
-import PencilToolbar from '../../features/pencil/PencilToolbar'
+import { PencilContext } from './PencilContext'
 
-const Pencil: Tool = {
+const PencilTool: Tool = {
   icon: PencilIcon,
   label: 'Pencil',
   subToolbar: PencilToolbar,
   use: () => {
     const viewport = useContext(ViewportPositionContext)
     const canvas = useContext(VirtualCanvasContext)
-    const selectedColor = useContext(SelectedColorContext)!
+    const selectedColor = useContext(SelectedColorContext)
 
     const [lastMousePos, setLastMousePos] = createSignal<{ x: number, y: number }>({ x: 0, y: 0 })
     let currentAction: null | PencilStroke = null
@@ -89,4 +89,4 @@ const Pencil: Tool = {
   },
 }
 
-export default Pencil
+export default PencilTool

@@ -1,6 +1,6 @@
 import { JSXElement, Show } from 'solid-js'
 
-import CheckIcon from '../assets/icons/check.svg'
+import CheckIcon from '../../assets/icons/check.svg'
 import './Menu.css'
 
 const Menu = (props: {

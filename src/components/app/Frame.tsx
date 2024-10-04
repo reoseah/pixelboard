@@ -1,11 +1,11 @@
 import { createSignal, JSX, onMount, Show, useContext } from 'solid-js'
 
-import useClickOutside from '../../hooks/useClickOutside'
+import useClickOutside from '../../state/whiteboard_elements/FrameElementTypett
 import SelectedToolContext from '../../state/SelectedToolContext'
 import { ViewportPositionContext } from '../../state/ViewportPositionContext'
+import { FrameEntity } from '../../state/whiteboard_elements/FrameEntity'
 import { WhiteboardElementsContext } from '../../state/WhiteboardElementsContext'
 import './Frame.css'
-import { FrameEntity } from './FrameEntity'
 
 const Frame = (props: {
   element: FrameEntity

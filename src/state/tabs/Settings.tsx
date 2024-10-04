@@ -1,5 +1,5 @@
 import SettingsIcon from '../../assets/icons/settings.svg'
-import Stack from '../../components/Stack'
+import Stack from '../../components/generic/Stack'
 import { Tab } from '../../types/tab'
 
 const Settings: Tab = {

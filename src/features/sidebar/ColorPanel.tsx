@@ -1,10 +1,10 @@
 import { makePersisted } from '@solid-primitives/storage'
 import { createSignal, Match, onCleanup, Switch, useContext } from 'solid-js'
 
-import InputGroup from '../../components/InputGroup'
-import NumberInput from '../../components/NumberInput'
-import { Option, Select } from '../../components/Select'
-import Stack from '../../components/Stack'
+import InputGroup from '../../components/generic/InputGroup'
+import NumberInput from '../../components/generic/NumberInput'
+import { Option, Select } from '../../components/generic/Select'
+import Stack from '../../components/generic/Stack'
 import SelectedColorContext from '../../state/SelectedColorContext'
 import './ColorPanel.css'
 

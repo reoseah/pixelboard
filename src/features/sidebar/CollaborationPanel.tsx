@@ -1,9 +1,9 @@
 import { Match, Switch, useContext } from 'solid-js'
 
-import Button from '../../components/Button'
-import Input from '../../components/Input'
-import Stack from '../../components/Stack'
-import Text from '../../components/Text'
+import Button from '../../components/generic/Button'
+import Input from '../../components/generic/Input'
+import Stack from '../../components/generic/Stack'
+import Text from '../../components/generic/Text'
 import YWebrtcContext from '../../state/YWebrtcContext'
 import './CollaborationPanel.css'
 

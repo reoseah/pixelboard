@@ -1,5 +1,6 @@
 import { Component } from 'solid-js'
 
+// consider naming it NonRasterElement?
 export type WhiteboardElement = {
   [data: string]: unknown
   type: string

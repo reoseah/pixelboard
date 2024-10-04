@@ -1,12 +1,12 @@
 import { onCleanup, useContext } from 'solid-js'
 
 import CropIcon from '../../assets/icons/crop.svg'
+import FramePreview from '../../components/app/FramePreview'
+import { isViewportClick, Tool } from '../../types/tool'
 import { RectangleDragContext } from '../RectangleDragContext'
 import SelectedToolContext from '../SelectedToolContext'
 import { ViewportPositionContext } from '../ViewportPositionContext'
 import WhiteboardElementsContext from '../WhiteboardElementsContext'
-import { isViewportClick, Tool } from '../../types/tool'
-import FramePreview from '../../features/frame/FramePreview'
 
 const FrameTool: Tool = {
   icon: CropIcon,
@@ -14,7 +14,7 @@ const FrameTool: Tool = {
   use: () => {
     const viewport = useContext(ViewportPositionContext)
     const whiteboard = useContext(WhiteboardElementsContext)
-    const selectedTool = useContext(SelectedToolContext)!
+    const selectedTool = useContext(SelectedToolContext)
 
     const {
       currentPos,

@@ -1,11 +1,11 @@
 import { createSignal, onCleanup, useContext } from 'solid-js'
 
 import CursorIcon from '../../assets/icons/cursor.svg'
+import SelectionBox from '../../components/app/SelectionBox'
+import { isViewportClick, Tool } from '../../types/tool'
 import { RectangleDragContext } from '../RectangleDragContext'
 import { ViewportPositionContext } from '../ViewportPositionContext'
 import { WhiteboardElementsContext } from '../WhiteboardElementsContext'
-import { isViewportClick, Tool } from '../../types/tool'
-import SelectionBox from '../../features/select/SelectionBox'
 
 const SelectTool: Tool = {
   icon: CursorIcon,

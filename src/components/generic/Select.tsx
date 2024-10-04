@@ -1,6 +1,6 @@
 import { createSignal, JSX, onCleanup, Show } from 'solid-js'
 
-import ChevronDownIcon from '../assets/icons/chevron-down.svg'
+import ChevronDownIcon from '../../assets/icons/chevron-down.svg'
 import Menu from './Menu'
 import './Select.css'
 

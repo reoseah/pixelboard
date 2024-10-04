@@ -11,9 +11,8 @@ import type { SidebarState } from './SidebarContext'
 import type { VirtualCanvasState } from './VirtualCanvasContext'
 import type { YjsState } from './YjsContext'
 
-import { FrameType } from '../features/frame/FrameEntity'
-import { PencilStrokeType } from '../features/pencil/pencil_stroke'
-import { DeleteRectangleType } from '../features/rectangle_selection/DeleteRectangle'
+import { DeleteRectangleType } from './canvas_action/DeleteRectangle'
+import { PencilStrokeType } from './canvas_action/pencil_stroke'
 import createClearProjectCommand from './commands/createClearProjectCommand'
 import createDeleteSelectionCommand from './commands/createDeleteSelectionCommand'
 import createDeselectCommand from './commands/createDeselectCommand'
@@ -27,9 +26,10 @@ import MainMenu from './tabs/MainMenu'
 import Settings from './tabs/Settings'
 import CommandPalette from './tools/CommandPaletteTool'
 import Frame from './tools/FrameTool'
-import Pencil from './tools/pencil'
-import RectangleSelection from './tools/RectangleSelection'
-import SelectTool from './tools/select'
+import PencilTool from './tools/PencilTool'
+import RectangleSelectionTool from './tools/RectangleSelectionTool'
+import SelectTool from './tools/SelectTool'
+import FrameElementType from './whiteboard_elements/FrameElementType'
 
 export type Registry = {
   actionTypes: Record<string, CanvasActionType>
@@ -52,8 +52,8 @@ export const createRegistry = (
 ): Registry => {
   const tools = {
     select: SelectTool,
-    pencil: Pencil,
-    select_rectangle: RectangleSelection,
+    pencil: PencilTool,
+    select_rectangle: RectangleSelectionTool,
     frame: Frame,
     command_palette: CommandPalette,
   }
@@ -71,7 +71,7 @@ export const createRegistry = (
       delete_rectangle: DeleteRectangleType,
     },
     elementTypes: {
-      crop: FrameType,
+      crop: FrameElementType,
     },
     tabs,
     tools,

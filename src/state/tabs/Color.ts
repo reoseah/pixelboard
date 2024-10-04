@@ -1,6 +1,6 @@
 import PaletteIcon from '../../assets/icons/palette.svg'
-import { Tab } from '../../types/tab'
 import ColorPanel from '../../features/sidebar/ColorPanel'
+import { Tab } from '../../types/tab'
 
 const Color: Tab = {
   contents: ColorPanel,

@@ -1,17 +1,17 @@
 import { onCleanup, useContext } from 'solid-js'
 
 import SelectionIcon from '../../assets/icons/selection.svg'
+import SelectRectanglePreview from '../../components/app/RectangleSelectionPreview'
+import { isViewportClick, type Tool } from '../../types/tool'
 import CanvasSelectionContext from '../CanvasSelectionContext'
 import { RectangleDragContext } from '../RectangleDragContext'
 import { ViewportPositionContext } from '../ViewportPositionContext'
-import { isViewportClick, Tool } from '../../types/tool'
-import SelectRectanglePreview from '../../features/rectangle_selection/RectangleSelectionPreview'
 
-const RectangleSelection: Tool = {
+const RectangleSelectionTool: Tool = {
   icon: SelectionIcon,
-  label: 'Select Rectangle',
+  label: 'Rectangle Selection',
   use: () => {
-    const selection = useContext(CanvasSelectionContext)!
+    const selection = useContext(CanvasSelectionContext)
     const viewport = useContext(ViewportPositionContext)
 
     const {
@@ -79,4 +79,4 @@ const RectangleSelection: Tool = {
   viewport: SelectRectanglePreview,
 }
 
-export default RectangleSelection
+export default RectangleSelectionTool

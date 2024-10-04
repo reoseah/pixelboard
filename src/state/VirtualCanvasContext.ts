@@ -1,8 +1,7 @@
 import { createContext } from 'solid-js'
 import * as Y from 'yjs'
 
-import { CanvasAction, VirtualCanvasAccess } from '../types/virtual_canvas'
-import { doRectanglesIntersect } from '../util/rectangle'
+import { CanvasAction } from '../types/virtual_canvas'
 
 export type VirtualCanvasState = {
   actions: Y.Array<CanvasAction>

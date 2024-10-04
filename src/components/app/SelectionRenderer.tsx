@@ -1,14 +1,14 @@
 import { createSignal, For, Show, useContext } from 'solid-js'
 
 import SaveIcon from '../../assets/icons/save.svg'
-import IconButton from '../../components/IconButton'
-import Input from '../../components/Input'
-import InputGroup from '../../components/InputGroup'
-import { Option, Select } from '../../components/Select'
-import Stack from '../../components/Stack'
 import CanvasSelectionContext, { useSelectionBounds } from '../../state/CanvasSelectionContext'
 import { ViewportPositionContext } from '../../state/ViewportPositionContext'
 import { VirtualCanvasContext } from '../../state/VirtualCanvasContext'
+import IconButton from '../generic/IconButton'
+import Input from '../generic/Input'
+import InputGroup from '../generic/InputGroup'
+import { Option, Select } from '../generic/Select'
+import Stack from '../generic/Stack'
 import './SelectionRenderer.css'
 
 const saveFormats = [

@@ -1,10 +1,10 @@
 import { For, useContext } from 'solid-js'
 
-import Stack from '../../components/Stack'
 import Keymap from '../../state/Keymap'
 import RegistryContext from '../../state/RegistryContext'
 import SelectedToolContext from '../../state/SelectedToolContext'
 import { stringifyShortcut } from '../../types/key_shortcut'
+import Stack from '../generic/Stack'
 import './Toolbar.css'
 
 const MainToolbar = () => {
