@@ -1,12 +1,12 @@
 import { createSignal, JSXElement, onCleanup, useContext } from 'solid-js'
 
 import SelectedToolContext from '../../state/SelectedToolContext'
-import { ViewportPositionContext } from '../../state/ViewportPositionContext'
+import ViewportPositionContext from '../../state/ViewportPositionContext'
 import './ViewportContainer.css'
 
 const ViewportContainer = (props: { children: JSXElement }) => {
   const viewport = useContext(ViewportPositionContext)
-  const selectedTool = useContext(SelectedToolContext)!
+  const selectedTool = useContext(SelectedToolContext)
   const { innerHeight, innerWidth } = useInnerSize()
 
   const [dragging, setDragging] = createSignal(false)

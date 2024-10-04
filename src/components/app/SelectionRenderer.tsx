@@ -2,8 +2,9 @@ import { createSignal, For, Show, useContext } from 'solid-js'
 
 import SaveIcon from '../../assets/icons/save.svg'
 import CanvasSelectionContext, { useSelectionBounds } from '../../state/CanvasSelectionContext'
-import { ViewportPositionContext } from '../../state/ViewportPositionContext'
-import { VirtualCanvasContext } from '../../state/VirtualCanvasContext'
+import RegistryContext from '../../state/RegistryContext'
+import ViewportPositionContext from '../../state/ViewportPositionContext'
+import VirtualCanvasContext, { renderArea } from '../../state/VirtualCanvasContext'
 import IconButton from '../generic/IconButton'
 import Input from '../generic/Input'
 import InputGroup from '../generic/InputGroup'
@@ -20,7 +21,9 @@ const saveFormats = [
 const SelectionRenderer = () => {
   const viewport = useContext(ViewportPositionContext)
   const canvas = useContext(VirtualCanvasContext)
-  const selection = useContext(CanvasSelectionContext)!
+  const selection = useContext(CanvasSelectionContext)
+  const registry = useContext(RegistryContext)
+
   const bounds = useSelectionBounds()
 
   const [saveScale, setSaveScale] = createSignal(1)
@@ -139,7 +142,9 @@ const SelectionRenderer = () => {
 
           <IconButton
             onclick={() => {
-              canvas.renderArea(
+              renderArea(
+                canvas,
+                registry.elementTypes,
                 bounds().x,
                 bounds().y,
                 bounds().width,

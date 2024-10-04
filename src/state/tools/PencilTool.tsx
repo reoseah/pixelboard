@@ -6,8 +6,8 @@ import { isViewportClick, Tool } from '../../types/tool'
 import { normalizeHex } from '../../util/color_conversion'
 import { PencilStroke } from '../canvas_action/pencil_stroke'
 import SelectedColorContext from '../SelectedColorContext'
-import { ViewportPositionContext } from '../ViewportPositionContext'
-import { VirtualCanvasContext } from '../VirtualCanvasContext'
+import ViewportPositionContext from '../ViewportPositionContext'
+import VirtualCanvasContext from '../VirtualCanvasContext'
 import { PencilContext } from './PencilContext'
 
 const PencilTool: Tool = {

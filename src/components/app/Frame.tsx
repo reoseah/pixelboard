@@ -1,14 +1,14 @@
 import { createSignal, JSX, onMount, Show, useContext } from 'solid-js'
 
-import useClickOutside from '../../state/whiteboard_elements/FrameElementTypett
+import useClickOutside from '../../hooks/useClickOutside'
 import SelectedToolContext from '../../state/SelectedToolContext'
-import { ViewportPositionContext } from '../../state/ViewportPositionContext'
-import { FrameEntity } from '../../state/whiteboard_elements/FrameEntity'
-import { WhiteboardElementsContext } from '../../state/WhiteboardElementsContext'
+import ViewportPositionContext from '../../state/ViewportPositionContext'
+import { FrameElement } from '../../state/whiteboard_elements/FrameElementType'
+import WhiteboardElementsContext from '../../state/WhiteboardElementsContext'
 import './Frame.css'
 
 const Frame = (props: {
-  element: FrameEntity
+  element: FrameElement
   id: string
 }) => {
   const viewport = useContext(ViewportPositionContext)
@@ -40,7 +40,7 @@ export default Frame
 
 const FrameTitle = (props: {
   id: string
-  node: FrameEntity
+  node: FrameElement
 }) => {
   const whiteboard = useContext(WhiteboardElementsContext)
   const selectedTool = useContext(SelectedToolContext)!
@@ -69,7 +69,7 @@ const FrameTitle = (props: {
 
 const FrameTitleEditor = (props: {
   id: string
-  node: FrameEntity
+  node: FrameElement
 }) => {
   const [value, setValue] = createSignal(props.node.title ?? 'Frame')
   const whiteboard = useContext(WhiteboardElementsContext)

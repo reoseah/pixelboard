@@ -35,7 +35,7 @@ export const createViewportPosition = (): ViewportPosition => {
   return { move, scale, toCanvasX, toCanvasY, x, y, zoomIn, zoomOut }
 }
 
-export const ViewportPositionContext = createContext<ViewportPosition>(undefined as unknown as ViewportPosition)
+const ViewportPositionContext = createContext<ViewportPosition>(undefined as unknown as ViewportPosition)
 
 export default ViewportPositionContext
 

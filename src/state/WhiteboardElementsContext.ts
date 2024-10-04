@@ -2,6 +2,7 @@ import { Accessor, createContext, createSignal } from 'solid-js'
 import * as Y from 'yjs'
 
 import { WhiteboardElement } from '../types/whiteboard'
+import { Registry } from './RegistryContext'
 
 export type WhiteboardElements = {
   elements: Y.Map<WhiteboardElement>
@@ -15,11 +16,9 @@ export type WhiteboardElements = {
 
   selected: Accessor<string[]>
   select: (ids: string[]) => void
-
-  getElementsInside: (x: number, y: number, width: number, height: number) => string[]
 }
 
-export const WhiteboardElementsContext = createContext<WhiteboardElements>(undefined as unknown as WhiteboardElements)
+const WhiteboardElementsContext = createContext<WhiteboardElements>(undefined as unknown as WhiteboardElements)
 
 export default WhiteboardElementsContext
 
@@ -45,18 +44,6 @@ export const createWhiteboardElements = (ydoc: Y.Doc): WhiteboardElements => {
     elements.clear()
   }
 
-  const getElementsInside = (x: number, y: number, width: number, height: number) => {
-    const output: string[] = []
-    // FIXME: move this outside of the whiteboard context, it requires registry and so makes initializing state difficult
-    // for (const [id, element] of elements) {
-    //   const bounds = DefaultRegistry.elementTypes[element.type].getBounds(element)
-    //   if (bounds.x >= x && bounds.y >= y && bounds.x + bounds.width <= x + width && bounds.y + bounds.height <= y + height) {
-    //     output.push(id)
-    //   }
-    // }
-    return output
-  }
-
   return {
     elements,
     set,
@@ -66,6 +53,16 @@ export const createWhiteboardElements = (ydoc: Y.Doc): WhiteboardElements => {
     setEditingTitle,
     selected,
     select,
-    getElementsInside,
   }
+}
+
+export const getElementsInside = (whiteboard: WhiteboardElements, elementTypes: Registry['elementTypes'], x: number, y: number, width: number, height: number) => {
+  const output: string[] = []
+  for (const [id, element] of whiteboard.elements) {
+    const bounds = elementTypes[element.type].getBounds(element)
+    if (bounds.x >= x && bounds.y >= y && bounds.x + bounds.width <= x + width && bounds.y + bounds.height <= y + height) {
+      output.push(id)
+    }
+  }
+  return output
 }

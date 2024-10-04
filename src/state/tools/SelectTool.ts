@@ -3,9 +3,10 @@ import { createSignal, onCleanup, useContext } from 'solid-js'
 import CursorIcon from '../../assets/icons/cursor.svg'
 import SelectionBox from '../../components/app/SelectionBox'
 import { isViewportClick, Tool } from '../../types/tool'
-import { RectangleDragContext } from '../RectangleDragContext'
-import { ViewportPositionContext } from '../ViewportPositionContext'
-import { WhiteboardElementsContext } from '../WhiteboardElementsContext'
+import RectangleDragContext from '../RectangleDragContext'
+import RegistryContext from '../RegistryContext'
+import ViewportPositionContext from '../ViewportPositionContext'
+import WhiteboardElementsContext, { getElementsInside } from '../WhiteboardElementsContext'
 
 const SelectTool: Tool = {
   icon: CursorIcon,
@@ -24,8 +25,9 @@ const SelectTool: Tool = {
     const [toolState, setToolState] = createSignal<'idle' | 'move' | 'selection_box'>('idle')
 
     const viewport = useContext(ViewportPositionContext)
-
     const whiteboard = useContext(WhiteboardElementsContext)
+    const registry = useContext(RegistryContext)
+
     let clickTime = 0
     let clickId: null | string = null
 
@@ -92,7 +94,7 @@ const SelectTool: Tool = {
           const maxX = Math.max(initialPos().x, currentPos().x)
           const maxY = Math.max(initialPos().y, currentPos().y)
 
-          const selection = whiteboard.getElementsInside(minX, minY, maxX - minX, maxY - minY)
+          const selection = getElementsInside(whiteboard, registry.elementTypes, minX, minY, maxX - minX, maxY - minY)
           whiteboard.select(selection)
 
           break

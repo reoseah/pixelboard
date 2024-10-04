@@ -3,9 +3,9 @@ import { onCleanup, useContext } from 'solid-js'
 import CropIcon from '../../assets/icons/crop.svg'
 import FramePreview from '../../components/app/FramePreview'
 import { isViewportClick, Tool } from '../../types/tool'
-import { RectangleDragContext } from '../RectangleDragContext'
+import RectangleDragContext from '../RectangleDragContext'
 import SelectedToolContext from '../SelectedToolContext'
-import { ViewportPositionContext } from '../ViewportPositionContext'
+import ViewportPositionContext from '../ViewportPositionContext'
 import WhiteboardElementsContext from '../WhiteboardElementsContext'
 
 const FrameTool: Tool = {

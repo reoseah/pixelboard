@@ -20,7 +20,7 @@ import SelectedToolContext, { createSelectedTool } from './state/SelectedToolCon
 import SidebarContext, { createSidebarState } from './state/SidebarContext'
 import ViewportPositionContext, { createViewportPosition } from './state/ViewportPositionContext'
 import VirtualCanvasContext, { createVirtualCanvasState } from './state/VirtualCanvasContext'
-import { createWhiteboardElements, WhiteboardElementsContext } from './state/WhiteboardElementsContext'
+import WhiteboardElementsContext, { createWhiteboardElements } from './state/WhiteboardElementsContext'
 import YjsContext, { createYjsState } from './state/YjsContext'
 import YWebrtcContext, { createYWebrtcState } from './state/YWebrtcContext'
 import { Tool } from './types/tool'

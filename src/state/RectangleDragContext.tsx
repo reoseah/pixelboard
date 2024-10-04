@@ -50,6 +50,6 @@ export const createRectangleDragState = () => {
 
 export type RectangleDragState = ReturnType<typeof createRectangleDragState>
 
-export const RectangleDragContext = createContext<RectangleDragState>()
+const RectangleDragContext = createContext<RectangleDragState>()
 
 export default RectangleDragContext
