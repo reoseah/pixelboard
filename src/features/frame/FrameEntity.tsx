@@ -1,4 +1,4 @@
-import { EntityType } from '../../types/whiteboard'
+import { WhiteboardElementType } from '../../types/whiteboard'
 import FrameRenderer from './Frame'
 
 export type FrameEntity = {
@@ -10,7 +10,7 @@ export type FrameEntity = {
   y: number
 }
 
-export const FrameType: EntityType<FrameEntity> = {
+export const FrameType: WhiteboardElementType<FrameEntity> = {
   getBounds: crop => ({
     height: crop.height,
     width: crop.width,

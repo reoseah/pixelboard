@@ -12,14 +12,25 @@ export type CanvasActionType<T extends CanvasAction = any> = {
 }
 
 export type VirtualCanvasAccess = {
+  readonly tileSize?: number
   readonly allowList?: {
     tiles: Map<number, Set<number>>
     type: 'blacklist' | 'whitelist'
   }
-  clearRect: (x: number, y: number, width: number, height: number) => void
-  get: (x: number, y: number) => number
-
   getOrCreateContext: (column: number, row: number) => CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
+
+  get: (x: number, y: number) => number
   set: (x: number, y: number, color: number | string) => void
-  readonly tileSize?: number
+  clearRect: (x: number, y: number, width: number, height: number) => void
 }
+
+// For simplicity, only simple rectangle selections are supported.
+// Arbitrary selections like needed for Magic Wand tool
+// might be quite hard to implement, especially with infinite canvas
+// and there are more critical features to do first.
+export type SelectionPart =
+  | { height: number, type: 'rectangle', width: number, x: number, y: number }
+
+// not `SelectionMode` to avoid collision with built-in type
+export type SelectionToolMode =
+  | 'replace'

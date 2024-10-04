@@ -4,15 +4,16 @@ import { Dynamic } from 'solid-js/web'
 
 import SearchIcon from '../../assets/icons/search.svg'
 import useClickOutside from '../../hooks/useClickOutside'
-import CurrentTool from '../../state/CurrentTool'
 import Keymap from '../../state/Keymap'
+import RegistryContext from '../../state/RegistryContext'
+import SelectedToolContext from '../../state/SelectedToolContext'
 import { Command } from '../../types/commands'
 import { stringifyShortcut } from '../../types/key_shortcut'
 import './CommandPalette.css'
-import RegistryContext from '../../state/RegistryContext'
 
 const CommandPalette = () => {
   const { commands } = useContext(RegistryContext)
+  const selectedTool = useContext(SelectedToolContext)!
   const [query, setQuery] = createSignal('')
   const [selectedEntry, setSelectedEntry] = createSignal<number>(0)
 
@@ -45,17 +46,17 @@ const CommandPalette = () => {
 
   const [wrapper, setWrapper] = createSignal<HTMLDivElement>()
   useClickOutside(wrapper, () => {
-    CurrentTool.selectId(CurrentTool.prevId())
+    selectedTool.selectId(selectedTool.prevId())
   })
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Escape') {
-      CurrentTool.selectId(CurrentTool.prevId())
+      selectedTool.selectId(selectedTool.prevId())
     }
     else if (event.key === 'Enter') {
       const firstCommand = matchingEnabledCommands()[selectedEntry()]
       if (firstCommand) {
-        CurrentTool.selectId(CurrentTool.prevId())
+        selectedTool.selectId(selectedTool.prevId())
         firstCommand.execute()
       }
     }
@@ -75,7 +76,7 @@ const CommandPalette = () => {
   }
 
   const handleCommandClick = (command: Command) => {
-    CurrentTool.selectId(CurrentTool.prevId())
+    selectedTool.selectId(selectedTool.prevId())
     command.execute()
   }
 

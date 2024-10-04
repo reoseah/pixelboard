@@ -1,27 +1,68 @@
+import { MultiProvider } from '@solid-primitives/context'
 import { Component, createMemo, For, onCleanup, Show, useContext } from 'solid-js'
 import { createStore, reconcile } from 'solid-js/store'
 import { Dynamic } from 'solid-js/web'
 
 import './App.css'
-import VirtualCanvas from './features/canvas/VirtualCanvas'
 import SelectionRenderer from './features/canvas_selection/SelectionRenderer'
+import VirtualCanvas from './features/canvas/VirtualCanvas'
 import SideLayout from './features/interface/SideLayout'
 import TopCenterLayout from './features/interface/TopCenterLayout'
 import Sidebar from './features/sidebar/Sidebar'
 import MainToolbar from './features/toolbar/Toolbar'
 import ViewportContainer from './features/viewport/ViewportContainer'
-import CurrentTool from './state/CurrentTool'
+import CanvasSelectionContext, { createCanvasSelection } from './state/CanvasSelectionContext'
 import Keymap from './state/Keymap'
-import RegistryContext from './state/RegistryContext'
-import { WhiteboardContext } from './state/WhiteboardContext'
+import RectangleDragContext, { createRectangleDragState } from './state/RectangleDragContext'
+import RegistryContext, { createRegistry, Registry } from './state/RegistryContext'
+import SelectedColorContext, { createSelectedColor } from './state/SelectedColorContext'
+import SelectedToolContext, { createSelectedTool } from './state/SelectedToolContext'
+import SidebarContext, { createSidebarState } from './state/SidebarContext'
+import VirtualCanvasContext, { createVirtualCanvasState } from './state/VirtualCanvasContext'
+import { createWhiteboardElements, WhiteboardElementsContext } from './state/WhiteboardElementsContext'
+import YjsContext, { createYjsState } from './state/YjsContext'
+import YWebrtcContext, { createYWebrtcState } from './state/YWebrtcContext'
 import { Tool } from './types/tool'
-import { Entity } from './types/whiteboard'
+import { WhiteboardElement } from './types/whiteboard'
+import ViewportPositionContext, { createViewportPosition } from './state/ViewportPositionContext'
 
 function App() {
-  useCommandKeybinds()
+  const selectedTool = createSelectedTool()
+  const selectedColor = createSelectedColor()
+  const canvasSelection = createCanvasSelection()
+  const rectangleDrag = createRectangleDragState()
+  const sidebarState = createSidebarState()
+  const viewportPosition = createViewportPosition()
+  const yjs = createYjsState()
+  const ywebrtc = createYWebrtcState(yjs.ydoc)
+  const whiteboardElements = createWhiteboardElements(yjs.ydoc)
+  const virtualCanvas = createVirtualCanvasState(yjs.ydoc)
+  const registry = createRegistry(
+    yjs,
+    selectedTool,
+    sidebarState,
+    canvasSelection,
+    virtualCanvas,
+  )
+
+  useCommandKeybinds(registry.commands)
 
   return (
-    <>
+    <MultiProvider
+      values={[
+        [SelectedToolContext, selectedTool],
+        [SelectedColorContext, selectedColor],
+        [CanvasSelectionContext, canvasSelection],
+        [RectangleDragContext, rectangleDrag],
+        [SidebarContext, sidebarState],
+        [ViewportPositionContext, viewportPosition],
+        [YjsContext, yjs],
+        [YWebrtcContext, ywebrtc],
+        [WhiteboardElementsContext, whiteboardElements],
+        [VirtualCanvasContext, virtualCanvas],
+        [RegistryContext, registry],
+      ]}
+    >
       <ViewportContainer>
         <VirtualCanvas />
         <CurrentToolRenderer map={tool => tool.viewport} />
@@ -36,7 +77,7 @@ function App() {
         <Sidebar />
       </SideLayout>
       <CurrentToolRenderer map={tool => tool.use} />
-    </>
+    </MultiProvider>
   )
 }
 
@@ -44,8 +85,9 @@ const CurrentToolRenderer = (props: {
   map: (tool: Tool) => Component | undefined
 }) => {
   const { tools } = useContext(RegistryContext)
+  const selectedTool = useContext(SelectedToolContext)!
 
-  const component = createMemo(() => props.map(tools[CurrentTool.id()]))
+  const component = createMemo(() => props.map(tools[selectedTool.id()]))
 
   return (
     <Show when={component()}>
@@ -54,9 +96,7 @@ const CurrentToolRenderer = (props: {
   )
 }
 
-const useCommandKeybinds = () => {
-  const { commands } = useContext(RegistryContext)
-
+const useCommandKeybinds = (commands: Registry['commands']) => {
   const handleKeyDown = (event: KeyboardEvent) => {
     const target = event.target as HTMLElement
     const isEditable = target.isContentEditable || target.tagName === 'INPUT' || target.tagName === 'TEXTAREA'
@@ -93,13 +133,13 @@ const useCommandKeybinds = () => {
 export default App
 
 const ElementsRenderer = () => {
-  const whiteboard = useContext(WhiteboardContext)
+  const whiteboard = useContext(WhiteboardElementsContext)
   const { elementTypes } = useContext(RegistryContext)
 
-  const [store, setStore] = createStore<Record<string, Entity>>({})
+  const [store, setStore] = createStore<Record<string, WhiteboardElement>>({})
 
-  whiteboard.entities.observe(() => {
-    setStore(reconcile(whiteboard.entities.toJSON()))
+  whiteboard.elements.observe(() => {
+    setStore(reconcile(whiteboard.elements.toJSON()))
   })
 
   return (

@@ -1,10 +1,25 @@
 import { makePersisted } from '@solid-primitives/storage'
-import { createContext, createEffect, createRoot, createSignal, onCleanup, useContext } from 'solid-js'
+import { Accessor, createContext, createEffect, createSignal, onCleanup } from 'solid-js'
 import { WebrtcProvider } from 'y-webrtc'
+import * as Y from 'yjs'
 
 import useSearchParams from '../hooks/useSearchParams'
-import YjsContext from './YjsContext'
 
+export type YWebrtcState = {
+  startSession: () => void
+  endSession: () => void
+
+  userName: Accessor<string>
+  setUserName: (name: string) => void
+
+  room: Accessor<string>
+  getShareUrl: () => string | undefined
+  setRoom: (room: string) => void
+}
+
+export const YWebrtcContext = createContext<YWebrtcState>(undefined as unknown as YWebrtcState)
+
+export default YWebrtcContext
 
 type YjsSearchParams = {
   room?: string
@@ -25,7 +40,7 @@ const userNamePool = [
   'Leisurely Lemur',
   'Magnetic Mongoose',
   'Nimble Newt',
-  'Omniscient Ocelot',
+  'Observant Ocelot',
   'Playful Panda',
   'Quick Quokka',
   'Resolute Racoon',
@@ -39,14 +54,12 @@ const userNamePool = [
   'Zealous Zebra',
 ]
 
+const chooseUserName = () => userNamePool[Math.floor(Math.random() * userNamePool.length)]
 
-export const YWebrtcState = createRoot(() => {
-  const yjs = useContext(YjsContext)
-
-  const [provider, setProvider] = createSignal<undefined | WebrtcProvider>(undefined)
-
+export const createYWebrtcState = (ydoc: Y.Doc) => {
   const [searchParams, setSearchParams] = useSearchParams<YjsSearchParams>()
-  const [userName, setUserNameInternal] = makePersisted(createSignal<string>(userNamePool[Math.floor(Math.random() * userNamePool.length)]), { name: 'collaboration-username' })
+  const [userName, setUserNameInternal] = makePersisted(createSignal<string>(chooseUserName()), { name: 'collaboration-username' })
+  const [provider, setProviderInternal] = createSignal<undefined | WebrtcProvider>(undefined)
 
   const startSession = () => {
     const room = crypto.randomUUID()
@@ -67,6 +80,10 @@ export const YWebrtcState = createRoot(() => {
   }
 
   const setUserName = (name: string) => {
+    if (name.trim() === '') {
+      name = chooseUserName()
+    }
+
     setUserNameInternal(name)
     const webrtc = provider()
     if (webrtc) {
@@ -74,30 +91,34 @@ export const YWebrtcState = createRoot(() => {
     }
   }
 
+  const setProvider = (provider: WebrtcProvider | undefined) => {
+    setProviderInternal((prev) => {
+      if (prev) {
+        prev.disconnect()
+        prev.destroy()
+      }
+      if (provider) {
+        provider.connect()
+      }
+      return provider
+    })
+  }
+
   createEffect(() => {
     const room = searchParams.room
-    const ydoc = yjs.ydoc()
 
-    if (!room) {
-      provider()?.disconnect()
-      provider()?.destroy()
-      return
+    if (room) {
+      const provider = new WebrtcProvider(room, ydoc, {
+        filterBcConns: true,
+      })
+      provider.awareness.setLocalStateField('user', {
+        name: userName(),
+      })
+      setProvider(provider)
     }
-
-    provider()?.disconnect()
-    provider()?.destroy()
-
-    setProvider(new WebrtcProvider(room, ydoc, {
-      filterBcConns: true,
-    }))
-
-    if (userName().trim() === '') {
-      setUserName(userNamePool[Math.floor(Math.random() * userNamePool.length)])
+    else {
+      setProvider(undefined)
     }
-    provider()!.awareness.setLocalStateField('user', {
-      name: userName(),
-    })
-    provider()!.connect()
   })
 
   onCleanup(() => {
@@ -106,18 +127,14 @@ export const YWebrtcState = createRoot(() => {
   })
 
   return {
-    endSession,
     startSession,
+    endSession,
 
-    setUserName,
     userName,
+    setUserName,
 
-    getShareUrl,
     room: () => searchParams.room || '',
+    getShareUrl,
     setRoom: (room: string) => setSearchParams({ room }),
   }
-})
-
-export const YWebrtcContext = createContext(YWebrtcState)
-
-export default YWebrtcContext
+}

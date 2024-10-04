@@ -1,9 +1,9 @@
 import { createSignal, JSX, onMount, Show, useContext } from 'solid-js'
 
 import useClickOutside from '../../hooks/useClickOutside'
-import CurrentTool from '../../state/CurrentTool'
+import SelectedToolContext from '../../state/SelectedToolContext'
 import { ViewportPositionContext } from '../../state/ViewportPositionContext'
-import { WhiteboardContext } from '../../state/WhiteboardContext'
+import { WhiteboardElementsContext } from '../../state/WhiteboardElementsContext'
 import './Frame.css'
 import { FrameEntity } from './FrameEntity'
 
@@ -12,8 +12,7 @@ const Frame = (props: {
   id: string
 }) => {
   const viewport = useContext(ViewportPositionContext)
-  const whiteboard = useContext(WhiteboardContext)
-
+  const whiteboard = useContext(WhiteboardElementsContext)
   return (
     <div
       class="frame"
@@ -43,10 +42,11 @@ const FrameTitle = (props: {
   id: string
   node: FrameEntity
 }) => {
-  const whiteboard = useContext(WhiteboardContext)
+  const whiteboard = useContext(WhiteboardElementsContext)
+  const selectedTool = useContext(SelectedToolContext)!
 
   const style = (): JSX.CSSProperties => ({
-    'pointer-events': CurrentTool.id() === 'select' ? 'auto' : 'none',
+    'pointer-events': selectedTool.id() === 'select' ? 'auto' : 'none',
   })
 
   return (
@@ -56,7 +56,7 @@ const FrameTitle = (props: {
       onDblClick={(e) => {
         e.preventDefault()
         e.stopPropagation()
-        if (CurrentTool.id() === 'select') {
+        if (selectedTool.id() === 'select') {
           whiteboard.setEditingTitle(props.id)
         }
       }}
@@ -72,7 +72,7 @@ const FrameTitleEditor = (props: {
   node: FrameEntity
 }) => {
   const [value, setValue] = createSignal(props.node.title ?? 'Frame')
-  const whiteboard = useContext(WhiteboardContext)
+  const whiteboard = useContext(WhiteboardElementsContext)
   let input!: HTMLInputElement
   let widthHelper!: HTMLSpanElement
 

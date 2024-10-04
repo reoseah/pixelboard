@@ -7,7 +7,7 @@ import './RectangleSelectionPreview.css'
 const SelectRectanglePreview = () => {
   const viewport = useContext(ViewportPositionContext)
 
-  const { currentPos, dragging, initialPos } = useContext(RectangleDragContext)
+  const { currentPos, dragging, initialPos } = useContext(RectangleDragContext)!
 
   const left = () => Math.min(Math.round(initialPos().x), Math.round(currentPos().x))
   const top = () => Math.min(Math.round(initialPos().y), Math.round(currentPos().y))

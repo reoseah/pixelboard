@@ -1,76 +1,98 @@
-import { createContext, createRoot } from 'solid-js'
+import { createContext } from 'solid-js'
 
-import CommandPalette from '../features/command_palette/CommandPaletteTool'
+import type { Command } from '../types/commands'
+import type { Tab } from '../types/tab'
+import type { Tool } from '../types/tool'
+import type { CanvasActionType } from '../types/virtual_canvas'
+import type { WhiteboardElementType } from '../types/whiteboard'
+import type { CanvasSelection } from './CanvasSelectionContext'
+import type { SelectedTool } from './SelectedToolContext'
+import type { SidebarState } from './SidebarContext'
+import type { VirtualCanvasState } from './VirtualCanvasContext'
+import type { YjsState } from './YjsContext'
+
 import { FrameType } from '../features/frame/FrameEntity'
-import Frame from '../features/frame/FrameTool'
-import createPencil from '../features/pencil/pencil'
 import { PencilStrokeType } from '../features/pencil/pencil_stroke'
 import { DeleteRectangleType } from '../features/rectangle_selection/DeleteRectangle'
-import RectangleSelection from '../features/rectangle_selection/RectangleSelection'
-import SelectTool from '../features/select/select'
-import Collaboration from '../features/sidebar/Collaboration'
-import Color from '../features/sidebar/Color'
-import MainMenu from '../features/sidebar/MainMenu'
-import Settings from '../features/sidebar/Settings'
-import { Tab } from '../types/tab'
-import { Tool } from '../types/tool'
-import { CanvasActionType } from '../types/virtual_canvas'
-import { EntityType } from '../types/whiteboard'
-import { Command } from '../types/commands'
-import { ClearProject } from '../features/canvas/virtual_canvas_commands'
-import { DeleteSelection, Deselect, Reselect } from '../features/rectangle_selection/selection_commands'
-import { ToggleSidebar, createTabCommand } from '../features/sidebar/sidebar_commands'
-import { createSelectToolCommand } from '../features/toolbar/tool_commands'
+import createClearProjectCommand from './commands/createClearProjectCommand'
+import createDeleteSelectionCommand from './commands/createDeleteSelectionCommand'
+import createDeselectCommand from './commands/createDeselectCommand'
+import createReselectCommand from './commands/createReselectCommand'
+import createSelectToolCommand from './commands/createSelectToolCommand'
+import createToggleSidebarCommand from './commands/createToggleSidebarCommand'
+import createToggleTabCommand from './commands/createToogleTabCommand'
+import Collaboration from './tabs/Collaboration'
+import Color from './tabs/Color'
+import MainMenu from './tabs/MainMenu'
+import Settings from './tabs/Settings'
+import CommandPalette from './tools/CommandPaletteTool'
+import Frame from './tools/FrameTool'
+import Pencil from './tools/pencil'
+import RectangleSelection from './tools/RectangleSelection'
+import SelectTool from './tools/select'
 
 export type Registry = {
   actionTypes: Record<string, CanvasActionType>
-  elementTypes: Record<string, EntityType>
+  elementTypes: Record<string, WhiteboardElementType>
   tabs: Record<string, Tab>
   tools: Record<string, Tool>
   commands: Record<string, Command>
 }
 
-export const DefaultRegistry: Registry = createRoot(() => {
+const RegistryContext = createContext<Registry>(undefined as unknown as Registry)
+
+export default RegistryContext
+
+export const createRegistry = (
+  yjs: YjsState,
+  selectedTool: SelectedTool,
+  sidebarState: SidebarState,
+  selection: CanvasSelection,
+  virtualCanvas: VirtualCanvasState,
+): Registry => {
+  const tools = {
+    select: SelectTool,
+    pencil: Pencil,
+    select_rectangle: RectangleSelection,
+    frame: Frame,
+    command_palette: CommandPalette,
+  }
+
+  const tabs = {
+    menu: MainMenu,
+    color: Color,
+    collaboration: Collaboration,
+    settings: Settings,
+  }
+
   return {
     actionTypes: {
-      delete_rectangle: DeleteRectangleType,
       pencil_stroke: PencilStrokeType,
+      delete_rectangle: DeleteRectangleType,
     },
     elementTypes: {
       crop: FrameType,
     },
-    tabs: {
-      menu: MainMenu,
-      color: Color,
-      collaboration: Collaboration,
-      settings: Settings,
-    },
-    tools: {
-      select: SelectTool,
-      pencil: createPencil(),
-      select_rectangle: RectangleSelection,
-      frame: Frame,
-      command_palette: CommandPalette,
-    },
+    tabs,
+    tools,
     commands: {
-      'clear_project': ClearProject,
-      'delete_selection': DeleteSelection,
-      'deselect': Deselect,
-      'reselect': Reselect,
-      'select_tool.command_palette': createSelectToolCommand('command_palette'),
-      'select_tool.frame': createSelectToolCommand('frame'),
-      'select_tool.pencil': createSelectToolCommand('pencil'),
-      'select_tool.select': createSelectToolCommand('select'),
-      'select_tool.select_rectangle': createSelectToolCommand('select_rectangle'),
-      'toggle_sidebar': ToggleSidebar,
-      'toggle_tab.collaboration': createTabCommand('collaboration'),
-      'toggle_tab.color': createTabCommand('color'),
-      'toggle_tab.menu': createTabCommand('menu'),
-      'toggle_tab.settings': createTabCommand('settings'),
+      'clear_project': createClearProjectCommand(yjs),
+
+      'deselect': createDeselectCommand(selection),
+      'reselect': createReselectCommand(selection),
+      'delete_selection': createDeleteSelectionCommand(selection, virtualCanvas),
+
+      'select_tool.select': createSelectToolCommand(selectedTool, tools, 'select'),
+      'select_tool.pencil': createSelectToolCommand(selectedTool, tools, 'pencil'),
+      'select_tool.select_rectangle': createSelectToolCommand(selectedTool, tools, 'select_rectangle'),
+      'select_tool.frame': createSelectToolCommand(selectedTool, tools, 'frame'),
+      'select_tool.command_palette': createSelectToolCommand(selectedTool, tools, 'command_palette'),
+
+      'toggle_sidebar': createToggleSidebarCommand(sidebarState),
+      'toggle_tab.menu': createToggleTabCommand(sidebarState, tabs, 'menu'),
+      'toggle_tab.color': createToggleTabCommand(sidebarState, tabs, 'color'),
+      'toggle_tab.collaboration': createToggleTabCommand(sidebarState, tabs, 'collaboration'),
+      'toggle_tab.settings': createToggleTabCommand(sidebarState, tabs, 'settings'),
     },
   }
-})
-
-export const RegistryContext = createContext(DefaultRegistry)
-
-export default RegistryContext
+}

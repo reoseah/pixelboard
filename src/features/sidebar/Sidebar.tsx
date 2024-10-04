@@ -2,13 +2,13 @@ import { For, Show, useContext } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 
 import Keymap from '../../state/Keymap'
-import { RegistryContext } from '../../state/RegistryContext'
-import { SidebarContext } from '../../state/SidebarContext'
+import RegistryContext from '../../state/RegistryContext'
+import SidebarContext from '../../state/SidebarContext'
 import { stringifyShortcut } from '../../types/key_shortcut'
 import './Sidebar.css'
 
 const Sidebar = () => {
-  const context = useContext(SidebarContext)
+  const context = useContext(SidebarContext)!
   const { tabs } = useContext(RegistryContext)
 
   const tabKeys = Keymap.reduce((acc, keybinding) => {
@@ -33,7 +33,7 @@ const Sidebar = () => {
             <button
               aria-pressed={context.isOpen() && context.tab() === id}
               class="sidebar-tab"
-              onClick={() => context.toggle(id)}
+              onClick={() => context.toggleOrOpen(id)}
               title={`${tab.label} - ${tabKeys[id]}`}
             >
               <tab.icon />

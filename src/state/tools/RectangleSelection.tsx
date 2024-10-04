@@ -1,16 +1,17 @@
 import { onCleanup, useContext } from 'solid-js'
 
 import SelectionIcon from '../../assets/icons/selection.svg'
-import CanvasSelection from '../../state/CanvasSelection'
-import { RectangleDragContext } from '../../state/RectangleDragContext'
-import { ViewportPositionContext } from '../../state/ViewportPositionContext'
+import CanvasSelectionContext from '../CanvasSelectionContext'
+import { RectangleDragContext } from '../RectangleDragContext'
+import { ViewportPositionContext } from '../ViewportPositionContext'
 import { isViewportClick, Tool } from '../../types/tool'
-import SelectRectanglePreview from './RectangleSelectionPreview'
+import SelectRectanglePreview from '../../features/rectangle_selection/RectangleSelectionPreview'
 
 const RectangleSelection: Tool = {
   icon: SelectionIcon,
   label: 'Select Rectangle',
   use: () => {
+    const selection = useContext(CanvasSelectionContext)!
     const viewport = useContext(ViewportPositionContext)
 
     const {
@@ -22,7 +23,7 @@ const RectangleSelection: Tool = {
 
       currentPos,
       setCurrentPos,
-    } = useContext(RectangleDragContext)
+    } = useContext(RectangleDragContext)!
 
     const handleMouseDown = (e: MouseEvent) => {
       if (e.button !== 0 || !isViewportClick(e)) {
@@ -58,7 +59,7 @@ const RectangleSelection: Tool = {
       const width = Math.abs(Math.round(currentPos().x) - Math.round(initialPos().x))
       const height = Math.abs(Math.round(currentPos().y) - Math.round(initialPos().y))
 
-      CanvasSelection.selectRectangle('replace', left, top, width, height)
+      selection.selectRectangle('replace', left, top, width, height)
 
       setDragging(false)
       setInitialPos({ x: 0, y: 0 })

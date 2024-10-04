@@ -12,10 +12,13 @@ export default [
   ...tseslint.configs.recommended,
   // solid.configs['flat/typescript'],
   stylistic.configs['recommended-flat'],
-  perfectionist.configs['recommended-natural'],
+  // perfectionist.configs['recommended-natural'],
   {
+    plugins: {
+      perfectionist: perfectionist,
+    },
     rules: {
-      'perfectionist/sort-objects': false,
+      'perfectionist/sort-imports': ['warn'],
     },
   },
 ]

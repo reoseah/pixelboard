@@ -1,5 +1,5 @@
 import { makePersisted } from '@solid-primitives/storage'
-import { Accessor, createContext, createRoot, createSignal } from 'solid-js'
+import { Accessor, createContext, createSignal } from 'solid-js'
 
 export type ViewportPosition = {
   move: (dx: number, dy: number) => void
@@ -14,7 +14,7 @@ export type ViewportPosition = {
   zoomOut: () => void
 }
 
-export const ViewportPosition: ViewportPosition = createRoot(() => {
+export const createViewportPosition = (): ViewportPosition => {
   const [x, setX] = makePersisted(createSignal(0), { name: 'viewport-x' })
   const [y, setY] = makePersisted(createSignal(0), { name: 'viewport-y' })
   const [scale, setScale] = makePersisted(createSignal(10), { name: 'viewport-scale' })
@@ -33,9 +33,9 @@ export const ViewportPosition: ViewportPosition = createRoot(() => {
   const toCanvasY = (clientY: number) => (clientY - window.innerHeight / 2) / scale() - y()
 
   return { move, scale, toCanvasX, toCanvasY, x, y, zoomIn, zoomOut }
-})
+}
 
-export const ViewportPositionContext = createContext(ViewportPosition)
+export const ViewportPositionContext = createContext<ViewportPosition>(undefined as unknown as ViewportPosition)
 
 export default ViewportPositionContext
 

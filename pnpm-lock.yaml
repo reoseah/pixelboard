@@ -11,6 +11,9 @@ importers:
       '@floating-ui/dom':
         specifier: ^1.6.11
         version: 1.6.11
+      '@solid-primitives/context':
+        specifier: ^0.2.3
+        version: 0.2.3(solid-js@1.8.22)
       '@solid-primitives/storage':
         specifier: ^4.2.1
         version: 4.2.1(solid-js@1.8.22)
@@ -471,6 +474,11 @@ packages:
     resolution: {integrity: sha512-YdicNOSJONVx/vuPkgPTyRoAPx3GbknBZRCOUkK84FJ/YTfs/F0vl/YsMscrB6Y177d+yDRcj+JWMPMCgshwrA==}
     cpu: [x64]
     os: [win32]
+
+  '@solid-primitives/context@0.2.3':
+    resolution: {integrity: sha512-6/e8qu9qJf48FJ+sxc/B782NdgFw5TvI8+r6U0gHizumfZcWZg8FAJqvRZAiwlygkUNiTQOGTeO10LVbMm0kvg==}
+    peerDependencies:
+      solid-js: ^1.6.12
 
   '@solid-primitives/storage@4.2.1':
     resolution: {integrity: sha512-1XUJeaSlizH9Eam/+IbIpslHEnggJMNZXzfsr06AlbG6tJtQENMu0+94ZIvooxt4Cyw46wPzcnHYbSK7LzoQAA==}
@@ -1711,6 +1719,10 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.22.0':
     optional: true
+
+  '@solid-primitives/context@0.2.3(solid-js@1.8.22)':
+    dependencies:
+      solid-js: 1.8.22
 
   '@solid-primitives/storage@4.2.1(solid-js@1.8.22)':
     dependencies:

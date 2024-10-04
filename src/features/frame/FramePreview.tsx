@@ -7,7 +7,7 @@ import './FramePreview.css'
 const FramePreview = () => {
   const viewport = useContext(ViewportPositionContext)
 
-  const { dragging, height, left, top, width } = useContext(RectangleDragContext)
+  const { dragging, height, left, top, width } = useContext(RectangleDragContext)!
 
   return (
     <Show when={dragging()}>

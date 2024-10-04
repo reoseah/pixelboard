@@ -1,11 +1,11 @@
-import { createContext, createRoot, createSignal } from 'solid-js'
+import { createContext, createSignal } from 'solid-js'
 
 // Shared state between a few tools that drag a rectangle on the canvas
 // such as select (when clicking and dragging on empty space), rectangular selection,
 // and crop tool.
 // It's raised from the tool components so that it can be shared between them,
 // allowing to switch between tools with shortcuts without losing the state.
-const RectangleDragState = createRoot(() => {
+export const createRectangleDragState = () => {
   const [dragging, setDragging] = createSignal(false)
   // Coordinates in project space, not the screen position,
   // apply toCanvasX/Y in ViewportPositionContext before assigning.
@@ -35,20 +35,21 @@ const RectangleDragState = createRoot(() => {
   })
 
   return {
-    currentPos,
     dragging,
-    height,
-    initialPos,
-    left,
-    setCurrentPos,
-
     setDragging,
+    initialPos,
     setInitialPos,
+    currentPos,
+    setCurrentPos,
+    left,
     top,
     width,
+    height,
   }
-})
+}
 
-export const RectangleDragContext = createContext<typeof RectangleDragState>(RectangleDragState)
+export type RectangleDragState = ReturnType<typeof createRectangleDragState>
+
+export const RectangleDragContext = createContext<RectangleDragState>()
 
 export default RectangleDragContext

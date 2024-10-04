@@ -1,7 +1,7 @@
 import { createEffect, onCleanup, onMount, useContext } from 'solid-js'
 import * as Y from 'yjs'
 
-import { RegistryContext } from '../../state/RegistryContext'
+import RegistryContext from '../../state/RegistryContext'
 import { ViewportPositionContext } from '../../state/ViewportPositionContext'
 import { VirtualCanvasContext } from '../../state/VirtualCanvasContext'
 import { CanvasAction, CanvasActionType, VirtualCanvasAccess } from '../../types/virtual_canvas'
@@ -194,10 +194,10 @@ export default VirtualCanvas
 const affectsChunk = <T extends CanvasAction = CanvasAction>(type: CanvasActionType<T>, action: T, column: number, row: number, tileSize: number) => {
   const actionBounds = type.getBounds(action)
   const chunkBounds = {
-    height: tileSize - 1,
-    width: tileSize - 1,
     x: column * tileSize,
     y: row * tileSize,
+    height: tileSize - 1,
+    width: tileSize - 1,
   }
   return doRectanglesIntersect(actionBounds, chunkBounds)
 }
@@ -234,8 +234,8 @@ const isReplacementOfLastElement = (event: Y.YEvent<Y.Array<unknown>>): boolean 
   const secondToLastIsInsert = secondToLast.insert !== undefined
   const secondToLastIsDelete = secondToLast.delete !== undefined
 
-  if (lastIsInsert && secondToLastIsDelete
-    || lastIsDelete && secondToLastIsInsert) {
+  if ((lastIsInsert && secondToLastIsDelete)
+    || (lastIsDelete && secondToLastIsInsert)) {
     if (event.changes.delta.length === 3) {
       const thirdToLastChange = event.changes.delta.at(0)!
       if (thirdToLastChange.retain === undefined) {

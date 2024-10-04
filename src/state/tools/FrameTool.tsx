@@ -1,19 +1,20 @@
 import { onCleanup, useContext } from 'solid-js'
 
 import CropIcon from '../../assets/icons/crop.svg'
-import CurrentTool from '../../state/CurrentTool'
-import { RectangleDragContext } from '../../state/RectangleDragContext'
-import { ViewportPositionContext } from '../../state/ViewportPositionContext'
-import WhiteboardContext from '../../state/WhiteboardContext'
+import { RectangleDragContext } from '../RectangleDragContext'
+import SelectedToolContext from '../SelectedToolContext'
+import { ViewportPositionContext } from '../ViewportPositionContext'
+import WhiteboardElementsContext from '../WhiteboardElementsContext'
 import { isViewportClick, Tool } from '../../types/tool'
-import FramePreview from './FramePreview'
+import FramePreview from '../../features/frame/FramePreview'
 
 const FrameTool: Tool = {
   icon: CropIcon,
   label: 'Frame',
   use: () => {
     const viewport = useContext(ViewportPositionContext)
-    const whiteboard = useContext(WhiteboardContext)
+    const whiteboard = useContext(WhiteboardElementsContext)
+    const selectedTool = useContext(SelectedToolContext)!
 
     const {
       currentPos,
@@ -22,7 +23,7 @@ const FrameTool: Tool = {
       setCurrentPos,
       setDragging,
       setInitialPos,
-    } = useContext(RectangleDragContext)
+    } = useContext(RectangleDragContext)!
 
     const handleMouseDown = (e: MouseEvent) => {
       if (!isViewportClick(e)) {
@@ -79,7 +80,7 @@ const FrameTool: Tool = {
       setDragging(false)
       setInitialPos({ x: 0, y: 0 })
       setCurrentPos({ x: 0, y: 0 })
-      CurrentTool.selectId('select')
+      selectedTool.selectId('select')
     }
 
     const handleKeyDown = (e: KeyboardEvent) => {

@@ -1,56 +1,64 @@
-import { Accessor, createContext, createEffect, createRoot, createSignal } from 'solid-js'
+import { createContext } from 'solid-js'
 import { IndexeddbPersistence } from 'y-indexeddb'
 import { WebrtcProvider } from 'y-webrtc'
 import * as Y from 'yjs'
 
 export type YjsState = {
-  ydoc: Accessor<Y.Doc>
+  ydoc: Y.Doc
 
   deserialize: (data: Uint8Array) => void
   serialize: () => Promise<Uint8Array>
+  clear: () => void
 }
 
-export const Yjs: YjsState = createRoot(() => {
-  const [ydoc, ] = createSignal(new Y.Doc())
+const YjsContext = createContext<YjsState>(undefined as unknown as YjsState)
 
-  createEffect<{ destroy: () => void }[]>((prev) => {
-    if (prev) {
-      prev[0].destroy()
-      prev[1].destroy()
-    }
+export default YjsContext
 
-    const indexeddbPersistence = new IndexeddbPersistence('project', ydoc())
-    const webrtcProvider = new WebrtcProvider('browser-tabs', ydoc(), { signaling: [] })
+export const createYjsState = (): YjsState => {
+  const ydoc = new Y.Doc()
 
-    return [indexeddbPersistence, webrtcProvider]
-  })
+  new WebrtcProvider('browser-tabs', ydoc, { signaling: [] })
+  const indexeddbPersistence = new IndexeddbPersistence('project', ydoc)
 
   const serialize = async () => {
-    console.log('Serialized', JSON.stringify(ydoc().toJSON()))
-    return new TextEncoder().encode(JSON.stringify(ydoc().toJSON()))
+    return new TextEncoder().encode(JSON.stringify(ydoc.toJSON()))
   }
 
   const deserialize = (data: Uint8Array) => {
-    console.log('Before deserializing', JSON.stringify(ydoc().toJSON()))
-
     const json = JSON.parse(new TextDecoder().decode(data))
-    console.log('JSON', json)
 
-    ydoc().transact(() => {
-      ydoc().share.forEach((ytype, key) => {
+    indexeddbPersistence.clearData()
+    ydoc.transact(() => {
+      ydoc.share.forEach((ytype, key) => {
         if (ytype instanceof Y.Array) {
-          const array = ydoc().getArray(key)
-          array.delete(0, array.length)
-          array.insert(0, json[key])
-        } else if (ytype instanceof Y.Map) {
-          const map = ydoc().getMap(key)
-          map.clear()
-          Object.entries(json[key]).forEach(([k, v]) => map.set(k, v))
+          const yarray = ydoc.getArray(key)
+          yarray.delete(0, yarray.length)
+          yarray.insert(0, json[key])
+        }
+        else if (ytype instanceof Y.Map) {
+          const ymap = ydoc.getMap(key)
+          ymap.clear()
+          Object.entries(json[key]).forEach(([k, v]) => ymap.set(k, v))
         }
       })
     })
+  }
 
-    console.log('After deserializing', JSON.stringify(ydoc().toJSON()))
+  const clear = () => {
+    indexeddbPersistence.clearData()
+    ydoc.transact(() => {
+      ydoc.share.forEach((ytype, key) => {
+        if (ytype instanceof Y.Array) {
+          const yarray = ydoc.getArray(key)
+          yarray.delete(0, yarray.length)
+        }
+        else if (ytype instanceof Y.Map) {
+          const ymap = ydoc.getMap(key)
+          ymap.clear()
+        }
+      })
+    })
   }
 
   return {
@@ -58,9 +66,6 @@ export const Yjs: YjsState = createRoot(() => {
 
     deserialize,
     serialize,
+    clear,
   }
-})
-
-export const YjsContext = createContext(Yjs)
-
-export default YjsContext
+}

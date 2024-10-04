@@ -1,4 +1,4 @@
-import { createMemo, createSignal, For, Show, useContext } from 'solid-js'
+import { createSignal, For, Show, useContext } from 'solid-js'
 
 import SaveIcon from '../../assets/icons/save.svg'
 import IconButton from '../../components/IconButton'
@@ -6,7 +6,7 @@ import Input from '../../components/Input'
 import InputGroup from '../../components/InputGroup'
 import { Option, Select } from '../../components/Select'
 import Stack from '../../components/Stack'
-import CanasSelection from '../../state/CanvasSelection'
+import CanvasSelectionContext, { useSelectionBounds } from '../../state/CanvasSelectionContext'
 import { ViewportPositionContext } from '../../state/ViewportPositionContext'
 import { VirtualCanvasContext } from '../../state/VirtualCanvasContext'
 import './SelectionRenderer.css'
@@ -20,13 +20,14 @@ const saveFormats = [
 const SelectionRenderer = () => {
   const viewport = useContext(ViewportPositionContext)
   const canvas = useContext(VirtualCanvasContext)
-  const bounds = createMemo(CanasSelection.getBounds)
+  const selection = useContext(CanvasSelectionContext)!
+  const bounds = useSelectionBounds()
 
   const [saveScale, setSaveScale] = createSignal(1)
   const [saveFormat, setSaveFormat] = createSignal('image/png')
 
   return (
-    <Show when={CanasSelection.parts.length !== 0}>
+    <Show when={selection.parts.length !== 0}>
       <svg
         class="selection-renderer"
         height={bounds().height * viewport.scale() + 1}
@@ -36,7 +37,7 @@ const SelectionRenderer = () => {
         }}
         width={bounds().width * viewport.scale() + 1}
       >
-        <For each={CanasSelection.parts}>
+        <For each={selection.parts}>
           {part => (
             <Show when={part.type === 'rectangle'}>
               <rect

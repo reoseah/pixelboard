@@ -1,10 +1,10 @@
 import { For, Show, useContext } from 'solid-js'
 
-import CircleIcon from '../../assets/icons/circle.svg'
 import CircleFilledIcon from '../../assets/icons/circle-filled.svg'
+import CircleIcon from '../../assets/icons/circle.svg'
 import DropIcon from '../../assets/icons/drop.svg'
-import SquareIcon from '../../assets/icons/square.svg'
 import SquareFilledIcon from '../../assets/icons/square-filled.svg'
+import SquareIcon from '../../assets/icons/square.svg'
 import StrokeWidthIcon from '../../assets/icons/stroke-width.svg'
 import ColorInput from '../../components/ColorInput'
 import InputGroup from '../../components/InputGroup'
@@ -12,7 +12,7 @@ import NumberInput from '../../components/NumberInput'
 import { Option, OptionDivider, Select } from '../../components/Select'
 import Stack from '../../components/Stack'
 import ToggleButton from '../../components/ToggleButton'
-import CurrentColor from '../../state/CurrentColor'
+import SelectedColorContext from '../../state/SelectedColorContext'
 import { modeGroups, modeNames } from '../../util/blending_modes'
 import { PencilContext } from './PencilContext'
 import './PencilToolbar.css'
@@ -26,6 +26,7 @@ const PencilToolbar = () => {
     shape,
     size,
   } = useContext(PencilContext)
+  const selectedColor = useContext(SelectedColorContext)!
 
   // TODO: use the new input component
   return (
@@ -65,9 +66,9 @@ const PencilToolbar = () => {
         />
         <ColorInput
           name="pencil-color"
-          onChange={value => CurrentColor.setHex(value)}
+          onChange={value => selectedColor.setHex(value)}
           title="Stroke color"
-          value={CurrentColor.hex()}
+          value={selectedColor.hex()}
         />
       </InputGroup>
 
@@ -111,12 +112,12 @@ const PencilToolbar = () => {
           max={100}
           min={0}
           name="pencil-opacity"
-          onChange={value => CurrentColor.setAlpha(value / 100)}
+          onChange={value => selectedColor.setAlpha(value / 100)}
           size={3}
           step={1}
           title="Not implemented yet"
           unit="%"
-          value={Math.floor(CurrentColor.alpha() * 100)}
+          value={Math.floor(selectedColor.alpha() * 100)}
         />
       </InputGroup>
     </Stack>
