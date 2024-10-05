@@ -1,5 +1,5 @@
 import CollaborationIcon from '../../assets/icons/collaboration.svg'
-import CollaborationPanel from '../../features/sidebar/CollaborationPanel'
+import CollaborationPanel from '../../components/app/CollaborationPanel'
 import { Tab } from '../../types/tab'
 
 const Collaboration: Tab = {

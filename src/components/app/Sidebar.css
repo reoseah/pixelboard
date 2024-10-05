@@ -93,5 +93,7 @@
 }
 
 .sidebar-content {
-    /* width: 16rem; */
+    @media (min-width: 700px) {
+        width: 16rem;
+    }
 }

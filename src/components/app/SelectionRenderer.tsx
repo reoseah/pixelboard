@@ -144,7 +144,7 @@ const SelectionRenderer = () => {
             onclick={() => {
               renderArea(
                 canvas,
-                registry.elementTypes,
+                registry.actionTypes,
                 bounds().x,
                 bounds().y,
                 bounds().width,

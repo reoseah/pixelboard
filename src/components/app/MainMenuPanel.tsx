@@ -1,8 +1,8 @@
 import { useContext } from 'solid-js'
 
-import Button from '../../components/generic/Button'
-import Stack from '../../components/generic/Stack'
 import YjsContext from '../../state/YjsContext'
+import Button from '../generic/Button'
+import Stack from '../generic/Stack'
 import './MainMenuPanel.css'
 
 const MainMenuPanel = () => {
