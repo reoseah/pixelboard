@@ -4,22 +4,47 @@
     border-radius: .375rem;
     border: .0625rem solid var(--neutral-750);
     display: flex;
-    min-height: 32em;
-    max-height: calc(100% - 2rem);
+    overflow-y: auto;
+
+    @media (max-width: 699px) {
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+
+    @media (min-width: 700px) {
+        flex-direction: row;
+        min-height: 32em;
+        max-height: calc(100% - 2rem);
+    }
 }
 
 .sidebar-tabs {
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
-    gap: .5rem;
     padding: .1875rem;
+
+    @media (max-width: 699px) {
+        flex-direction: row;
+        gap: .25rem;
+    }
+
+    @media (min-width: 700px) {
+        flex-direction: column;
+        gap: .5rem;
+    }
 }
 
 .sidebar-tab-group {
     display: flex;
-    flex-direction: column;
     gap: .25rem;
+
+    @media (max-width: 699px) {
+        flex-direction: row;
+    }
+
+    @media (min-width: 700px) {
+        flex-direction: column;
+    }
 }
 
 .sidebar-tab {
@@ -56,10 +81,17 @@
 }
 
 .sidebar-divider {
-    width: 0.0625rem;
     background-color: var(--neutral-750);
+
+    @media (max-width: 699px) {
+        height: 0.0625rem;
+    }
+
+    @media (min-width: 700px) {
+        width: 0.0625rem;
+    }
 }
 
 .sidebar-content {
-    width: 16rem;
+    /* width: 16rem; */
 }

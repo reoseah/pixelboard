@@ -22,7 +22,7 @@ const MainToolbar = () => {
   }, {} as Record<string, string>)
 
   return (
-    <Stack class="island" direction="row" padding={0.1875} spacing={0.25}>
+    <Stack class="main-toolbar island" direction="row" padding={0.1875} spacing={0.25}>
       <For each={Object.entries(tools)}>
         {([id, tool]) => (
           <button

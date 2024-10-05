@@ -5,12 +5,10 @@ import { Dynamic } from 'solid-js/web'
 
 import './App.css'
 import SelectionRenderer from './components/app/SelectionRenderer'
+import Sidebar from './components/app/Sidebar'
 import MainToolbar from './components/app/Toolbar'
 import ViewportContainer from './components/app/ViewportContainer'
 import VirtualCanvas from './components/app/VirtualCanvas'
-import SideLayout from './features/interface/SideLayout'
-import TopCenterLayout from './features/interface/TopCenterLayout'
-import Sidebar from './features/sidebar/Sidebar'
 import CanvasSelectionContext, { createCanvasSelection } from './state/CanvasSelectionContext'
 import Keymap from './state/Keymap'
 import RectangleDragContext, { createRectangleDragState } from './state/RectangleDragContext'
@@ -69,13 +67,11 @@ function App() {
         <SelectionRenderer />
         <ElementsRenderer />
       </ViewportContainer>
-      <TopCenterLayout>
+      <div class="interface">
         <MainToolbar />
         <CurrentToolRenderer map={tool => tool.subToolbar} />
-      </TopCenterLayout>
-      <SideLayout>
         <Sidebar />
-      </SideLayout>
+      </div>
       <CurrentToolRenderer map={tool => tool.use} />
     </MultiProvider>
   )
