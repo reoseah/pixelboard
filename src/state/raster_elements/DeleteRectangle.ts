@@ -1,7 +1,7 @@
-import { CanvasActionType } from '../../types/virtual_canvas'
+import { RasterElementType } from '../../types/raster_elements.ts'
 
 // This is temporary until we have a proper canvas selection implementation,
-// at which point this will be substituted with a more advanced DeleteSelection
+// at which point this can be substituted with a more advanced DeleteSelection
 export type DeleteRectangle = {
   height: number
 
@@ -11,7 +11,7 @@ export type DeleteRectangle = {
   y: number
 }
 
-export const DeleteRectangleType: CanvasActionType<DeleteRectangle> = {
+export const DeleteRectangleType: RasterElementType<DeleteRectangle> = {
   getBounds: (action) => {
     return {
       height: action.height,

@@ -3,10 +3,10 @@ import { createSignal, onCleanup, useContext } from 'solid-js'
 import CursorIcon from '../../assets/icons/cursor.svg'
 import SelectionBox from '../../components/app/SelectionBox'
 import { isViewportClick, Tool } from '../../types/tool'
+import NonRasterElementsContext, { getElementsInside } from '../NonRasterElementsContext'
 import RectangleDragContext from '../RectangleDragContext'
 import RegistryContext from '../RegistryContext'
 import ViewportPositionContext from '../ViewportPositionContext'
-import WhiteboardElementsContext, { getElementsInside } from '../WhiteboardElementsContext'
 
 const SelectTool: Tool = {
   icon: CursorIcon,
@@ -25,7 +25,7 @@ const SelectTool: Tool = {
     const [toolState, setToolState] = createSignal<'idle' | 'move' | 'selection_box'>('idle')
 
     const viewport = useContext(ViewportPositionContext)
-    const whiteboard = useContext(WhiteboardElementsContext)
+    const whiteboard = useContext(NonRasterElementsContext)
     const registry = useContext(RegistryContext)
 
     let clickTime = 0
@@ -43,7 +43,7 @@ const SelectTool: Tool = {
         const isTitle = (e.target as Element)?.hasAttribute('data-element-title')
         if (isTitle) {
           if (Date.now() - clickTime < 300 && clickId === targetedId) {
-            whiteboard.setEditingTitle(targetedId)
+            whiteboard.setTitleBeingEdited(targetedId)
             return
           }
           else {
@@ -52,7 +52,7 @@ const SelectTool: Tool = {
           }
         }
         if (!whiteboard.selected().includes(targetedId)) {
-          const selection = modifySelection(whiteboard.selected(), targetedId, e.shiftKey)
+          const selection = modifySelection(whiteboard.selected(), targetedId, e.ctrlKey || e.metaKey)
           whiteboard.select(selection)
         }
         if (whiteboard.selected().length > 0) {
@@ -160,6 +160,8 @@ const SelectTool: Tool = {
     document.addEventListener('mouseup', handleMouseUp)
 
     onCleanup(() => {
+      whiteboard.highlight([])
+
       document.removeEventListener('mousedown', handleMouseDown)
       document.removeEventListener('mousemove', handleMouseMove)
       document.removeEventListener('mouseup', handleMouseUp)

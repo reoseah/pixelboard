@@ -11,6 +11,7 @@ import ViewportContainer from './components/app/ViewportContainer'
 import VirtualCanvas from './components/app/VirtualCanvas'
 import CanvasSelectionContext, { createCanvasSelection } from './state/CanvasSelectionContext'
 import Keymap from './state/Keymap'
+import NonRasterElementsContext, { createNonRasterElementState as createWhiteboardState } from './state/NonRasterElementsContext'
 import RectangleDragContext, { createRectangleDragState } from './state/RectangleDragContext'
 import RegistryContext, { createRegistry, Registry } from './state/RegistryContext'
 import SelectedColorContext, { createSelectedColor } from './state/SelectedColorContext'
@@ -18,11 +19,10 @@ import SelectedToolContext, { createSelectedTool } from './state/SelectedToolCon
 import SidebarContext, { createSidebarState } from './state/SidebarContext'
 import ViewportPositionContext, { createViewportPosition } from './state/ViewportPositionContext'
 import VirtualCanvasContext, { createVirtualCanvasState } from './state/VirtualCanvasContext'
-import WhiteboardElementsContext, { createWhiteboardElements } from './state/WhiteboardElementsContext'
 import YjsContext, { createYjsState } from './state/YjsContext'
 import YWebrtcContext, { createYWebrtcState } from './state/YWebrtcContext'
+import { NonRasterElement } from './types/non_raster_elements'
 import { Tool } from './types/tool'
-import { WhiteboardElement } from './types/whiteboard'
 
 function App() {
   const selectedTool = createSelectedTool()
@@ -33,7 +33,7 @@ function App() {
   const viewportPosition = createViewportPosition()
   const yjs = createYjsState()
   const ywebrtc = createYWebrtcState(yjs.ydoc)
-  const whiteboardElements = createWhiteboardElements(yjs.ydoc)
+  const whiteboard = createWhiteboardState(yjs.ydoc)
   const virtualCanvas = createVirtualCanvasState(yjs.ydoc)
   const registry = createRegistry(
     yjs,
@@ -41,6 +41,7 @@ function App() {
     sidebarState,
     canvasSelection,
     virtualCanvas,
+    whiteboard,
   )
 
   useCommandKeybinds(registry.commands)
@@ -56,7 +57,7 @@ function App() {
         [ViewportPositionContext, viewportPosition],
         [YjsContext, yjs],
         [YWebrtcContext, ywebrtc],
-        [WhiteboardElementsContext, whiteboardElements],
+        [NonRasterElementsContext, whiteboard],
         [VirtualCanvasContext, virtualCanvas],
         [RegistryContext, registry],
       ]}
@@ -129,10 +130,10 @@ const useCommandKeybinds = (commands: Registry['commands']) => {
 export default App
 
 const ElementsRenderer = () => {
-  const whiteboard = useContext(WhiteboardElementsContext)
+  const whiteboard = useContext(NonRasterElementsContext)
   const { elementTypes } = useContext(RegistryContext)
 
-  const [store, setStore] = createStore<Record<string, WhiteboardElement>>({})
+  const [store, setStore] = createStore<Record<string, NonRasterElement>>({})
 
   whiteboard.elements.observe(() => {
     setStore(reconcile(whiteboard.elements.toJSON()))

@@ -4,7 +4,7 @@ import * as Y from 'yjs'
 import RegistryContext from '../../state/RegistryContext'
 import ViewportPositionContext from '../../state/ViewportPositionContext'
 import VirtualCanvasContext from '../../state/VirtualCanvasContext'
-import { CanvasAction, CanvasActionType, VirtualCanvasAccess } from '../../types/virtual_canvas'
+import { RasterElement, RasterElementType, VirtualCanvasAccess } from '../../types/raster_elements.ts'
 import { doRectanglesIntersect } from '../../util/rectangle'
 import './VirtualCanvas.css'
 
@@ -145,7 +145,7 @@ const VirtualCanvas = () => {
             .clearRect(0, 0, tileSize, tileSize)
         })
       })
-      context.actions.forEach((action) => {
+      context.elements.forEach((action) => {
         const type = actionTypes[action.type]
 
         deletionAffectedChunks.forEach((rows, column) => {
@@ -166,10 +166,10 @@ const VirtualCanvas = () => {
     })
   }
   onMount(() => {
-    context.actions.observe(onDataChange)
+    context.elements.observe(onDataChange)
   })
   onCleanup(() => {
-    context.actions.unobserve(onDataChange)
+    context.elements.unobserve(onDataChange)
   })
 
   createEffect(() => {
@@ -191,7 +191,7 @@ const VirtualCanvas = () => {
 
 export default VirtualCanvas
 
-const affectsChunk = <T extends CanvasAction = CanvasAction>(type: CanvasActionType<T>, action: T, column: number, row: number, tileSize: number) => {
+const affectsChunk = <T extends RasterElement = RasterElement>(type: RasterElementType<T>, action: T, column: number, row: number, tileSize: number) => {
   const actionBounds = type.getBounds(action)
   const chunkBounds = {
     x: column * tileSize,
@@ -202,7 +202,7 @@ const affectsChunk = <T extends CanvasAction = CanvasAction>(type: CanvasActionT
   return doRectanglesIntersect(actionBounds, chunkBounds)
 }
 
-const getAffectedChunks = <T extends CanvasAction = CanvasAction>(type: CanvasActionType<T>, action: T, tileSize: number) => {
+const getAffectedChunks = <T extends RasterElement = RasterElement>(type: RasterElementType<T>, action: T, tileSize: number) => {
   if (!type) {
     return []
   }
@@ -247,7 +247,7 @@ const isReplacementOfLastElement = (event: Y.YEvent<Y.Array<unknown>>): boolean 
   return false
 }
 
-const getChunksAffectedByDeletions = (actionTypes: Record<string, CanvasActionType>, tileSize: number, event: Y.YEvent<Y.Array<CanvasAction>>): Map<number, Set<number>> => {
+const getChunksAffectedByDeletions = (actionTypes: Record<string, RasterElementType>, tileSize: number, event: Y.YEvent<Y.Array<RasterElement>>): Map<number, Set<number>> => {
   const chunks = new Map<number, Set<number>>()
   event.changes.deleted.forEach((item) => {
     item.content.getContent().forEach((action) => {

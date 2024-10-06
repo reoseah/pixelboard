@@ -1,10 +1,10 @@
 import { createSignal, JSX, onMount, Show, useContext } from 'solid-js'
 
 import useClickOutside from '../../hooks/useClickOutside'
+import { FrameElement } from '../../state/non_raster_elements/FrameElementType'
+import NonRasterElementsContext from '../../state/NonRasterElementsContext'
 import SelectedToolContext from '../../state/SelectedToolContext'
 import ViewportPositionContext from '../../state/ViewportPositionContext'
-import { FrameElement } from '../../state/whiteboard_elements/FrameElementType'
-import WhiteboardElementsContext from '../../state/WhiteboardElementsContext'
 import './Frame.css'
 
 const Frame = (props: {
@@ -12,7 +12,7 @@ const Frame = (props: {
   id: string
 }) => {
   const viewport = useContext(ViewportPositionContext)
-  const whiteboard = useContext(WhiteboardElementsContext)
+  const whiteboard = useContext(NonRasterElementsContext)
   return (
     <div
       class="frame"
@@ -29,7 +29,7 @@ const Frame = (props: {
     >
       <Show
         fallback={<FrameTitle id={props.id} node={props.element} />}
-        when={whiteboard.editingTitle() === props.id}
+        when={whiteboard.titleBeingEdited() === props.id}
       >
         <FrameTitleEditor id={props.id} node={props.element} />
       </Show>
@@ -43,7 +43,7 @@ const FrameTitle = (props: {
   id: string
   node: FrameElement
 }) => {
-  const whiteboard = useContext(WhiteboardElementsContext)
+  const whiteboard = useContext(NonRasterElementsContext)
   const selectedTool = useContext(SelectedToolContext)!
 
   const style = (): JSX.CSSProperties => ({
@@ -58,7 +58,7 @@ const FrameTitle = (props: {
         e.preventDefault()
         e.stopPropagation()
         if (selectedTool.id() === 'select') {
-          whiteboard.setEditingTitle(props.id)
+          whiteboard.setTitleBeingEdited(props.id)
         }
       }}
       style={style()}
@@ -73,7 +73,7 @@ const FrameTitleEditor = (props: {
   node: FrameElement
 }) => {
   const [value, setValue] = createSignal(props.node.title ?? 'Frame')
-  const whiteboard = useContext(WhiteboardElementsContext)
+  const whiteboard = useContext(NonRasterElementsContext)
   let input!: HTMLInputElement
   let widthHelper!: HTMLSpanElement
 
@@ -83,7 +83,7 @@ const FrameTitleEditor = (props: {
       title: value().trim() || null,
     })
 
-    whiteboard.setEditingTitle(null)
+    whiteboard.setTitleBeingEdited(null)
   }
 
   onMount(() => {
@@ -125,7 +125,7 @@ const FrameTitleEditor = (props: {
           if (e.key === 'Enter') updateTitle()
           if (e.key === 'Escape') {
             setValue(props.node.title ?? 'Frame')
-            whiteboard.setEditingTitle(null)
+            whiteboard.setTitleBeingEdited(null)
           }
         }}
         ref={el => input = el}

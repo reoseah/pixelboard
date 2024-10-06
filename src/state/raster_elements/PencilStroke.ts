@@ -1,4 +1,4 @@
-import { CanvasActionType } from '../../types/virtual_canvas'
+import { RasterElementType } from '../../types/raster_elements.ts'
 
 export type PencilStroke = {
   color: string
@@ -10,7 +10,7 @@ export type PencilStroke = {
 
 const interval = 1 // TODO: Make this configurable by the user
 
-export const PencilStrokeType: CanvasActionType<PencilStroke> = {
+export const PencilStrokeType: RasterElementType<PencilStroke> = {
   getBounds: (action) => {
     const x = Math.min(...action.points.map(point => point.x))
     const y = Math.min(...action.points.map(point => point.y))

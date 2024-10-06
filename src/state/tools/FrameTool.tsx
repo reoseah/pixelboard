@@ -3,17 +3,17 @@ import { onCleanup, useContext } from 'solid-js'
 import CropIcon from '../../assets/icons/crop.svg'
 import FramePreview from '../../components/app/FramePreview'
 import { isViewportClick, Tool } from '../../types/tool'
+import NonRasterElementsContext from '../NonRasterElementsContext'
 import RectangleDragContext from '../RectangleDragContext'
 import SelectedToolContext from '../SelectedToolContext'
 import ViewportPositionContext from '../ViewportPositionContext'
-import WhiteboardElementsContext from '../WhiteboardElementsContext'
 
 const FrameTool: Tool = {
   icon: CropIcon,
   label: 'Frame',
   use: () => {
     const viewport = useContext(ViewportPositionContext)
-    const whiteboard = useContext(WhiteboardElementsContext)
+    const whiteboard = useContext(NonRasterElementsContext)
     const selectedTool = useContext(SelectedToolContext)
 
     const {
@@ -68,13 +68,15 @@ const FrameTool: Tool = {
       const height = maxY - y
 
       if (width > 0 && height > 0) {
-        whiteboard.set(crypto.randomUUID(), {
+        const id = crypto.randomUUID()
+        whiteboard.set(id, {
           height,
           type: 'crop',
           width,
           x,
           y,
         })
+        whiteboard.select([id])
       }
 
       setDragging(false)

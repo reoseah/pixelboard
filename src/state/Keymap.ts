@@ -63,6 +63,11 @@ const keymap: KeymapEntry[] = [
     command: 'delete_selection',
     key: parseShortcut('Delete'),
   },
+
+  {
+    command: 'rename_element',
+    key: parseShortcut('F2'),
+  },
 ]
 
 export default keymap

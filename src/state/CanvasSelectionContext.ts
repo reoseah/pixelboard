@@ -2,7 +2,7 @@ import { makePersisted } from '@solid-primitives/storage'
 import { createContext, createMemo, useContext } from 'solid-js'
 import { createStore, reconcile, Store } from 'solid-js/store'
 
-import type { SelectionPart, SelectionToolMode } from '../types/virtual_canvas'
+import { SelectionPart, SelectionToolMode } from '../types/raster_selection.ts'
 
 export type CanvasSelection = {
   parts: Store<SelectionPart[]>

@@ -2,13 +2,13 @@ import { makePersisted } from '@solid-primitives/storage'
 import { Accessor, createContext, createSignal } from 'solid-js'
 import * as Y from 'yjs'
 
-import { WhiteboardElement } from '../types/whiteboard'
+import { NonRasterElement } from '../types/non_raster_elements'
 import { Registry } from './RegistryContext'
 
-export type WhiteboardElements = {
-  elements: Y.Map<WhiteboardElement>
+export type NonRasterElementState = {
+  elements: Y.Map<NonRasterElement>
 
-  set: (id: string, element: WhiteboardElement) => void
+  set: (id: string, element: NonRasterElement) => void
   remove: (id: string) => void
   clear: () => void
 
@@ -18,22 +18,22 @@ export type WhiteboardElements = {
   highlighted: Accessor<string[]>
   highlight: (ids: string[]) => void
 
-  editingTitle: Accessor<null | string>
-  setEditingTitle: (id: null | string) => void
+  titleBeingEdited: Accessor<null | string>
+  setTitleBeingEdited: (id: null | string) => void
 }
 
-const WhiteboardElementsContext = createContext<WhiteboardElements>(undefined as unknown as WhiteboardElements)
+const NonRasterElementsContext = createContext<NonRasterElementState>(undefined as unknown as NonRasterElementState)
 
-export default WhiteboardElementsContext
+export default NonRasterElementsContext
 
-export const createWhiteboardElements = (ydoc: Y.Doc): WhiteboardElements => {
-  const elements = ydoc.getMap<WhiteboardElement>('board-elements')
+export const createNonRasterElementState = (ydoc: Y.Doc): NonRasterElementState => {
+  const elements = ydoc.getMap<NonRasterElement>('board-elements')
 
   const [selected, setSelected] = makePersisted(createSignal<string[]>([]), { name: 'selected-elements' })
   const [highlighted, setHighlighted] = createSignal<string[]>([])
-  const [editingTitle, setEditingTitle] = createSignal<null | string>(null)
+  const [titleBeingEdited, setTitleBeingEdited] = createSignal<null | string>(null)
 
-  const set = (id: string, entity: WhiteboardElement) => {
+  const set = (id: string, entity: NonRasterElement) => {
     elements.set(id, entity)
   }
 
@@ -62,12 +62,12 @@ export const createWhiteboardElements = (ydoc: Y.Doc): WhiteboardElements => {
     select,
     highlighted,
     highlight,
-    editingTitle,
-    setEditingTitle,
+    titleBeingEdited,
+    setTitleBeingEdited,
   }
 }
 
-export const getElementsInside = (whiteboard: WhiteboardElements, elementTypes: Registry['elementTypes'], x: number, y: number, width: number, height: number) => {
+export const getElementsInside = (whiteboard: NonRasterElementState, elementTypes: Registry['elementTypes'], x: number, y: number, width: number, height: number) => {
   const output: string[] = []
   for (const [id, element] of whiteboard.elements) {
     const bounds = elementTypes[element.type].getBounds(element)

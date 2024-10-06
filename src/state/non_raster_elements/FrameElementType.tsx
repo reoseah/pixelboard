@@ -1,4 +1,4 @@
-import type { WhiteboardElementType } from '../../types/whiteboard'
+import type { NonRasterElementType } from '../../types/non_raster_elements'
 
 import FrameRenderer from '../../components/app/Frame'
 
@@ -11,7 +11,7 @@ export type FrameElement = {
   width: number
 }
 
-const FrameElementType: WhiteboardElementType<FrameElement> = {
+const FrameElementType: NonRasterElementType<FrameElement> = {
   render: FrameRenderer,
   getBounds: element => ({
     height: element.height,

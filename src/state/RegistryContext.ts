@@ -1,25 +1,28 @@
 import { createContext } from 'solid-js'
 
 import type { Command } from '../types/commands'
+import type { NonRasterElementType } from '../types/non_raster_elements'
+import type { RasterElementType } from '../types/raster_elements.ts'
 import type { Tab } from '../types/tab'
 import type { Tool } from '../types/tool'
-import type { CanvasActionType } from '../types/virtual_canvas'
-import type { WhiteboardElementType } from '../types/whiteboard'
 import type { CanvasSelection } from './CanvasSelectionContext'
 import type { SelectedTool } from './SelectedToolContext'
 import type { SidebarState } from './SidebarContext'
 import type { VirtualCanvasState } from './VirtualCanvasContext'
 import type { YjsState } from './YjsContext'
 
-import { DeleteRectangleType } from './canvas_action/DeleteRectangle'
-import { PencilStrokeType } from './canvas_action/pencil_stroke'
 import createClearProjectCommand from './commands/createClearProjectCommand'
 import createDeleteSelectionCommand from './commands/createDeleteSelectionCommand'
 import createDeselectCommand from './commands/createDeselectCommand'
+import createRenameElementCommand from './commands/createRenameElementCommand'
 import createReselectCommand from './commands/createReselectCommand'
 import createSelectToolCommand from './commands/createSelectToolCommand'
 import createToggleSidebarCommand from './commands/createToggleSidebarCommand'
 import createToggleTabCommand from './commands/createToogleTabCommand'
+import FrameElementType from './non_raster_elements/FrameElementType'
+import { NonRasterElementState } from './NonRasterElementsContext'
+import { DeleteRectangleType } from './raster_elements/DeleteRectangle'
+import { PencilStrokeType } from './raster_elements/PencilStroke.ts'
 import Collaboration from './tabs/Collaboration'
 import Color from './tabs/Color'
 import MainMenu from './tabs/MainMenu'
@@ -29,11 +32,10 @@ import Frame from './tools/FrameTool'
 import PencilTool from './tools/PencilTool'
 import RectangleSelectionTool from './tools/RectangleSelectionTool'
 import SelectTool from './tools/SelectTool'
-import FrameElementType from './whiteboard_elements/FrameElementType'
 
 export type Registry = {
-  actionTypes: Record<string, CanvasActionType>
-  elementTypes: Record<string, WhiteboardElementType>
+  actionTypes: Record<string, RasterElementType>
+  elementTypes: Record<string, NonRasterElementType>
   tabs: Record<string, Tab>
   tools: Record<string, Tool>
   commands: Record<string, Command>
@@ -49,6 +51,7 @@ export const createRegistry = (
   sidebarState: SidebarState,
   selection: CanvasSelection,
   virtualCanvas: VirtualCanvasState,
+  whiteboard: NonRasterElementState,
 ): Registry => {
   const tools = {
     select: SelectTool,
@@ -81,6 +84,8 @@ export const createRegistry = (
       'deselect': createDeselectCommand(selection),
       'reselect': createReselectCommand(selection),
       'delete_selection': createDeleteSelectionCommand(selection, virtualCanvas),
+
+      'rename_element': createRenameElementCommand(whiteboard),
 
       'select_tool.select': createSelectToolCommand(selectedTool, tools, 'select'),
       'select_tool.pencil': createSelectToolCommand(selectedTool, tools, 'pencil'),

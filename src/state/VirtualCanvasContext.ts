@@ -1,15 +1,15 @@
 import { createContext, createMemo, useContext } from 'solid-js'
 import * as Y from 'yjs'
 
-import { CanvasAction, VirtualCanvasAccess } from '../types/virtual_canvas'
+import { RasterElement, VirtualCanvasAccess } from '../types/raster_elements.ts'
 import { doRectanglesIntersect } from '../util/rectangle'
 import RegistryContext, { Registry } from './RegistryContext'
 
 export type VirtualCanvasState = {
-  actions: Y.Array<CanvasAction>
+  elements: Y.Array<RasterElement>
 
-  add: (action: CanvasAction) => void
-  replace: (oldAction: CanvasAction, newAction: CanvasAction) => void
+  add: (element: RasterElement) => void
+  replace: (previous: RasterElement, replacement: RasterElement) => void
   clear: () => void
 }
 
@@ -18,26 +18,26 @@ const VirtualCanvasContext = createContext<VirtualCanvasState>(undefined as unkn
 export default VirtualCanvasContext
 
 export const createVirtualCanvasState = (ydoc: Y.Doc): VirtualCanvasState => {
-  const actions = ydoc.getArray<CanvasAction>('virtual-canvas-actions')
+  const actions = ydoc.getArray<RasterElement>('raster-elements')
 
-  const add = (action: CanvasAction) => {
+  const add = (action: RasterElement) => {
     actions.push([action])
   }
 
-  const replace = (oldAction: CanvasAction, newAction: CanvasAction) => {
+  const replace = (previous: RasterElement, replacement: RasterElement) => {
     let idx = -1
     for (let i = 0; i < actions.length; i++) {
-      if (actions.get(i) === oldAction) {
+      if (actions.get(i) === previous) {
         idx = i
         break
       }
     }
     if (idx === -1) {
-      throw new Error('oldAction not found')
+      throw new Error('previous not found')
     }
     ydoc.transact(() => {
       actions.delete(idx)
-      actions.insert(idx, [newAction])
+      actions.insert(idx, [replacement])
     })
   }
 
@@ -48,7 +48,7 @@ export const createVirtualCanvasState = (ydoc: Y.Doc): VirtualCanvasState => {
   }
 
   return {
-    actions,
+    elements: actions,
     add,
     replace,
     clear,
@@ -56,7 +56,7 @@ export const createVirtualCanvasState = (ydoc: Y.Doc): VirtualCanvasState => {
 }
 
 export const useCanvasBounds = () => {
-  const { actions } = useContext(VirtualCanvasContext)
+  const { elements } = useContext(VirtualCanvasContext)
   const { actionTypes } = useContext(RegistryContext)
 
   return createMemo(() => {
@@ -64,7 +64,7 @@ export const useCanvasBounds = () => {
     let minY = Infinity
     let maxX = -Infinity
     let maxY = -Infinity
-    actions.forEach((action) => {
+    elements.forEach((action) => {
       const type = actionTypes[action.type]
       if (!type) {
         console.error(`Unknown action type ${action.type}`, action)
@@ -103,7 +103,7 @@ export const renderArea = (virtualCanvas: VirtualCanvasState, actionTypes: Regis
     },
   }
 
-  virtualCanvas.actions.forEach((action) => {
+  virtualCanvas.elements.forEach((action) => {
     const type = actionTypes[action.type]
     if (!type) {
       console.error(`Unknown action type ${action.type}`, action)
