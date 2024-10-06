@@ -51,16 +51,17 @@ const SelectTool: Tool = {
             clickId = targetedId
           }
         }
-        const selection = modifySelection(whiteboard.selected(), targetedId, e.shiftKey)
-        whiteboard.select(selection)
-        if (selection.length > 0) {
+        if (!whiteboard.selected().includes(targetedId)) {
+          const selection = modifySelection(whiteboard.selected(), targetedId, e.shiftKey)
+          whiteboard.select(selection)
+        }
+        if (whiteboard.selected().length > 0) {
           setToolState('move')
           const x = viewport.toCanvasX(e.clientX)
           const y = viewport.toCanvasY(e.clientY)
           setInitialPos({ x, y })
           setCurrentPos({ x, y })
         }
-
         return
       }
 
@@ -71,16 +72,49 @@ const SelectTool: Tool = {
       setCurrentPos({ x, y })
       setDragging(true)
       whiteboard.select([])
+      whiteboard.highlight([])
     }
 
     const handleMouseMove = (e: MouseEvent) => {
       switch (toolState()) {
+        case 'idle': {
+          const nodeId = (e.target as Element)?.closest('[data-selectable][data-element-id]')?.getAttribute('data-element-id') ?? null
+          whiteboard.highlight(nodeId ? [nodeId] : [])
+
+          break
+        }
+        case 'move': {
+          const x = viewport.toCanvasX(e.clientX)
+          const y = viewport.toCanvasY(e.clientY)
+          const dx = x - currentPos().x
+          const dy = y - currentPos().y
+          setCurrentPos({ x, y })
+
+          const selection = whiteboard.selected()
+          selection.forEach((id) => {
+            const element = whiteboard.elements.get(id)!
+            const elementType = registry.elementTypes[element.type]
+            if (elementType.move) {
+              const movedElement = elementType.move(element, dx, dy)
+              whiteboard.set(id, movedElement)
+            }
+          })
+
+          break
+        }
         case 'selection_box': {
           const x = viewport.toCanvasX(e.clientX)
           const y = viewport.toCanvasY(e.clientY)
           setCurrentPos({ x, y })
 
-          // TODO: highlight nodes within selection box
+          const minX = Math.min(initialPos().x, currentPos().x)
+          const minY = Math.min(initialPos().y, currentPos().y)
+          const maxX = Math.max(initialPos().x, currentPos().x)
+          const maxY = Math.max(initialPos().y, currentPos().y)
+
+          const highlight = getElementsInside(whiteboard, registry.elementTypes, minX, minY, maxX - minX, maxY - minY)
+          whiteboard.highlight(highlight)
+
           break
         }
       }
@@ -88,6 +122,19 @@ const SelectTool: Tool = {
 
     const handleMouseUp = (/* e: MouseEvent */) => {
       switch (toolState()) {
+        case 'move': {
+          const selection = whiteboard.selected()
+          selection.forEach((id) => {
+            const element = whiteboard.elements.get(id)!
+            const elementType = registry.elementTypes[element.type]
+            if (elementType.finishMove) {
+              const movedElement = elementType.finishMove(element)
+              whiteboard.set(id, movedElement)
+            }
+          })
+
+          break
+        }
         case 'selection_box': {
           const minX = Math.min(initialPos().x, currentPos().x)
           const minY = Math.min(initialPos().y, currentPos().y)
@@ -96,6 +143,7 @@ const SelectTool: Tool = {
 
           const selection = getElementsInside(whiteboard, registry.elementTypes, minX, minY, maxX - minX, maxY - minY)
           whiteboard.select(selection)
+          whiteboard.highlight([])
 
           break
         }

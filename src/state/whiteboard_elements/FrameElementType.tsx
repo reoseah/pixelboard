@@ -19,6 +19,18 @@ const FrameElementType: WhiteboardElementType<FrameElement> = {
     x: element.x,
     y: element.y,
   }),
+  move: (element, dx, dy) => {
+    return ({
+      ...element,
+      x: element.x + dx,
+      y: element.y + dy,
+    })
+  },
+  finishMove: element => ({
+    ...element,
+    x: Math.round(element.x),
+    y: Math.round(element.y),
+  }),
 }
 
 export default FrameElementType

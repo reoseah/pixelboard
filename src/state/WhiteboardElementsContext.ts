@@ -1,3 +1,4 @@
+import { makePersisted } from '@solid-primitives/storage'
 import { Accessor, createContext, createSignal } from 'solid-js'
 import * as Y from 'yjs'
 
@@ -11,11 +12,14 @@ export type WhiteboardElements = {
   remove: (id: string) => void
   clear: () => void
 
-  editingTitle: Accessor<null | string>
-  setEditingTitle: (id: null | string) => void
-
   selected: Accessor<string[]>
   select: (ids: string[]) => void
+
+  highlighted: Accessor<string[]>
+  highlight: (ids: string[]) => void
+
+  editingTitle: Accessor<null | string>
+  setEditingTitle: (id: null | string) => void
 }
 
 const WhiteboardElementsContext = createContext<WhiteboardElements>(undefined as unknown as WhiteboardElements)
@@ -25,7 +29,8 @@ export default WhiteboardElementsContext
 export const createWhiteboardElements = (ydoc: Y.Doc): WhiteboardElements => {
   const elements = ydoc.getMap<WhiteboardElement>('board-elements')
 
-  const [selected, setSelected] = createSignal<string[]>([])
+  const [selected, setSelected] = makePersisted(createSignal<string[]>([]), { name: 'selected-elements' })
+  const [highlighted, setHighlighted] = createSignal<string[]>([])
   const [editingTitle, setEditingTitle] = createSignal<null | string>(null)
 
   const set = (id: string, entity: WhiteboardElement) => {
@@ -44,15 +49,21 @@ export const createWhiteboardElements = (ydoc: Y.Doc): WhiteboardElements => {
     elements.clear()
   }
 
+  const highlight = (ids: string[]) => {
+    setHighlighted(ids)
+  }
+
   return {
     elements,
     set,
     remove,
     clear,
-    editingTitle,
-    setEditingTitle,
     selected,
     select,
+    highlighted,
+    highlight,
+    editingTitle,
+    setEditingTitle,
   }
 }
 

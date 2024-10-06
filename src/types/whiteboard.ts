@@ -10,4 +10,6 @@ export type WhiteboardElement = {
 export type WhiteboardElementType<T extends WhiteboardElement = any> = {
   render: Component<{ element: T, id: string }>
   getBounds: (element: T) => { height: number, width: number, x: number, y: number }
+  move?: (element: T, dx: number, dy: number) => T
+  finishMove?: (element: T) => T
 }

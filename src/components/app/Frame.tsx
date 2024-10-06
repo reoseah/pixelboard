@@ -19,6 +19,7 @@ const Frame = (props: {
       data-element-id={props.id}
       data-selectable
       data-selected={whiteboard.selected().includes(props.id)}
+      data-highlighted={whiteboard.highlighted().includes(props.id)}
       style={{
         height: `${props.element.height * viewport.scale()}px`,
         left: `${props.element.x * viewport.scale()}px`,
