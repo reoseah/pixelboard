@@ -6,14 +6,15 @@ import { Dynamic } from 'solid-js/web'
 import './App.css'
 import SelectionRenderer from './components/app/SelectionRenderer'
 import Sidebar from './components/app/Sidebar'
-import MainToolbar from './components/app/Toolbar'
-import ViewportContainer from './components/app/ViewportContainer'
+import Toolbar from './components/app/Toolbar'
+import Viewport from './components/app/Viewport'
 import VirtualCanvas from './components/app/VirtualCanvas'
 import CanvasSelectionContext, { createCanvasSelection } from './state/CanvasSelectionContext'
 import Keymap from './state/Keymap'
 import NonRasterElementsContext, { createNonRasterElementState as createWhiteboardState } from './state/NonRasterElementsContext'
 import RectangleDragContext, { createRectangleDragState } from './state/RectangleDragContext'
 import RegistryContext, { createRegistry, Registry } from './state/RegistryContext'
+import SavePropertiesContext, { createSaveProperties } from './state/SavePropertiesContext'
 import SelectedColorContext, { createSelectedColor } from './state/SelectedColorContext'
 import SelectedToolContext, { createSelectedTool } from './state/SelectedToolContext'
 import SidebarContext, { createSidebarState } from './state/SidebarContext'
@@ -29,6 +30,7 @@ function App() {
   const selectedColor = createSelectedColor()
   const canvasSelection = createCanvasSelection()
   const rectangleDrag = createRectangleDragState()
+  const saveProperties = createSaveProperties()
   const sidebarState = createSidebarState()
   const viewportPosition = createViewportPosition()
   const yjs = createYjsState()
@@ -53,6 +55,7 @@ function App() {
         [SelectedColorContext, selectedColor],
         [CanvasSelectionContext, canvasSelection],
         [RectangleDragContext, rectangleDrag],
+        [SavePropertiesContext, saveProperties],
         [SidebarContext, sidebarState],
         [ViewportPositionContext, viewportPosition],
         [YjsContext, yjs],
@@ -62,14 +65,14 @@ function App() {
         [RegistryContext, registry],
       ]}
     >
-      <ViewportContainer>
+      <Viewport>
         <VirtualCanvas />
         <CurrentToolRenderer map={tool => tool.viewport} />
         <SelectionRenderer />
         <ElementsRenderer />
-      </ViewportContainer>
+      </Viewport>
       <div class="interface">
-        <MainToolbar />
+        <Toolbar />
         <CurrentToolRenderer map={tool => tool.subToolbar} />
         <Sidebar />
       </div>

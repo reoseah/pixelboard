@@ -1,8 +1,9 @@
-import { createSignal, For, Show, useContext } from 'solid-js'
+import { For, Show, useContext } from 'solid-js'
 
 import SaveIcon from '../../assets/icons/save.svg'
 import CanvasSelectionContext, { useSelectionBounds } from '../../state/CanvasSelectionContext'
 import RegistryContext from '../../state/RegistryContext'
+import SavePropertiesContext, { formats } from '../../state/SavePropertiesContext'
 import ViewportPositionContext from '../../state/ViewportPositionContext'
 import VirtualCanvasContext, { renderArea } from '../../state/VirtualCanvasContext'
 import IconButton from '../generic/IconButton'
@@ -12,12 +13,6 @@ import { Option, Select } from '../generic/Select'
 import Stack from '../generic/Stack'
 import './SelectionRenderer.css'
 
-const saveFormats = [
-  { label: 'PNG', value: 'image/png' },
-  // { value: "image/jpeg", label: "JPEG" },
-  { label: 'WebP', value: 'image/webp' },
-]
-
 const SelectionRenderer = () => {
   const viewport = useContext(ViewportPositionContext)
   const canvas = useContext(VirtualCanvasContext)
@@ -26,8 +21,7 @@ const SelectionRenderer = () => {
 
   const bounds = useSelectionBounds()
 
-  const [saveScale, setSaveScale] = createSignal(1)
-  const [saveFormat, setSaveFormat] = createSignal('image/png')
+  const { scale, setScale, format, setFormat } = useContext(SavePropertiesContext)
 
   return (
     <Show when={selection.parts.length !== 0}>
@@ -99,19 +93,19 @@ const SelectionRenderer = () => {
           <Select
             class="w-3.5rem"
             title="Export format"
-            value={saveFormats.find(format => format.value === saveFormat())?.label || 'Unknown'}
+            value={formats.find(option => option.value === format())?.label || 'Unknown'}
           >
             {close => (
-              <For each={saveFormats}>
-                {format => (
+              <For each={formats}>
+                {option => (
                   <Option
                     onClick={() => {
-                      setSaveFormat(format.value)
+                      setFormat(option.value)
                       close()
                     }}
-                    selected={format.value === saveFormat()}
+                    selected={option.value === format()}
                   >
-                    {format.label}
+                    {option.label}
                   </Option>
                 )}
               </For>
@@ -123,11 +117,11 @@ const SelectionRenderer = () => {
             onblur={(e) => {
               const value = parseFloat(e.currentTarget.value)
               if (!isNaN(value)) {
-                setSaveScale(value)
+                setScale(value)
               }
             }}
             onfocus={(e) => {
-              e.currentTarget.value = saveScale().toString()
+              e.currentTarget.value = scale().toString()
               e.currentTarget.select()
             }}
             onkeydown={(e) => {
@@ -137,7 +131,7 @@ const SelectionRenderer = () => {
             }}
             small
             title="Export scale"
-            value={saveScale() + 'x'}
+            value={scale() + 'x'}
           />
 
           <IconButton
@@ -149,16 +143,16 @@ const SelectionRenderer = () => {
                 bounds().y,
                 bounds().width,
                 bounds().height,
-                saveScale(),
+                scale(),
                 {
                   quality: 1,
-                  type: saveFormat(),
+                  type: format(),
                 },
               ).then((blob) => {
                 const url = URL.createObjectURL(blob)
                 const a = document.createElement('a')
                 a.href = url
-                a.download = 'selection.' + saveFormat().split('/')[1]
+                a.download = 'selection.' + format().split('/')[1]
                 a.click()
                 URL.revokeObjectURL(url)
               })

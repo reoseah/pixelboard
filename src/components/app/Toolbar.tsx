@@ -7,7 +7,7 @@ import { stringifyShortcut } from '../../types/key_shortcut'
 import Stack from '../generic/Stack'
 import './Toolbar.css'
 
-const MainToolbar = () => {
+const Toolbar = () => {
   const { tools } = useContext(RegistryContext)
   const selectedTool = useContext(SelectedToolContext)!
 
@@ -41,4 +41,4 @@ const MainToolbar = () => {
   )
 }
 
-export default MainToolbar
+export default Toolbar

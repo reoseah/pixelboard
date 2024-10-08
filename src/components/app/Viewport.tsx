@@ -2,9 +2,9 @@ import { createSignal, JSXElement, onCleanup, useContext } from 'solid-js'
 
 import SelectedToolContext from '../../state/SelectedToolContext'
 import ViewportPositionContext from '../../state/ViewportPositionContext'
-import './ViewportContainer.css'
+import './Viewport.css'
 
-const ViewportContainer = (props: { children: JSXElement }) => {
+const Viewport = (props: { children: JSXElement }) => {
   const viewport = useContext(ViewportPositionContext)
   const selectedTool = useContext(SelectedToolContext)
   const { innerHeight, innerWidth } = useInnerSize()
@@ -130,7 +130,7 @@ const ViewportContainer = (props: { children: JSXElement }) => {
   )
 }
 
-export default ViewportContainer
+export default Viewport
 
 const useInnerSize = () => {
   const [innerWidth, setInnerWidth] = createSignal(window.innerWidth)
