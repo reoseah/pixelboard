@@ -1,8 +1,8 @@
 import { Component } from 'solid-js'
 
 export type Tool = {
-  icon: Component
   label: string
+  icon: Component
 
   subToolbar?: Component
   use?: (() => undefined) & Component

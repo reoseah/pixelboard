@@ -67,7 +67,7 @@ export const createNonRasterElementState = (ydoc: Y.Doc): NonRasterElementState 
   }
 }
 
-export const getElementsInside = (whiteboard: NonRasterElementState, elementTypes: Registry['elementTypes'], x: number, y: number, width: number, height: number) => {
+export const getElementsInside = (whiteboard: NonRasterElementState, elementTypes: Registry['nonRasterElements'], x: number, y: number, width: number, height: number) => {
   const output: string[] = []
   for (const [id, element] of whiteboard.elements) {
     const bounds = elementTypes[element.type].getBounds(element)

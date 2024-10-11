@@ -1,8 +1,10 @@
 import { createSignal, onCleanup, useContext } from 'solid-js'
 
+import type { Tool } from '../../types/tool'
+
 import CursorIcon from '../../assets/icons/cursor.svg'
 import SelectionBox from '../../components/app/SelectionBox'
-import { isViewportClick, Tool } from '../../types/tool'
+import { isViewportClick } from '../../types/tool'
 import NonRasterElementsContext, { getElementsInside } from '../NonRasterElementsContext'
 import RectangleDragContext from '../RectangleDragContext'
 import RegistryContext from '../RegistryContext'
@@ -93,7 +95,7 @@ const SelectTool: Tool = {
           const selection = whiteboard.selected()
           selection.forEach((id) => {
             const element = whiteboard.elements.get(id)!
-            const elementType = registry.elementTypes[element.type]
+            const elementType = registry.nonRasterElements[element.type]
             if (elementType.move) {
               const movedElement = elementType.move(element, dx, dy)
               whiteboard.set(id, movedElement)
@@ -112,7 +114,7 @@ const SelectTool: Tool = {
           const maxX = Math.max(initialPos().x, currentPos().x)
           const maxY = Math.max(initialPos().y, currentPos().y)
 
-          const highlight = getElementsInside(whiteboard, registry.elementTypes, minX, minY, maxX - minX, maxY - minY)
+          const highlight = getElementsInside(whiteboard, registry.nonRasterElements, minX, minY, maxX - minX, maxY - minY)
           whiteboard.highlight(highlight)
 
           break
@@ -126,7 +128,7 @@ const SelectTool: Tool = {
           const selection = whiteboard.selected()
           selection.forEach((id) => {
             const element = whiteboard.elements.get(id)!
-            const elementType = registry.elementTypes[element.type]
+            const elementType = registry.nonRasterElements[element.type]
             if (elementType.finishMove) {
               const movedElement = elementType.finishMove(element)
               whiteboard.set(id, movedElement)
@@ -141,7 +143,7 @@ const SelectTool: Tool = {
           const maxX = Math.max(initialPos().x, currentPos().x)
           const maxY = Math.max(initialPos().y, currentPos().y)
 
-          const selection = getElementsInside(whiteboard, registry.elementTypes, minX, minY, maxX - minX, maxY - minY)
+          const selection = getElementsInside(whiteboard, registry.nonRasterElements, minX, minY, maxX - minX, maxY - minY)
           whiteboard.select(selection)
           whiteboard.highlight([])
 

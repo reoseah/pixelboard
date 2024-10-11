@@ -134,7 +134,7 @@ export default App
 
 const ElementsRenderer = () => {
   const whiteboard = useContext(NonRasterElementsContext)
-  const { elementTypes } = useContext(RegistryContext)
+  const { nonRasterElements: elementTypes } = useContext(RegistryContext)
 
   const [store, setStore] = createStore<Record<string, NonRasterElement>>({})
 
@@ -147,7 +147,7 @@ const ElementsRenderer = () => {
       {([id, element]) => {
         const type = elementTypes[element.type]
         return (
-          <Dynamic component={type.render} element={element} id={id} />
+          <Dynamic component={type?.render} element={element} id={id} />
         )
       }}
     </For>

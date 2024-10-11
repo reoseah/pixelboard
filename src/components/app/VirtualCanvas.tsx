@@ -13,7 +13,7 @@ const tileSize = 32
 const VirtualCanvas = () => {
   const context = useContext(VirtualCanvasContext)
   const viewport = useContext(ViewportPositionContext)
-  const { actionTypes } = useContext(RegistryContext)
+  const { rasterElements: actionTypes } = useContext(RegistryContext)
 
   let containerRef!: HTMLDivElement
 
@@ -73,7 +73,7 @@ const VirtualCanvas = () => {
       ctx.fillStyle = rgba
     }
     else {
-      ctx.fillStyle = `rgba(${(rgba >> 24) & 0xff}, ${(rgba >> 16) & 0xff}, ${(rgba >> 8) & 0xff}, ${rgba & 0xff})`
+      ctx.fillStyle = rgba.toString(16)
     }
     ctx.fillRect(localX, localY, 1, 1)
   }
@@ -97,12 +97,14 @@ const VirtualCanvas = () => {
   }
 
   const access: VirtualCanvasAccess = {
-    clearRect,
-    get,
-    getOrCreateContext,
-    set,
     tileSize,
+    getOrCreateContext,
+    get,
+    set,
+    clearRect,
   }
+
+  context.setRenderer(access)
 
   const createLimitedAccess = (type: 'blacklist' | 'whitelist', tiles: Map<number, Set<number>>): VirtualCanvasAccess => {
     const setInternal = access.set

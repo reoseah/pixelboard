@@ -1,6 +1,7 @@
+import type { Tool } from '../../types/tool'
+
 import CommandIcon from '../../assets/icons/command.svg'
 import CommandPalette from '../../components/app/CommandPalette'
-import { Tool } from '../../types/tool'
 
 const CommandPaletteTool: Tool = {
   icon: CommandIcon,

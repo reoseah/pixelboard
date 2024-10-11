@@ -1,5 +1,5 @@
 import { makePersisted } from '@solid-primitives/storage'
-import { createContext, createMemo, useContext } from 'solid-js'
+import { createContext } from 'solid-js'
 import { createStore, reconcile, Store } from 'solid-js/store'
 
 import { SelectionPart, SelectionToolMode } from '../types/raster_selection.ts'
@@ -7,6 +7,8 @@ import { SelectionPart, SelectionToolMode } from '../types/raster_selection.ts'
 export type CanvasSelection = {
   parts: Store<SelectionPart[]>
   deselected: Store<SelectionPart[]>
+
+  clear: () => void
 
   deselect: () => void
   reselect: () => void
@@ -20,6 +22,11 @@ export default CanvasSelectionContext
 export const createCanvasSelection = (): CanvasSelection => {
   const [parts, setParts] = makePersisted(createStore<SelectionPart[]>([]), { name: 'selection' })
   const [deselected, setDeselected] = makePersisted(createStore<SelectionPart[]>([]), { name: 'deselected-selection' })
+
+  const clear = () => {
+    setParts(reconcile([]))
+    setDeselected(reconcile([]))
+  }
 
   const deselect = () => {
     setDeselected(parts)
@@ -46,28 +53,25 @@ export const createCanvasSelection = (): CanvasSelection => {
   return {
     parts,
     deselected,
+    clear,
     deselect,
     reselect,
     selectRectangle,
   }
 }
 
-export const useSelectionBounds = () => {
-  const selection = useContext(CanvasSelectionContext)!
+export const getSelectionBounds = (selection: CanvasSelection) => {
+  const [minX, minY, maxX, maxY] = selection.parts.reduce((bounds, part) => {
+    if (part.type === 'rectangle') {
+      return [
+        Math.min(bounds[0], part.x),
+        Math.min(bounds[1], part.y),
+        Math.max(bounds[2], part.x + part.width),
+        Math.max(bounds[3], part.y + part.height),
+      ]
+    }
+    return bounds
+  }, [Infinity, Infinity, -Infinity, -Infinity])
 
-  return createMemo(() => {
-    const [minX, minY, maxX, maxY] = selection.parts.reduce((bounds, part) => {
-      if (part.type === 'rectangle') {
-        return [
-          Math.min(bounds[0], part.x),
-          Math.min(bounds[1], part.y),
-          Math.max(bounds[2], part.x + part.width),
-          Math.max(bounds[3], part.y + part.height),
-        ]
-      }
-      return bounds
-    }, [Infinity, Infinity, -Infinity, -Infinity])
-
-    return { height: maxY - minY, width: maxX - minX, x: minX, y: minY }
-  })
+  return { height: maxY - minY, width: maxX - minX, x: minX, y: minY }
 }

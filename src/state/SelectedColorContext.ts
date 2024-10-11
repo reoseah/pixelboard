@@ -9,6 +9,7 @@ export type SelectedColor = {
   hsv: Accessor<[number, number, number]>
   alpha: Accessor<number>
 
+  setRgbaNumber: (color: number) => void
   setHex: (hex: string) => void
   setRgb: (rgb: [number, number, number]) => void
   setHsv: (hsv: [number, number, number]) => void
@@ -40,6 +41,18 @@ export const createSelectedColor = (): SelectedColor => {
     _setHsv(rgbToHsv(hexToRgb(safeHex)))
   }
 
+  const setRgbaNumber = (color: number) => {
+    const r = (color >> 24) & 0xFF
+    const g = (color >> 16) & 0xFF
+    const b = (color >> 8) & 0xFF
+    const a = (color & 0xFF) / 255
+
+    _setRgb([r, g, b])
+    _setHex(rgbToHex([r, g, b]))
+    _setHsv(rgbToHsv([r, g, b]))
+    setAlpha(a)
+  }
+
   const setRgb = (rgb: [number, number, number]) => {
     _setRgb(rgb)
     _setHex(rgbToHex(rgb))
@@ -57,6 +70,7 @@ export const createSelectedColor = (): SelectedColor => {
     hsv,
     rgb,
     alpha,
+    setRgbaNumber,
     setHex,
     setHsv,
     setRgb,

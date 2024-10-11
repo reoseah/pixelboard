@@ -18,6 +18,10 @@ const keymap: KeymapEntry[] = [
     key: parseShortcut('B'),
   },
   {
+    command: 'select_tool.pipette',
+    key: parseShortcut('I'),
+  },
+  {
     command: 'select_tool.select_rectangle',
     key: parseShortcut('M'),
   },
@@ -62,6 +66,10 @@ const keymap: KeymapEntry[] = [
   {
     command: 'delete_selection',
     key: parseShortcut('Delete'),
+  },
+  {
+    command: 'select_all',
+    key: parseShortcut('Ctrl+A'),
   },
 
   {

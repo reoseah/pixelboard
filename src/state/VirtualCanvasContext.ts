@@ -1,9 +1,10 @@
-import { createContext, createMemo, useContext } from 'solid-js'
+import { createContext } from 'solid-js'
 import * as Y from 'yjs'
+
+import type { Registry } from './RegistryContext'
 
 import { RasterElement, VirtualCanvasAccess } from '../types/raster_elements.ts'
 import { doRectanglesIntersect } from '../util/rectangle'
-import RegistryContext, { Registry } from './RegistryContext'
 
 export type VirtualCanvasState = {
   elements: Y.Array<RasterElement>
@@ -11,6 +12,9 @@ export type VirtualCanvasState = {
   add: (element: RasterElement) => void
   replace: (previous: RasterElement, replacement: RasterElement) => void
   clear: () => void
+
+  renderer: () => VirtualCanvasAccess
+  setRenderer: (renderer: VirtualCanvasAccess) => void
 }
 
 const VirtualCanvasContext = createContext<VirtualCanvasState>(undefined as unknown as VirtualCanvasState)
@@ -18,16 +22,16 @@ const VirtualCanvasContext = createContext<VirtualCanvasState>(undefined as unkn
 export default VirtualCanvasContext
 
 export const createVirtualCanvasState = (ydoc: Y.Doc): VirtualCanvasState => {
-  const actions = ydoc.getArray<RasterElement>('raster-elements')
+  const elements = ydoc.getArray<RasterElement>('raster-elements')
 
   const add = (action: RasterElement) => {
-    actions.push([action])
+    elements.push([action])
   }
 
   const replace = (previous: RasterElement, replacement: RasterElement) => {
     let idx = -1
-    for (let i = 0; i < actions.length; i++) {
-      if (actions.get(i) === previous) {
+    for (let i = 0; i < elements.length; i++) {
+      if (elements.get(i) === previous) {
         idx = i
         break
       }
@@ -36,51 +40,58 @@ export const createVirtualCanvasState = (ydoc: Y.Doc): VirtualCanvasState => {
       throw new Error('previous not found')
     }
     ydoc.transact(() => {
-      actions.delete(idx)
-      actions.insert(idx, [replacement])
+      elements.delete(idx)
+      elements.insert(idx, [replacement])
     })
   }
 
   const clear = () => {
     ydoc.transact(() => {
-      actions.delete(0, actions.length)
+      elements.delete(0, elements.length)
     })
+  }
+
+  let renderer: VirtualCanvasAccess | null = null
+
+  const getRenderer = () => {
+    return renderer!
+  }
+
+  const setRenderer = (newRenderer: VirtualCanvasAccess) => {
+    renderer = newRenderer
   }
 
   return {
-    elements: actions,
+    elements,
     add,
     replace,
     clear,
+    renderer: getRenderer,
+    setRenderer,
   }
 }
 
-export const useCanvasBounds = () => {
-  const { elements } = useContext(VirtualCanvasContext)
-  const { actionTypes } = useContext(RegistryContext)
-
-  return createMemo(() => {
-    let minX = Infinity
-    let minY = Infinity
-    let maxX = -Infinity
-    let maxY = -Infinity
-    elements.forEach((action) => {
-      const type = actionTypes[action.type]
-      if (!type) {
-        console.error(`Unknown action type ${action.type}`, action)
-        return
-      }
-      const bounds = type.getBounds(action)
-      minX = Math.min(minX, bounds.x)
-      minY = Math.min(minY, bounds.y)
-      maxX = Math.max(maxX, bounds.x + bounds.width)
-      maxY = Math.max(maxY, bounds.y + bounds.height)
-    })
-    return { x: minX, y: minY, width: maxX - minX, height: maxY - minY }
+export const getCanvasBounds = (canvas: VirtualCanvasState, registry: Registry['rasterElements']) => {
+  let minX = Infinity
+  let minY = Infinity
+  let maxX = -Infinity
+  let maxY = -Infinity
+  canvas.elements.forEach((action) => {
+    const type = registry[action.type]
+    if (!type) {
+      console.error(`Unknown action type ${action.type}`, action)
+      return
+    }
+    const bounds = type.getBounds(action)
+    minX = Math.min(minX, bounds.x)
+    minY = Math.min(minY, bounds.y)
+    maxX = Math.max(maxX, bounds.x + bounds.width)
+    maxY = Math.max(maxY, bounds.y + bounds.height)
   })
+  return { x: minX, y: minY, width: maxX - minX, height: maxY - minY }
 }
 
-export const renderArea = (virtualCanvas: VirtualCanvasState, actionTypes: Registry['actionTypes'], x: number, y: number, width: number, height: number, scale: number, options: ImageEncodeOptions): Promise<Blob> => {
+export const renderArea = (virtualCanvas: VirtualCanvasState, actionTypes: Registry['rasterElements'], x: number, y: number, width: number, height: number, scale: number): OffscreenCanvas => {
   const bounds = { height, width, x, y }
 
   const canvas = new OffscreenCanvas(width * scale, height * scale)
@@ -115,5 +126,5 @@ export const renderArea = (virtualCanvas: VirtualCanvasState, actionTypes: Regis
     }
   })
 
-  return canvas.convertToBlob(options)
+  return canvas
 }

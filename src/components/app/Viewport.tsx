@@ -12,6 +12,8 @@ const Viewport = (props: { children: JSXElement }) => {
   const [dragging, setDragging] = createSignal(false)
   let type: 'space' | 'wheel' | null = null
 
+  const [heldCtrl, setHeldCtrl] = createSignal(false)
+
   const handleMouseDown = (e: MouseEvent) => {
     if (shouldSkipInteraction(e)) {
       return
@@ -41,11 +43,17 @@ const Viewport = (props: { children: JSXElement }) => {
       type = 'space'
       setDragging(true)
     }
+    if (e.key === 'Control') {
+      setHeldCtrl(true)
+    }
   }
   const handleKeyUp = (e: KeyboardEvent) => {
     if (e.key === ' ' && type === 'space') {
       setDragging(false)
       type = null
+    }
+    if (e.key === 'Control') {
+      setHeldCtrl(false)
     }
   }
 
@@ -94,6 +102,7 @@ const Viewport = (props: { children: JSXElement }) => {
     <div
       class="viewport"
       data-active-tool={selectedTool.id()}
+      data-held-ctrl={heldCtrl()}
       data-dragging={dragging()}
       onMouseDown={handleMouseDown}
     >

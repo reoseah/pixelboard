@@ -1,8 +1,10 @@
 import { onCleanup, useContext } from 'solid-js'
 
+import type { Tool } from '../../types/tool'
+
 import CropIcon from '../../assets/icons/crop.svg'
 import FramePreview from '../../components/app/FramePreview'
-import { isViewportClick, Tool } from '../../types/tool'
+import { isViewportClick } from '../../types/tool'
 import NonRasterElementsContext from '../NonRasterElementsContext'
 import RectangleDragContext from '../RectangleDragContext'
 import SelectedToolContext from '../SelectedToolContext'
@@ -71,7 +73,7 @@ const FrameTool: Tool = {
         const id = crypto.randomUUID()
         whiteboard.set(id, {
           height,
-          type: 'crop',
+          type: 'frame',
           width,
           x,
           y,

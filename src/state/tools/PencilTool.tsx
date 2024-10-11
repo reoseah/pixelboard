@@ -1,8 +1,10 @@
 import { createSignal, onCleanup, useContext } from 'solid-js'
 
+import type { Tool } from '../../types/tool'
+
 import PencilIcon from '../../assets/icons/pencil.svg'
 import PencilToolbar from '../../components/app/PencilToolbar'
-import { isViewportClick, Tool } from '../../types/tool'
+import { isViewportClick } from '../../types/tool'
 import { normalizeHex } from '../../util/color_conversion'
 import { PencilStroke } from '../raster_elements/PencilStroke.ts'
 import SelectedColorContext from '../SelectedColorContext'

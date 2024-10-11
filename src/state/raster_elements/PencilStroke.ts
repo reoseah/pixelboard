@@ -18,10 +18,10 @@ export const PencilStrokeType: RasterElementType<PencilStroke> = {
     const maxY = Math.max(...action.points.map(point => point.y))
 
     return {
-      height: maxY - y + action.size * 2 + 1,
-      width: maxX - x + action.size * 2 + 1,
-      x: x - action.size,
-      y: y - action.size,
+      x: x - Math.floor(action.size / 2),
+      y: y - Math.floor(action.size / 2),
+      width: maxX - x + action.size + 1,
+      height: maxY - y + action.size + 1,
     }
   },
   render: (action, helper) => {

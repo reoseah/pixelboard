@@ -1,27 +1,41 @@
 .viewport {
-    width: 100vw;
-    height: 100vh;
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
 
-    &[data-active-tool="pencil"],
-    &[data-active-tool="frame"],
-    &[data-active-tool="select_rectangle"] {
-        cursor: crosshair;
+  &[data-active-tool="frame"],
+  &[data-active-tool="select_rectangle"] {
+    cursor: crosshair;
+  }
+
+  &[data-active-tool="pencil"] {
+    cursor: crosshair;
+
+    &[data-held-ctrl="true"] {
+      cursor: url('/assets/cursors/crosshair-pipette.png') 11 11, crosshair;
     }
+  }
 
-    &[data-dragging="true"] {
-        cursor: grabbing;
-    }
+  &[data-active-tool="pipette"] {
+    cursor:
+      url('/assets/cursors/crosshair-pipette.png') 11 11,
+      /* svg cursors look horrible for some reason */
+      /* url('/assets/cursors/crosshair-pipette.svg') 11 11, */
+      crosshair;
+  }
 
+  &[data-dragging="true"] {
+    cursor: grabbing;
+  }
 }
 
 .viewport-pixel-grid {
-    position: absolute;
-    pointer-events: none;
+  position: absolute;
+  pointer-events: none;
 
-    &[data-hidden="true"] {
-        display: none;
-    }
+  &[data-hidden="true"] {
+    display: none;
+  }
 }

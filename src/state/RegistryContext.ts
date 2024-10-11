@@ -16,6 +16,7 @@ import createDeleteSelectionCommand from './commands/createDeleteSelectionComman
 import createDeselectCommand from './commands/createDeselectCommand'
 import createRenameElementCommand from './commands/createRenameElementCommand'
 import createReselectCommand from './commands/createReselectCommand'
+import createSelectAllCommand from './commands/createSelectAllCommand.ts'
 import createSelectToolCommand from './commands/createSelectToolCommand'
 import createToggleSidebarCommand from './commands/createToggleSidebarCommand'
 import createToggleTabCommand from './commands/createToogleTabCommand'
@@ -30,12 +31,13 @@ import Settings from './tabs/Settings'
 import CommandPalette from './tools/CommandPaletteTool'
 import Frame from './tools/FrameTool'
 import PencilTool from './tools/PencilTool'
+import PipetteTool from './tools/PipetteTool.ts'
 import RectangleSelectionTool from './tools/RectangleSelectionTool'
 import SelectTool from './tools/SelectTool'
 
 export type Registry = {
-  actionTypes: Record<string, RasterElementType>
-  elementTypes: Record<string, NonRasterElementType>
+  rasterElements: Record<string, RasterElementType>
+  nonRasterElements: Record<string, NonRasterElementType>
   tabs: Record<string, Tab>
   tools: Record<string, Tool>
   commands: Record<string, Command>
@@ -53,9 +55,14 @@ export const createRegistry = (
   virtualCanvas: VirtualCanvasState,
   whiteboard: NonRasterElementState,
 ): Registry => {
+  const rasterElements = {
+    pencil_stroke: PencilStrokeType,
+    delete_rectangle: DeleteRectangleType,
+  }
   const tools = {
     select: SelectTool,
     pencil: PencilTool,
+    pipette: PipetteTool,
     select_rectangle: RectangleSelectionTool,
     frame: Frame,
     command_palette: CommandPalette,
@@ -69,26 +76,25 @@ export const createRegistry = (
   }
 
   return {
-    actionTypes: {
-      pencil_stroke: PencilStrokeType,
-      delete_rectangle: DeleteRectangleType,
-    },
-    elementTypes: {
-      crop: FrameElementType,
+    rasterElements,
+    nonRasterElements: {
+      frame: FrameElementType,
     },
     tabs,
     tools,
     commands: {
-      'clear_project': createClearProjectCommand(yjs),
+      'clear_project': createClearProjectCommand(yjs, selection),
 
       'deselect': createDeselectCommand(selection),
       'reselect': createReselectCommand(selection),
       'delete_selection': createDeleteSelectionCommand(selection, virtualCanvas),
+      'select_all': createSelectAllCommand(selection, virtualCanvas, rasterElements),
 
       'rename_element': createRenameElementCommand(whiteboard),
 
       'select_tool.select': createSelectToolCommand(selectedTool, tools, 'select'),
       'select_tool.pencil': createSelectToolCommand(selectedTool, tools, 'pencil'),
+      'select_tool.pipette': createSelectToolCommand(selectedTool, tools, 'pipette'),
       'select_tool.select_rectangle': createSelectToolCommand(selectedTool, tools, 'select_rectangle'),
       'select_tool.frame': createSelectToolCommand(selectedTool, tools, 'frame'),
       'select_tool.command_palette': createSelectToolCommand(selectedTool, tools, 'command_palette'),
