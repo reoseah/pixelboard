@@ -1,6 +1,7 @@
 import { createMemo, For, Show, useContext } from 'solid-js'
 
 import CanvasSelectionContext, { getSelectionBounds } from '../../state/CanvasSelectionContext'
+import SelectedToolContext from '../../state/SelectedToolContext'
 import ViewportPositionContext from '../../state/ViewportPositionContext'
 import Stack from '../generic/Stack'
 import SaveAreaControls from './SaveAreaControls'
@@ -9,6 +10,7 @@ import './SelectionRenderer.css'
 const SelectionRenderer = () => {
   const viewport = useContext(ViewportPositionContext)
   const selection = useContext(CanvasSelectionContext)
+  const tool = useContext(SelectedToolContext)
 
   const bounds = createMemo(() => getSelectionBounds(selection))
 
@@ -66,26 +68,28 @@ const SelectionRenderer = () => {
           )}
         </For>
       </svg>
-      <Stack
-        class="island"
-        direction="row"
-        padding={0.1875}
-        spacing={0.25}
-        style={{
-          position: 'absolute',
-          left: `${bounds().x * viewport.scale() + bounds().width * viewport.scale() / 2}px`,
-          top: `${bounds().y * viewport.scale() + bounds().height * viewport.scale() + 8}px`,
-          transform: 'translate(-50%, 0)',
-        }}
-      >
-        <SaveAreaControls
-          x={bounds().x}
-          y={bounds().y}
-          width={bounds().width}
-          height={bounds().height}
-          name="Selection"
-        />
-      </Stack>
+      <Show when={tool.id() === 'select' || tool.id() === 'select_rectangle'}>
+        <Stack
+          class="island"
+          direction="row"
+          padding={0.1875}
+          spacing={0.25}
+          style={{
+            position: 'absolute',
+            left: `${bounds().x * viewport.scale() + bounds().width * viewport.scale() / 2}px`,
+            top: `${bounds().y * viewport.scale() + bounds().height * viewport.scale() + 8}px`,
+            transform: 'translate(-50%, 0)',
+          }}
+        >
+          <SaveAreaControls
+            x={bounds().x}
+            y={bounds().y}
+            width={bounds().width}
+            height={bounds().height}
+            name="Selection"
+          />
+        </Stack>
+      </Show>
     </Show>
   )
 }

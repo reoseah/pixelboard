@@ -26,7 +26,7 @@ const PencilToolbar = () => {
     shape,
     size,
   } = useContext(PencilContext)
-  const selectedColor = useContext(SelectedColorContext)!
+  const selectedColor = useContext(SelectedColorContext)
 
   // TODO: use the new input component
   return (

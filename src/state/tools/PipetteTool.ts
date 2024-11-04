@@ -1,6 +1,7 @@
 import { onCleanup, useContext } from 'solid-js'
 
 import PipetteIcon from '../../assets/icons/pipette.svg'
+import ColorPickerToolbar from '../../components/app/ColorPickerToolbar'
 import { isViewportClick, type Tool } from '../../types/tool'
 import SelectedColorContext from '../SelectedColorContext'
 import ViewportPositionContext from '../ViewportPositionContext'
@@ -9,7 +10,7 @@ import VirtualCanvasContext from '../VirtualCanvasContext'
 const PipetteTool: Tool = {
   label: 'Pipette',
   icon: PipetteIcon,
-
+  subToolbar: ColorPickerToolbar,
   use: () => {
     const color = useContext(SelectedColorContext)
     const virtualCanvas = useContext(VirtualCanvasContext)
