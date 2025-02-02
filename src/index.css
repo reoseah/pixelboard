@@ -4,4 +4,21 @@
 	--color-canvas-background: var(--color-neutral-800);
 	--color-canvas-dots: var(--color-neutral-500);
 	--color-slice: var(--color-neutral-500);
+
+	--color-neutral-675: #444444;
+	--color-neutral-750: #333333;
+	--color-neutral-825: #222222;
+
+	/* Tailwind 50% Sky Blue + 50% Blue */
+	--color-primary-50: #eff7ff;
+	--color-primary-100: #ddeefe;
+	--color-primary-200: #bce0fd;
+	--color-primary-300: #87cbfc;
+	--color-primary-400: #4cb0f9;
+	--color-primary-500: #2493ef;
+	--color-primary-600: #1373d8;
+	--color-primary-700: #0f5bbc;
+	--color-primary-800: #124c99;
+	--color-primary-900: #15427c;
+	--color-primary-950: #0f294e;
 }
