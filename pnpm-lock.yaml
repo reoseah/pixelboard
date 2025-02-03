@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@solid-primitives/context':
-        specifier: ^0.3.0
-        version: 0.3.0(solid-js@1.9.4)
       '@solid-primitives/keyed':
         specifier: ^1.5.0
         version: 1.5.0(solid-js@1.9.4)
@@ -484,11 +481,6 @@ packages:
     resolution: {integrity: sha512-g2ASy1QwHP88y5KWvblUolJz9rN+i4ZOsYzkEwcNfaNooxNUXG+ON6F5xFo0NIItpHqxcdAyls05VXpBnludGw==}
     cpu: [x64]
     os: [win32]
-
-  '@solid-primitives/context@0.3.0':
-    resolution: {integrity: sha512-hVLWfZbXuz23gpJ+flCllbKidlIDCcSTOtlhSo9AhQ/vNiwvenLK8J4B2Hw2WCa4ETGPpQcNfgQHSNffEV5YeQ==}
-    peerDependencies:
-      solid-js: ^1.6.12
 
   '@solid-primitives/keyed@1.5.0':
     resolution: {integrity: sha512-g04CXywgWG/7L4sTxQP6q1gdiirItVBq6ZO9YuLTqPFlkX3uD4IEjeL9cLHP6waahrnO8yL3OZl64pcKGYN5Qw==}
@@ -1535,10 +1527,6 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.34.0':
     optional: true
-
-  '@solid-primitives/context@0.3.0(solid-js@1.9.4)':
-    dependencies:
-      solid-js: 1.9.4
 
   '@solid-primitives/keyed@1.5.0(solid-js@1.9.4)':
     dependencies:

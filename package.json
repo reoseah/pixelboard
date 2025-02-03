@@ -10,7 +10,6 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@solid-primitives/context": "^0.3.0",
     "@solid-primitives/keyed": "^1.5.0",
     "@solid-primitives/storage": "^4.3.1",
     "lucide-solid": "^0.474.0",

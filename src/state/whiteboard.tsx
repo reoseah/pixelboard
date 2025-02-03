@@ -1,4 +1,3 @@
-import { MultiProvider } from '@solid-primitives/context'
 import type { JSX } from 'solid-js/jsx-runtime'
 import * as Y from 'yjs'
 import type { SliceInstance } from '../features/non-raster-objects/slice'
@@ -6,10 +5,10 @@ import { NonRasterStateContext, createNonRasterState } from '../features/non-ras
 
 export const WhiteboardStateProvider = (props: { children: JSX.Element }) => {
 	const ydoc = new Y.Doc()
-	const nonRasterData = createNonRasterState(ydoc)
+	const nonRasterState = createNonRasterState(ydoc)
 
 	// FIXME: test data
-	nonRasterData.elements.set('a', {
+	nonRasterState.elements.set('a', {
 		type: 'slice',
 		x: 0,
 		y: 0,
@@ -17,7 +16,7 @@ export const WhiteboardStateProvider = (props: { children: JSX.Element }) => {
 		height: 16,
 		title: 'Test 1',
 	} satisfies SliceInstance)
-	nonRasterData.elements.set('b', {
+	nonRasterState.elements.set('b', {
 		type: 'slice',
 		x: 16,
 		y: 0,
@@ -26,5 +25,5 @@ export const WhiteboardStateProvider = (props: { children: JSX.Element }) => {
 		title: 'Test 2',
 	} satisfies SliceInstance)
 
-	return <MultiProvider values={[[NonRasterStateContext, nonRasterData]]}>{props.children}</MultiProvider>
+	return <NonRasterStateContext.Provider value={nonRasterState}>{props.children}</NonRasterStateContext.Provider>
 }
