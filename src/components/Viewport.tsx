@@ -1,8 +1,10 @@
 import { Entries } from '@solid-primitives/keyed'
 import { createMemo, createSignal, onCleanup, useContext } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
-import { NonRasterHandlerRegistry, NonRasterStateContext } from '../features/non-raster-objects/state'
-import { ActiveToolContext } from '../features/tools/state'
+import { twMerge } from 'tailwind-merge'
+import { NonRasterHandlerRegistry } from '../features/non-raster-objects/state'
+import { ActiveToolContext } from '../state/active-tool'
+import { NonRasterStateContext } from '../state/document'
 import { ViewportStateContext } from '../state/viewport'
 
 export const Viewport = () => {
@@ -24,14 +26,14 @@ export const Viewport = () => {
 			setDragging(true)
 			dragTrigger = 'wheel'
 		} else {
-			activeTool.handler().handleMouseDown?.(e)
+			activeTool().handleMouseDown?.(e)
 		}
 	}
 	const handleMouseMove = (e: MouseEvent) => {
 		if (dragging()) {
 			move(e.movementX / scale(), e.movementY / scale())
 		} else {
-			activeTool.handler().handleMouseMove?.(e)
+			activeTool().handleMouseMove?.(e)
 		}
 	}
 	const handleMouseUp = (e: MouseEvent) => {
@@ -39,7 +41,7 @@ export const Viewport = () => {
 			setDragging(false)
 			dragTrigger = null
 		} else {
-			activeTool.handler().handleMouseUp?.(e)
+			activeTool().handleMouseUp?.(e)
 		}
 	}
 
@@ -50,12 +52,14 @@ export const Viewport = () => {
 		if (e.key === ' ' && dragTrigger === null) {
 			setDragging(true)
 			dragTrigger = 'space'
+			e.preventDefault()
 		}
 	}
 	const handleKeyUp = (e: KeyboardEvent) => {
 		if (e.key === ' ' && dragTrigger === 'space') {
 			setDragging(false)
 			dragTrigger = null
+			e.preventDefault()
 		}
 	}
 
@@ -106,14 +110,17 @@ export const Viewport = () => {
 
 	return (
 		<div
-			class="relative isolate h-screen overflow-hidden bg-canvas-background data-[dragging=true]:cursor-grabbing"
+			class={twMerge(
+				'relative isolate h-screen overflow-hidden bg-canvas-background data-[dragging=true]:cursor-grabbing',
+				activeTool().viewportClass,
+			)}
 			data-dragging={dragging()}
 			onmousedown={handleMouseDown}
 		>
 			<ViewportBackground width={innerWidth()} height={innerHeight()} x={translationX()} y={translationY()} />
 			<div style={{ transform: `translate(${translationX()}px, ${translationY()}px)` }}>
 				<NonRasterElementsRenderer />
-				{activeTool.handler()?.viewportElement}
+				{activeTool()?.viewportElement}
 			</div>
 		</div>
 	)

@@ -1,6 +1,6 @@
 import { type Accessor, Show, createSignal, onCleanup, onMount, useContext } from 'solid-js'
+import { NonRasterStateContext } from '../../state/document'
 import { ViewportStateContext } from '../../state/viewport'
-import { NonRasterStateContext } from './state'
 import type { NonRasterHandler } from './types'
 
 export type SliceInstance = {

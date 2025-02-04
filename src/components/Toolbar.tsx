@@ -10,7 +10,7 @@ export const Toolbar = () => {
 			<For each={Object.entries(tools)}>
 				{([id, tool]) => (
 					<button
-						class="grid h-9 w-9 cursor-pointer place-items-center rounded-md text-neutral-200 transition-colors hover:bg-neutral-750 hover:text-neutral-100 active:bg-neutral-700 active:text-neutral-50 aria-pressed:bg-primary-600 aria-pressed:text-neutral-50"
+						class="grid h-9 w-9 cursor-pointer place-items-center rounded-md text-neutral-200 outline-none transition-colors hover:bg-neutral-750 hover:text-neutral-100 active:bg-neutral-700 active:text-neutral-50 aria-pressed:bg-primary-600 aria-pressed:text-neutral-50"
 						type="button"
 						aria-pressed={selectedTool.id() === id}
 						onClick={() => selectedTool.select(id)}

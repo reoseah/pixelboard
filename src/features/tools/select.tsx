@@ -1,8 +1,9 @@
 import MousePointer2Icon from 'lucide-solid/icons/mouse-pointer-2'
 import { Show, createSignal, onCleanup, useContext } from 'solid-js'
 import type * as Y from 'yjs'
+import { NonRasterStateContext } from '../../state/document'
 import { ViewportStateContext } from '../../state/viewport'
-import { NonRasterHandlerRegistry, NonRasterStateContext } from '../non-raster-objects/state'
+import { NonRasterHandlerRegistry } from '../non-raster-objects/state'
 import type { NonRasterHandler, NonRasterInstance } from '../non-raster-objects/types'
 import { DraggedRectangleContext } from './dragged-rectangle'
 import type { Tool } from './types'
@@ -82,11 +83,13 @@ export const SelectTool: Tool = {
 					setCurrentPos({ x, y })
 
 					for (const id of nonRasterState.selected()) {
-						const element = nonRasterState.elements.get(id)!
-						const handler = nonRasterHandlers[element.type]
-						if (handler.move) {
-							const movedElement = handler.move(element, dx, dy)
-							nonRasterState.elements.set(id, movedElement)
+						const element = nonRasterState.elements.get(id)
+						if (element) {
+							const handler = nonRasterHandlers[element.type]
+							if (handler.move) {
+								const movedElement = handler.move(element, dx, dy)
+								nonRasterState.elements.set(id, movedElement)
+							}
 						}
 					}
 
@@ -102,22 +105,15 @@ export const SelectTool: Tool = {
 					const maxX = Math.max(initialPos().x, currentPos().x)
 					const maxY = Math.max(initialPos().y, currentPos().y)
 
-					const highlight = getElementsInside(
-						nonRasterState.elements,
-						nonRasterHandlers,
-						minX,
-						minY,
-						maxX - minX,
-						maxY - minY,
-					)
-					nonRasterState.highlight(highlight)
+					const inside = getElementsInside(nonRasterState.elements, nonRasterHandlers, minX, minY, maxX, maxY)
+					nonRasterState.highlight(inside)
 
 					break
 				}
 			}
 		}
 
-		const handleMouseUp = (e: MouseEvent) => {
+		const handleMouseUp = () => {
 			switch (toolState()) {
 				case 'move': {
 					for (const id of nonRasterState.selected()) {
@@ -136,15 +132,8 @@ export const SelectTool: Tool = {
 					const maxX = Math.max(initialPos().x, currentPos().x)
 					const maxY = Math.max(initialPos().y, currentPos().y)
 
-					const selection = getElementsInside(
-						nonRasterState.elements,
-						nonRasterHandlers,
-						minX,
-						minY,
-						maxX - minX,
-						maxY - minY,
-					)
-					nonRasterState.select(selection)
+					const inside = getElementsInside(nonRasterState.elements, nonRasterHandlers, minX, minY, maxX, maxY)
+					nonRasterState.select(inside)
 					nonRasterState.highlight([])
 
 					break
@@ -193,10 +182,12 @@ const findElementAtPos = (
 ): string | null => {
 	for (const [key, element] of elements) {
 		const handler = registry[element.type]
-		const bounds = handler.getBounds(element)
+		if (handler) {
+			const bounds = handler.getBounds(element)
 
-		if (bounds.x <= x && bounds.y <= y && x <= bounds.x + bounds.width && y <= bounds.y + bounds.height) {
-			return key
+			if (bounds.x <= x && bounds.y <= y && x <= bounds.x + bounds.width && y <= bounds.y + bounds.height) {
+				return key
+			}
 		}
 	}
 	return null
@@ -205,20 +196,15 @@ const findElementAtPos = (
 export const getElementsInside = (
 	elements: Y.Map<NonRasterInstance>,
 	registry: Record<string, NonRasterHandler>,
-	x: number,
-	y: number,
-	width: number,
-	height: number,
+	minX: number,
+	minY: number,
+	maxX: number,
+	maxY: number,
 ) => {
 	const output: string[] = []
 	for (const [id, element] of elements) {
 		const bounds = registry[element.type].getBounds(element)
-		if (
-			bounds.x >= x &&
-			bounds.y >= y &&
-			bounds.x + bounds.width <= x + width &&
-			bounds.y + bounds.height <= y + height
-		) {
+		if (bounds.x >= minX && bounds.y >= minY && bounds.x + bounds.width <= maxX && bounds.y + bounds.height <= maxY) {
 			output.push(id)
 		}
 	}

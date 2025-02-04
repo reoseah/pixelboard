@@ -13,6 +13,8 @@ export type ActiveTool = {
 	handleMouseDown?: (e: MouseEvent) => void
 	handleMouseMove?: (e: MouseEvent) => void
 	handleMouseUp?: (e: MouseEvent) => void
+	handleKeyDown?: (e: KeyboardEvent) => void
 
+	viewportClass?: string
 	viewportElement?: JSX.Element
 }
