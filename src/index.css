@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme inline {
-	--color-canvas-background: var(--color-neutral-800);
-	--color-canvas-dots: var(--color-neutral-500);
+	--color-canvas-background: var(--color-neutral-900);
+	--color-canvas-dots: var(--color-neutral-675);
 	--color-slice: var(--color-neutral-500);
 
 	--color-neutral-675: #444444;

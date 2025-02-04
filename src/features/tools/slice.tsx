@@ -123,7 +123,7 @@ const SlicePreview = () => {
 				}}
 			>
 				<div
-					class="absolute z-15 whitespace-nowrap rounded-sm px-2 py-1 font-xs text-white"
+					class="absolute z-15 whitespace-nowrap rounded-sm bg-primary-600 px-2 py-1 text-white text-xs"
 					style={{
 						left: `calc(${width() * viewport.scale()}px + .5rem)`,
 						top: `calc(${height() * viewport.scale()}px + .5rem)`,

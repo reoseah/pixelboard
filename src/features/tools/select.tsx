@@ -28,28 +28,36 @@ export const SelectTool: Tool = {
 		const [toolState, setToolState] = createSignal<'idle' | 'move' | 'selection_box'>('idle')
 
 		const handleMouseDown = (e: MouseEvent) => {
+			e.preventDefault()
+
 			const x = viewport.toCanvasX(e.clientX)
 			const y = viewport.toCanvasY(e.clientY)
 
 			const targetedElementId = findElementAtPos(nonRasterState.elements, nonRasterHandlers, x, y)
 			if (targetedElementId) {
-				const modifierKey = e.shiftKey || e.metaKey
+				const modifierKey = e.ctrlKey || e.metaKey || e.shiftKey
 				const selection = nonRasterState.selected()
 
-				const nextSelection =
-					modifierKey || !selection.includes(targetedElementId)
-						? getNextSelection(selection, targetedElementId, modifierKey)
-						: selection
+				let nextSelection: string[] = []
+
+				if (!modifierKey) {
+					nextSelection = [targetedElementId]
+				} else {
+					if (selection.includes(targetedElementId)) {
+						nextSelection = selection.filter((id) => id !== targetedElementId)
+					} else {
+						nextSelection = [...selection, targetedElementId]
+					}
+				}
+
 				nonRasterState.select(nextSelection)
-				if (nextSelection.length > 0) {
+				if (nextSelection.includes(targetedElementId)) {
 					setToolState('move')
-					// TODO: perhaps have separate state for moving, instead of reusing selection box/dragged rectangle?
 					setInitialPos({ x, y })
 					setCurrentPos({ x, y })
-					e.preventDefault()
-
-					return
 				}
+
+				return
 			}
 			setToolState('selection_box')
 			setInitialPos({ x, y })
@@ -57,7 +65,6 @@ export const SelectTool: Tool = {
 			setDragging(true)
 			nonRasterState.select([])
 			nonRasterState.highlight([])
-			e.preventDefault()
 		}
 
 		const handleMouseMove = (e: MouseEvent) => {
@@ -209,14 +216,4 @@ export const getElementsInside = (
 		}
 	}
 	return output
-}
-
-const getNextSelection = (selection: string[], id: string, shiftKey: boolean): string[] => {
-	if (shiftKey) {
-		if (selection.includes(id)) {
-			return selection.filter((selectedId) => selectedId !== id)
-		}
-		return [...selection, id]
-	}
-	return [id]
 }
