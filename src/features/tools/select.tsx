@@ -1,5 +1,5 @@
 import MousePointer2Icon from 'lucide-solid/icons/mouse-pointer-2'
-import { Show, createSignal, useContext } from 'solid-js'
+import { Show, createSignal, onCleanup, useContext } from 'solid-js'
 import type * as Y from 'yjs'
 import { ViewportStateContext } from '../../state/viewport'
 import { NonRasterHandlerRegistry, NonRasterStateContext } from '../non-raster-objects/state'
@@ -20,46 +20,81 @@ export const SelectTool: Tool = {
 			currentPos,
 			setCurrentPos,
 		} = useContext(DraggedRectangleContext)
-		const canvasPosition = useContext(ViewportStateContext)
-		const nonRasterObjectTypes = useContext(NonRasterHandlerRegistry)
-		const nonRasterData = useContext(NonRasterStateContext)
+		const viewport = useContext(ViewportStateContext)
+		const nonRasterHandlers = useContext(NonRasterHandlerRegistry)
+		const nonRasterState = useContext(NonRasterStateContext)
 
 		const [toolState, setToolState] = createSignal<'idle' | 'move' | 'selection_box'>('idle')
 
 		const handleMouseDown = (e: MouseEvent) => {
-			const x = canvasPosition.toCanvasX(e.clientX)
-			const y = canvasPosition.toCanvasY(e.clientY)
+			const x = viewport.toCanvasX(e.clientX)
+			const y = viewport.toCanvasY(e.clientY)
 
-			const key = findElementAtPos(nonRasterData.elements, nonRasterObjectTypes, x, y)
-			if (key) {
-			} else {
-				setToolState('selection_box')
-				setInitialPos({ x, y })
-				setCurrentPos({ x, y })
-				setDragging(true)
-				nonRasterData.select([])
-				nonRasterData.highlight([])
+			const targetedElementId = findElementAtPos(nonRasterState.elements, nonRasterHandlers, x, y)
+			if (targetedElementId) {
+				const modifierKey = e.shiftKey || e.metaKey
+				const selection = nonRasterState.selected()
+
+				const nextSelection =
+					modifierKey || !selection.includes(targetedElementId)
+						? getNextSelection(selection, targetedElementId, modifierKey)
+						: selection
+				nonRasterState.select(nextSelection)
+				if (nextSelection.length > 0) {
+					setToolState('move')
+					// TODO: perhaps have separate state for moving, instead of reusing selection box/dragged rectangle?
+					setInitialPos({ x, y })
+					setCurrentPos({ x, y })
+					e.preventDefault()
+
+					return
+				}
 			}
+			setToolState('selection_box')
+			setInitialPos({ x, y })
+			setCurrentPos({ x, y })
+			setDragging(true)
+			nonRasterState.select([])
+			nonRasterState.highlight([])
+			e.preventDefault()
 		}
 
 		const handleMouseMove = (e: MouseEvent) => {
 			switch (toolState()) {
 				case 'idle': {
-					const canvasX = canvasPosition.toCanvasX(e.clientX)
-					const canvasY = canvasPosition.toCanvasY(e.clientY)
+					const canvasX = viewport.toCanvasX(e.clientX)
+					const canvasY = viewport.toCanvasY(e.clientY)
 
-					const key = findElementAtPos(nonRasterData.elements, nonRasterObjectTypes, canvasX, canvasY)
+					const key = findElementAtPos(nonRasterState.elements, nonRasterHandlers, canvasX, canvasY)
 					if (key) {
-						nonRasterData.highlight([key])
+						nonRasterState.highlight([key])
 					} else {
-						nonRasterData.highlight([])
+						nonRasterState.highlight([])
+					}
+
+					break
+				}
+				case 'move': {
+					const x = viewport.toCanvasX(e.clientX)
+					const y = viewport.toCanvasY(e.clientY)
+					const dx = x - currentPos().x
+					const dy = y - currentPos().y
+					setCurrentPos({ x, y })
+
+					for (const id of nonRasterState.selected()) {
+						const element = nonRasterState.elements.get(id)!
+						const handler = nonRasterHandlers[element.type]
+						if (handler.move) {
+							const movedElement = handler.move(element, dx, dy)
+							nonRasterState.elements.set(id, movedElement)
+						}
 					}
 
 					break
 				}
 				case 'selection_box': {
-					const x = canvasPosition.toCanvasX(e.clientX)
-					const y = canvasPosition.toCanvasY(e.clientY)
+					const x = viewport.toCanvasX(e.clientX)
+					const y = viewport.toCanvasY(e.clientY)
 					setCurrentPos({ x, y })
 
 					const minX = Math.min(initialPos().x, currentPos().x)
@@ -68,14 +103,14 @@ export const SelectTool: Tool = {
 					const maxY = Math.max(initialPos().y, currentPos().y)
 
 					const highlight = getElementsInside(
-						nonRasterData.elements,
-						nonRasterObjectTypes,
+						nonRasterState.elements,
+						nonRasterHandlers,
 						minX,
 						minY,
 						maxX - minX,
 						maxY - minY,
 					)
-					nonRasterData.highlight(highlight)
+					nonRasterState.highlight(highlight)
 
 					break
 				}
@@ -83,8 +118,44 @@ export const SelectTool: Tool = {
 		}
 
 		const handleMouseUp = (e: MouseEvent) => {
+			switch (toolState()) {
+				case 'move': {
+					for (const id of nonRasterState.selected()) {
+						const element = nonRasterState.elements.get(id)!
+						const handler = nonRasterHandlers[element.type]
+						if (handler.finishMove) {
+							const movedElement = handler.finishMove(element)
+							nonRasterState.elements.set(id, movedElement)
+						}
+					}
+					break
+				}
+				case 'selection_box': {
+					const minX = Math.min(initialPos().x, currentPos().x)
+					const minY = Math.min(initialPos().y, currentPos().y)
+					const maxX = Math.max(initialPos().x, currentPos().x)
+					const maxY = Math.max(initialPos().y, currentPos().y)
+
+					const selection = getElementsInside(
+						nonRasterState.elements,
+						nonRasterHandlers,
+						minX,
+						minY,
+						maxX - minX,
+						maxY - minY,
+					)
+					nonRasterState.select(selection)
+					nonRasterState.highlight([])
+
+					break
+				}
+			}
 			setToolState('idle')
 		}
+
+		onCleanup(() => {
+			nonRasterState.highlight([])
+		})
 
 		const left = () => Math.min(initialPos().x, currentPos().x)
 		const top = () => Math.min(initialPos().y, currentPos().y)
@@ -96,10 +167,10 @@ export const SelectTool: Tool = {
 				<div
 					class="absolute bg-primary-500/20 outline outline-primary-500"
 					style={{
-						left: `${left() * canvasPosition.scale()}px`,
-						top: `${top() * canvasPosition.scale()}px`,
-						width: `${width() * canvasPosition.scale()}px`,
-						height: `${height() * canvasPosition.scale()}px`,
+						left: `${left() * viewport.scale()}px`,
+						top: `${top() * viewport.scale()}px`,
+						width: `${width() * viewport.scale()}px`,
+						height: `${height() * viewport.scale()}px`,
 					}}
 				/>
 			</Show>
@@ -152,4 +223,14 @@ export const getElementsInside = (
 		}
 	}
 	return output
+}
+
+const getNextSelection = (selection: string[], id: string, shiftKey: boolean): string[] => {
+	if (shiftKey) {
+		if (selection.includes(id)) {
+			return selection.filter((selectedId) => selectedId !== id)
+		}
+		return [...selection, id]
+	}
+	return [id]
 }

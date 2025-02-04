@@ -1,8 +1,9 @@
-import { For, createMemo, createSignal, onCleanup, useContext } from 'solid-js'
+import { Entries } from '@solid-primitives/keyed'
+import { createMemo, createSignal, onCleanup, useContext } from 'solid-js'
+import { Dynamic } from 'solid-js/web'
 import { NonRasterHandlerRegistry, NonRasterStateContext } from '../features/non-raster-objects/state'
 import { ActiveToolContext } from '../features/tools/state'
 import { ViewportStateContext } from '../state/viewport'
-import { mapYMap } from '../util/mapYMap'
 
 export const Viewport = () => {
 	const { x, y, scale, move, zoomIn, zoomOut } = useContext(ViewportStateContext)
@@ -160,14 +161,22 @@ const ViewportBackground = (props: {
 }
 
 const NonRasterElementsRenderer = () => {
-	const { elements } = useContext(NonRasterStateContext)
+	const { store, selected, highlighted } = useContext(NonRasterStateContext)
 	const nonRasterHandlers = useContext(NonRasterHandlerRegistry)
 
-	const rendered = mapYMap(elements, (value, key) => {
-		const Renderer = nonRasterHandlers[value.type].render
-
-		return <Renderer key={key} instance={value} />
-	})
-
-	return <For each={Object.values(rendered)}>{(jsx) => jsx}</For>
+	return (
+		<Entries of={store}>
+			{(key, instance) => {
+				return (
+					<Dynamic
+						component={nonRasterHandlers[instance().type].render}
+						key={key}
+						instance={instance()}
+						selected={selected().includes(key)}
+						highlighted={highlighted().includes(key)}
+					/>
+				)
+			}}
+		</Entries>
+	)
 }
