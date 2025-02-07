@@ -1,11 +1,11 @@
 import type { Component } from 'solid-js'
 
-export type NonRasterInstance = {
+export type ObjectInstance = {
 	type: string
 }
 
 // biome-ignore lint/suspicious/noExplicitAny:
-export type NonRasterHandler<T extends NonRasterInstance = any> = {
+export type ObjectHandler<T extends ObjectInstance = any> = {
 	// TODO: fix inability to use contexts inside this
 	render: Component<{ instance: T; key: string; selected: boolean; highlighted: boolean }>
 

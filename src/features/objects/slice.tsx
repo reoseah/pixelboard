@@ -1,7 +1,7 @@
 import { type Accessor, Show, createSignal, onCleanup, onMount, useContext } from 'solid-js'
 import { NonRasterStateContext } from '../../state/document'
 import { ViewportStateContext } from '../../state/viewport'
-import type { NonRasterHandler } from './types'
+import type { ObjectHandler } from './types'
 
 export type SliceInstance = {
 	type: 'slice'
@@ -12,7 +12,7 @@ export type SliceInstance = {
 	width: number
 }
 
-export const SliceHandler: NonRasterHandler<SliceInstance> = {
+export const SliceHandler: ObjectHandler<SliceInstance> = {
 	getBounds: (instance) => ({
 		x: instance.x,
 		y: instance.y,

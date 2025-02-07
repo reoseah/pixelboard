@@ -2,14 +2,13 @@ import { makePersisted } from '@solid-primitives/storage'
 import { type Accessor, createContext, createSignal } from 'solid-js'
 import { createStore, produce } from 'solid-js/store'
 import * as Y from 'yjs'
-import type { SliceInstance } from '../features/non-raster-objects/slice'
-import type { NonRasterInstance } from '../features/non-raster-objects/types'
+import type { ObjectInstance } from '../features/objects/types'
 
 export const ydoc = new Y.Doc()
 
-export type NonRasterState = {
-	elements: Y.Map<NonRasterInstance>
-	store: Record<string, NonRasterInstance>
+export type WhiteboardObjects = {
+	elements: Y.Map<ObjectInstance>
+	store: Record<string, ObjectInstance>
 
 	// TODO: make this per-user, store in YDoc, synchronize and display to other users
 	selected: Accessor<string[]>
@@ -22,11 +21,11 @@ export type NonRasterState = {
 	setTitleBeingEdited: (id: null | string) => void
 }
 
-export const createNonRasterState = (): NonRasterState => {
-	const elements = ydoc.getMap<NonRasterInstance>('non-raster-elements')
-	const [store, setStore] = createStore<Record<string, NonRasterInstance>>(elements.toJSON())
+export const createWhiteboardObjects = (): WhiteboardObjects => {
+	const elements = ydoc.getMap<ObjectInstance>('objects')
+	const [store, setStore] = createStore<Record<string, ObjectInstance>>(elements.toJSON())
 
-	const observer = (event: Y.YMapEvent<NonRasterInstance>) => {
+	const observer = (event: Y.YMapEvent<ObjectInstance>) => {
 		setStore(
 			produce((store) => {
 				event.changes.keys.forEach((change, key) => {
@@ -58,4 +57,4 @@ export const createNonRasterState = (): NonRasterState => {
 	}
 }
 
-export const NonRasterStateContext = createContext<NonRasterState>(createNonRasterState())
+export const NonRasterStateContext = createContext<WhiteboardObjects>(createWhiteboardObjects())

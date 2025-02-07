@@ -2,7 +2,7 @@ import { Entries } from '@solid-primitives/keyed'
 import { createMemo, createSignal, onCleanup, useContext } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 import { twMerge } from 'tailwind-merge'
-import { NonRasterHandlerRegistry } from '../features/non-raster-objects/state'
+import { NonRasterHandlerRegistry } from '../features/objects/state'
 import { ActiveToolContext } from '../state/active-tool'
 import { NonRasterStateContext } from '../state/document'
 import { ViewportStateContext } from '../state/viewport'
@@ -120,7 +120,7 @@ export const Viewport = () => {
 			<ViewportBackground width={innerWidth()} height={innerHeight()} x={translationX()} y={translationY()} />
 			<div style={{ transform: `translate(${translationX()}px, ${translationY()}px)` }}>
 				<NonRasterElementsRenderer />
-				{activeTool()?.viewportElement}
+				<Dynamic component={activeTool()?.viewportElement} />
 			</div>
 		</div>
 	)

@@ -1,5 +1,6 @@
 import { For, useContext } from 'solid-js'
-import { ToolRegistry, ToolSelectionContext } from '../features/tools/state'
+import { ToolRegistry } from '../features/tools/registry'
+import { ToolSelectionContext } from '../features/tools/state'
 
 export const Toolbar = () => {
 	const tools = useContext(ToolRegistry)
