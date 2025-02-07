@@ -12,21 +12,6 @@ const [selected, setSelected] = makePersisted(createSignal<string[]>([]), { name
 const [highlighted, setHighlighted] = createSignal<string[]>([])
 const [titleBeingEdited, setTitleBeingEdited] = createSignal<null | string>(null)
 
-const observer = (event: Y.YMapEvent<ObjectInstance>) => {
-	setStore(
-		produce((store) => {
-			event.changes.keys.forEach((change, key) => {
-				if (change.action === 'add' || change.action === 'update') {
-					store[key] = instances.get(key)!
-				} else {
-					delete store[key]
-				}
-			})
-		}),
-	)
-}
-instances.observe(observer)
-
 export type CanvasObjects = {
 	instances: Y.Map<ObjectInstance>
 	store: Record<string, ObjectInstance>
@@ -55,3 +40,18 @@ export const CanvasObjects: CanvasObjects = {
 }
 
 export default CanvasObjects
+
+const observer = (event: Y.YMapEvent<ObjectInstance>) => {
+	setStore(
+		produce((store) => {
+			event.changes.keys.forEach((change, key) => {
+				if (change.action === 'add' || change.action === 'update') {
+					store[key] = instances.get(key)!
+				} else {
+					delete store[key]
+				}
+			})
+		}),
+	)
+}
+instances.observe(observer)

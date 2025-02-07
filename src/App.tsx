@@ -14,7 +14,7 @@ function App() {
 	return (
 		<>
 			<Viewport />
-			<div class="pointer-events-none absolute inset-x-auto top-2 grid w-screen place-content-center gap-1 *:pointer-events-auto">
+			<div class="pointer-events-none absolute inset-x-auto top-4 grid w-screen place-content-center gap-1 *:pointer-events-auto">
 				<Toolbar />
 			</div>
 		</>

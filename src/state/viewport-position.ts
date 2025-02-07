@@ -5,20 +5,6 @@ const [x, setX] = makePersisted(createSignal(0), { name: 'canvas-x' })
 const [y, setY] = makePersisted(createSignal(0), { name: 'canvas-y' })
 const [scale, setScale] = makePersisted(createSignal(10), { name: 'canvas-scale' })
 
-const move = (dx: number, dy: number) => {
-	setX(x() + dx)
-	setY(y() + dy)
-}
-const zoomIn = () => {
-	setScale(chooseNextZoom(scale()))
-}
-const zoomOut = () => {
-	setScale(choosePreviousZoom(scale()))
-}
-
-const toCanvasX = (windowX: number) => (windowX - window.innerWidth / 2) / scale() - x()
-const toCanvasY = (windowY: number) => (windowY - window.innerHeight / 2) / scale() - y()
-
 type ViewportPosition = {
 	x: Accessor<number>
 	y: Accessor<number>
@@ -37,12 +23,19 @@ const ViewportPosition: ViewportPosition = {
 	y,
 	scale,
 
-	move,
-	zoomIn,
-	zoomOut,
+	move: (dx, dy) => {
+		setX(x() + dx)
+		setY(y() + dy)
+	},
+	zoomIn: () => {
+		setScale(chooseNextZoom(scale()))
+	},
+	zoomOut: () => {
+		setScale(choosePreviousZoom(scale()))
+	},
 
-	toCanvasX,
-	toCanvasY,
+	toCanvasX: (windowX) => (windowX - window.innerWidth / 2) / scale() - x(),
+	toCanvasY: (windowY) => (windowY - window.innerHeight / 2) / scale() - y(),
 }
 
 export default ViewportPosition

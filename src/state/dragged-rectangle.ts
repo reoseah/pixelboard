@@ -38,22 +38,3 @@ const DraggedRectangle: DraggedRectangle = {
 }
 
 export default DraggedRectangle
-
-// reset state on mouse up,
-document.addEventListener('mouseup', (e: MouseEvent) => {
-	if (e.button !== 0) {
-		return
-	}
-	if (!dragging()) {
-		return
-	}
-
-	// delayed in case a tool registers a mouseup handler on document too
-	requestAnimationFrame(() => {
-		setDragging(false)
-		setInitialPos({ x: 0, y: 0 })
-		setLastPos({ x: 0, y: 0 })
-	})
-})
-
-// TODO: export 'clear' method, call it from the component already handling mouse interactions, remove event listener?

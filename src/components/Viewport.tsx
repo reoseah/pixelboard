@@ -4,6 +4,7 @@ import { twMerge } from 'tailwind-merge'
 import ObjectHandlers from '../features/objects'
 import Tools from '../features/tools'
 import CanvasObjects from '../state/document/objects'
+import DraggedRectangle from '../state/dragged-rectangle'
 import SelectedTool from '../state/selected-tool'
 import ViewportPosition from '../state/viewport-position'
 
@@ -41,6 +42,9 @@ export const Viewport = () => {
 			dragTrigger = null
 		} else {
 			activeTool().handleMouseUp?.(e)
+			if (DraggedRectangle.dragging() && e.button === 0) {
+				DraggedRectangle.clear()
+			}
 		}
 	}
 
