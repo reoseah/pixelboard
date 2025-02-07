@@ -1,7 +1,7 @@
-import { type Accessor, Show, createSignal, onCleanup, onMount } from 'solid-js'
+import { type Accessor, Show, createEffect, createSignal, onCleanup, onMount } from 'solid-js'
 import CanvasObjects from '../../state/document/objects'
 import ViewportPosition from '../../state/viewport-position'
-import useClickOutside from '../../util/useClickOutside'
+import useMouseUpOutside from '../../util/useMouseUpOutside'
 import type { ObjectHandler } from './types'
 
 export type SliceInstance = {
@@ -97,7 +97,7 @@ const TitleEditor = (props: {
 		updateWidth()
 	})
 
-	useClickOutside(
+	useMouseUpOutside(
 		() => input,
 		() => {
 			updateTitle()
@@ -131,9 +131,9 @@ const TitleEditor = (props: {
 					updateWidth()
 				}}
 				onKeyDown={(e) => {
-					if (e.key === 'Enter') updateTitle()
-					if (e.key === 'Escape') {
-						setValue(props.initial ?? 'Frame')
+					if (e.key === 'Enter') {
+						updateTitle()
+					} else if (e.key === 'Escape') {
 						setTitleBeingEdited(null)
 					}
 				}}
