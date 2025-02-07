@@ -1,5 +1,5 @@
 import CropIcon from 'lucide-solid/icons/crop'
-import { Show, batch, useContext } from 'solid-js'
+import { Show, batch } from 'solid-js'
 import CanvasObjects from '../../state/document/objects'
 import DraggedRectangle from '../../state/dragged-rectangle'
 import SelectedTool from '../../state/selected-tool'

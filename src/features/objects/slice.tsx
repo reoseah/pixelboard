@@ -1,4 +1,4 @@
-import { type Accessor, Show, createEffect, createSignal, onCleanup, onMount } from 'solid-js'
+import { Show, createSignal, onMount } from 'solid-js'
 import CanvasObjects from '../../state/document/objects'
 import ViewportPosition from '../../state/viewport-position'
 import useMouseUpOutside from '../../util/useMouseUpOutside'
