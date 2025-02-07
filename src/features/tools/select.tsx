@@ -1,39 +1,25 @@
 import MousePointer2Icon from 'lucide-solid/icons/mouse-pointer-2'
-import { Show, createSignal, onCleanup, useContext } from 'solid-js'
+import { Show, createSignal, onCleanup } from 'solid-js'
 import type * as Y from 'yjs'
-import { NonRasterStateContext } from '../../state/document'
-import { ViewportStateContext } from '../../state/viewport'
-import { NonRasterHandlerRegistry } from '../objects/state'
-import type { ObjectHandler, ObjectInstance } from '../objects/types'
-import { DraggedRectangleContext } from './dragged-rectangle'
+import CanvasObjects from '../../state/document/objects'
+import DraggedRectangle from '../../state/dragged-rectangle'
+import ViewportPosition from '../../state/viewport-position'
+import ObjectHandlers from '../objects'
+import type { ObjectInstance } from '../objects/types'
 import type { Tool } from './types'
-
-const {
-	dragging,
-	setDragging,
-
-	initialPos,
-	setInitialPos,
-
-	currentPos,
-	setCurrentPos,
-} = useContext(DraggedRectangleContext)
-const viewport = useContext(ViewportStateContext)
-const nonRasterHandlers = useContext(NonRasterHandlerRegistry)
-const nonRasterState = useContext(NonRasterStateContext)
 
 const [toolState, setToolState] = createSignal<'idle' | 'move' | 'selection_box'>('idle')
 
 const handleMouseDown = (e: MouseEvent) => {
 	e.preventDefault()
 
-	const x = viewport.toCanvasX(e.clientX)
-	const y = viewport.toCanvasY(e.clientY)
+	const x = ViewportPosition.toCanvasX(e.clientX)
+	const y = ViewportPosition.toCanvasY(e.clientY)
 
-	const targetedElementId = findElementAtPos(nonRasterState.elements, nonRasterHandlers, x, y)
+	const targetedElementId = findElementAtPos(CanvasObjects.instances, x, y)
 	if (targetedElementId) {
 		const modifierKey = e.ctrlKey || e.metaKey || e.shiftKey
-		const selection = nonRasterState.selected()
+		const selection = CanvasObjects.selected()
 
 		let nextSelection: string[] = []
 
@@ -47,52 +33,50 @@ const handleMouseDown = (e: MouseEvent) => {
 			}
 		}
 
-		nonRasterState.select(nextSelection)
+		CanvasObjects.select(nextSelection)
 		if (nextSelection.includes(targetedElementId)) {
 			setToolState('move')
-			setInitialPos({ x, y })
-			setCurrentPos({ x, y })
+			DraggedRectangle.start(x, y)
 		}
 
 		return
 	}
 	setToolState('selection_box')
-	setInitialPos({ x, y })
-	setCurrentPos({ x, y })
-	setDragging(true)
-	nonRasterState.select([])
-	nonRasterState.highlight([])
+	DraggedRectangle.start(x, y)
+	CanvasObjects.select([])
+	CanvasObjects.highlight([])
 }
 
 const handleMouseMove = (e: MouseEvent) => {
 	switch (toolState()) {
 		case 'idle': {
-			const canvasX = viewport.toCanvasX(e.clientX)
-			const canvasY = viewport.toCanvasY(e.clientY)
+			const canvasX = ViewportPosition.toCanvasX(e.clientX)
+			const canvasY = ViewportPosition.toCanvasY(e.clientY)
 
-			const key = findElementAtPos(nonRasterState.elements, nonRasterHandlers, canvasX, canvasY)
+			const key = findElementAtPos(CanvasObjects.instances, canvasX, canvasY)
 			if (key) {
-				nonRasterState.highlight([key])
+				CanvasObjects.highlight([key])
 			} else {
-				nonRasterState.highlight([])
+				CanvasObjects.highlight([])
 			}
 
 			break
 		}
 		case 'move': {
-			const x = viewport.toCanvasX(e.clientX)
-			const y = viewport.toCanvasY(e.clientY)
-			const dx = x - currentPos().x
-			const dy = y - currentPos().y
-			setCurrentPos({ x, y })
+			const x = ViewportPosition.toCanvasX(e.clientX)
+			const y = ViewportPosition.toCanvasY(e.clientY)
+			const dx = x - DraggedRectangle.lastPos().x
+			const dy = y - DraggedRectangle.lastPos().y
 
-			for (const id of nonRasterState.selected()) {
-				const element = nonRasterState.elements.get(id)
+			DraggedRectangle.update(x, y)
+
+			for (const id of CanvasObjects.selected()) {
+				const element = CanvasObjects.instances.get(id)
 				if (element) {
-					const handler = nonRasterHandlers[element.type]
+					const handler = ObjectHandlers[element.type]
 					if (handler.move) {
 						const movedElement = handler.move(element, dx, dy)
-						nonRasterState.elements.set(id, movedElement)
+						CanvasObjects.instances.set(id, movedElement)
 					}
 				}
 			}
@@ -100,17 +84,18 @@ const handleMouseMove = (e: MouseEvent) => {
 			break
 		}
 		case 'selection_box': {
-			const x = viewport.toCanvasX(e.clientX)
-			const y = viewport.toCanvasY(e.clientY)
-			setCurrentPos({ x, y })
+			const x = ViewportPosition.toCanvasX(e.clientX)
+			const y = ViewportPosition.toCanvasY(e.clientY)
 
-			const minX = Math.min(initialPos().x, currentPos().x)
-			const minY = Math.min(initialPos().y, currentPos().y)
-			const maxX = Math.max(initialPos().x, currentPos().x)
-			const maxY = Math.max(initialPos().y, currentPos().y)
+			DraggedRectangle.update(x, y)
 
-			const inside = getElementsInside(nonRasterState.elements, nonRasterHandlers, minX, minY, maxX, maxY)
-			nonRasterState.highlight(inside)
+			const minX = Math.min(DraggedRectangle.initialPos().x, DraggedRectangle.lastPos().x)
+			const minY = Math.min(DraggedRectangle.initialPos().y, DraggedRectangle.lastPos().y)
+			const maxX = Math.max(DraggedRectangle.initialPos().x, DraggedRectangle.lastPos().x)
+			const maxY = Math.max(DraggedRectangle.initialPos().y, DraggedRectangle.lastPos().y)
+
+			const inside = getElementsInside(CanvasObjects.instances, minX, minY, maxX, maxY)
+			CanvasObjects.highlight(inside)
 
 			break
 		}
@@ -120,25 +105,25 @@ const handleMouseMove = (e: MouseEvent) => {
 const handleMouseUp = () => {
 	switch (toolState()) {
 		case 'move': {
-			for (const id of nonRasterState.selected()) {
-				const element = nonRasterState.elements.get(id)!
-				const handler = nonRasterHandlers[element.type]
+			for (const id of CanvasObjects.selected()) {
+				const element = CanvasObjects.instances.get(id)!
+				const handler = ObjectHandlers[element.type]
 				if (handler.finishMove) {
 					const movedElement = handler.finishMove(element)
-					nonRasterState.elements.set(id, movedElement)
+					CanvasObjects.instances.set(id, movedElement)
 				}
 			}
 			break
 		}
 		case 'selection_box': {
-			const minX = Math.min(initialPos().x, currentPos().x)
-			const minY = Math.min(initialPos().y, currentPos().y)
-			const maxX = Math.max(initialPos().x, currentPos().x)
-			const maxY = Math.max(initialPos().y, currentPos().y)
+			const minX = Math.min(DraggedRectangle.initialPos().x, DraggedRectangle.lastPos().x)
+			const minY = Math.min(DraggedRectangle.initialPos().y, DraggedRectangle.lastPos().y)
+			const maxX = Math.max(DraggedRectangle.initialPos().x, DraggedRectangle.lastPos().x)
+			const maxY = Math.max(DraggedRectangle.initialPos().y, DraggedRectangle.lastPos().y)
 
-			const inside = getElementsInside(nonRasterState.elements, nonRasterHandlers, minX, minY, maxX, maxY)
-			nonRasterState.select(inside)
-			nonRasterState.highlight([])
+			const inside = getElementsInside(CanvasObjects.instances, minX, minY, maxX, maxY)
+			CanvasObjects.select(inside)
+			CanvasObjects.highlight([])
 
 			break
 		}
@@ -146,43 +131,52 @@ const handleMouseUp = () => {
 	setToolState('idle')
 }
 
-const left = () => Math.min(initialPos().x, currentPos().x)
-const top = () => Math.min(initialPos().y, currentPos().y)
-const width = () => Math.max(initialPos().x, currentPos().x) - Math.min(initialPos().x, currentPos().x)
-const height = () => Math.max(initialPos().y, currentPos().y) - Math.min(initialPos().y, currentPos().y)
+const SelectionBox = () => {
+	const { initialPos, lastPos } = DraggedRectangle
 
-const SelectionBox = () => (
-	<Show when={dragging()}>
-		<div
-			class="absolute bg-primary-500/20 outline outline-primary-500"
-			style={{
-				left: `${left() * viewport.scale()}px`,
-				top: `${top() * viewport.scale()}px`,
-				width: `${width() * viewport.scale()}px`,
-				height: `${height() * viewport.scale()}px`,
-			}}
-		/>
-	</Show>
-)
+	const left = () => Math.min(initialPos().x, lastPos().x)
+	const top = () => Math.min(initialPos().y, lastPos().y)
+	const width = () => Math.max(initialPos().x, lastPos().x) - Math.min(initialPos().x, lastPos().x)
+	const height = () => Math.max(initialPos().y, lastPos().y) - Math.min(initialPos().y, lastPos().y)
 
-export const SelectTool: Tool = {
+	return (
+		<Show when={toolState() === 'selection_box'}>
+			<div
+				class="absolute bg-primary-500/20 outline outline-primary-500"
+				style={{
+					left: `${left() * ViewportPosition.scale()}px`,
+					top: `${top() * ViewportPosition.scale()}px`,
+					width: `${width() * ViewportPosition.scale()}px`,
+					height: `${height() * ViewportPosition.scale()}px`,
+				}}
+			/>
+		</Show>
+	)
+}
+
+const onSelected = () => {
+	onCleanup(() => {
+		CanvasObjects.highlight([])
+	})
+}
+
+const SelectTool: Tool = {
 	icon: MousePointer2Icon,
+
+	onSelected,
 
 	handleMouseDown,
 	handleMouseMove,
 	handleMouseUp,
 
-	viewportElement: SelectionBox,
+	renderInViewport: SelectionBox,
 }
 
-const findElementAtPos = (
-	elements: Y.Map<ObjectInstance>,
-	registry: Record<string, ObjectHandler>,
-	x: number,
-	y: number,
-): string | null => {
+export default SelectTool
+
+const findElementAtPos = (elements: Y.Map<ObjectInstance>, x: number, y: number): string | null => {
 	for (const [key, element] of elements) {
-		const handler = registry[element.type]
+		const handler = ObjectHandlers[element.type]
 		if (handler) {
 			const bounds = handler.getBounds(element)
 
@@ -196,7 +190,6 @@ const findElementAtPos = (
 
 export const getElementsInside = (
 	elements: Y.Map<ObjectInstance>,
-	registry: Record<string, ObjectHandler>,
 	minX: number,
 	minY: number,
 	maxX: number,
@@ -204,7 +197,7 @@ export const getElementsInside = (
 ) => {
 	const output: string[] = []
 	for (const [id, element] of elements) {
-		const bounds = registry[element.type].getBounds(element)
+		const bounds = ObjectHandlers[element.type].getBounds(element)
 		if (bounds.x >= minX && bounds.y >= minY && bounds.x + bounds.width <= maxX && bounds.y + bounds.height <= maxY) {
 			output.push(id)
 		}

@@ -1,7 +1,16 @@
+import { createEffect } from 'solid-js'
 import { Toolbar } from './components/Toolbar'
 import { Viewport } from './components/Viewport'
+import Tools from './features/tools'
+import SelectedTool from './state/selected-tool'
 
 function App() {
+	createEffect(() => {
+		const tool = Tools[SelectedTool.id()]
+
+		tool?.onSelected?.()
+	})
+
 	return (
 		<>
 			<Viewport />

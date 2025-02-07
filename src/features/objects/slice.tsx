@@ -1,6 +1,7 @@
-import { type Accessor, Show, createSignal, onCleanup, onMount, useContext } from 'solid-js'
-import { NonRasterStateContext } from '../../state/document'
-import { ViewportStateContext } from '../../state/viewport'
+import { type Accessor, Show, createSignal, onCleanup, onMount } from 'solid-js'
+import CanvasObjects from '../../state/document/objects'
+import ViewportPosition from '../../state/viewport-position'
+import useClickOutside from '../../util/useClickOutside'
 import type { ObjectHandler } from './types'
 
 export type SliceInstance = {
@@ -37,9 +38,9 @@ export const SliceHandler: ObjectHandler<SliceInstance> = {
 		selected: boolean
 		highlighted: boolean
 	}) => {
-		const { scale } = useContext(ViewportStateContext)
+		const { scale } = ViewportPosition
 
-		const { titleBeingEdited, setTitleBeingEdited } = useContext(NonRasterStateContext)
+		const { titleBeingEdited, setTitleBeingEdited } = CanvasObjects
 
 		return (
 			<div
@@ -75,14 +76,16 @@ const TitleEditor = (props: {
 	key: string
 	initial: string | null
 }) => {
-	const { elements, setTitleBeingEdited } = useContext(NonRasterStateContext)
+	const { instances, setTitleBeingEdited } = CanvasObjects
+
 	const [value, setValue] = createSignal(props.initial ?? 'Slice')
+
 	let input!: HTMLInputElement
 	let widthHelper!: HTMLSpanElement
 
 	const updateTitle = () => {
-		elements.set(props.key, {
-			...elements.get(props.key),
+		instances.set(props.key, {
+			...instances.get(props.key),
 			title: value().trim() || null,
 		} as SliceInstance)
 		setTitleBeingEdited(null)
@@ -140,17 +143,4 @@ const TitleEditor = (props: {
 			/>
 		</>
 	)
-}
-
-const useClickOutside = (ref: Accessor<HTMLElement | null | undefined>, callback: (e: Event) => void) => {
-	const handleClick = (event: Event) => {
-		const element = ref()
-		if (!element || element.contains(event.target as Node)) {
-			return
-		}
-
-		callback(event)
-	}
-	document.addEventListener('click', handleClick)
-	onCleanup(() => document.removeEventListener('click', handleClick))
 }

@@ -1,22 +1,21 @@
 import { Entries } from '@solid-primitives/keyed'
-import { createMemo, createSignal, onCleanup, useContext } from 'solid-js'
-import { Dynamic } from 'solid-js/web'
+import { createMemo, createSignal, onCleanup } from 'solid-js'
 import { twMerge } from 'tailwind-merge'
-import { NonRasterHandlerRegistry } from '../features/objects/state'
-import { ActiveToolContext } from '../state/active-tool'
-import { NonRasterStateContext } from '../state/document'
-import { ViewportStateContext } from '../state/viewport'
+import ObjectHandlers from '../features/objects'
+import Tools from '../features/tools'
+import CanvasObjects from '../state/document/objects'
+import SelectedTool from '../state/selected-tool'
+import ViewportPosition from '../state/viewport-position'
 
 export const Viewport = () => {
-	const { x, y, scale, move, zoomIn, zoomOut } = useContext(ViewportStateContext)
+	const { x, y, scale, move, zoomIn, zoomOut } = ViewportPosition
+	const activeTool = () => Tools[SelectedTool.id()]
 
 	const [innerWidth, setInnerWidth] = createSignal(window.innerWidth)
 	const [innerHeight, setInnerHeight] = createSignal(window.innerHeight)
 
 	const [dragging, setDragging] = createSignal(false)
 	let dragTrigger: 'space' | 'wheel' | null = null
-
-	const activeTool = useContext(ActiveToolContext)
 
 	const handleMouseDown = (e: MouseEvent) => {
 		if (isEditable(e.target)) {
@@ -119,8 +118,21 @@ export const Viewport = () => {
 		>
 			<ViewportBackground width={innerWidth()} height={innerHeight()} x={translationX()} y={translationY()} />
 			<div style={{ transform: `translate(${translationX()}px, ${translationY()}px)` }}>
-				<NonRasterElementsRenderer />
-				<Dynamic component={activeTool()?.viewportElement} />
+				<Entries of={CanvasObjects.store}>
+					{(key, instance) => {
+						const handler = ObjectHandlers[instance().type]
+
+						return (
+							<handler.render
+								key={key}
+								instance={instance()}
+								selected={CanvasObjects.selected().includes(key)}
+								highlighted={CanvasObjects.highlighted().includes(key)}
+							/>
+						)
+					}}
+				</Entries>
+				{activeTool()?.renderInViewport?.({})}
 			</div>
 		</div>
 	)
@@ -141,7 +153,7 @@ const ViewportBackground = (props: {
 	x: number
 	y: number
 }) => {
-	const { scale } = useContext(ViewportStateContext)
+	const { scale } = ViewportPosition
 
 	return (
 		// biome-ignore lint/a11y/noSvgWithoutTitle:
@@ -164,26 +176,5 @@ const ViewportBackground = (props: {
 				width="100%"
 			/>
 		</svg>
-	)
-}
-
-const NonRasterElementsRenderer = () => {
-	const { store, selected, highlighted } = useContext(NonRasterStateContext)
-	const nonRasterHandlers = useContext(NonRasterHandlerRegistry)
-
-	return (
-		<Entries of={store}>
-			{(key, instance) => {
-				return (
-					<Dynamic
-						component={nonRasterHandlers[instance().type].render}
-						key={key}
-						instance={instance()}
-						selected={selected().includes(key)}
-						highlighted={highlighted().includes(key)}
-					/>
-				)
-			}}
-		</Entries>
 	)
 }

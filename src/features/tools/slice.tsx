@@ -1,36 +1,21 @@
 import CropIcon from 'lucide-solid/icons/crop'
 import { Show, useContext } from 'solid-js'
-import { NonRasterStateContext } from '../../state/document'
-import { ViewportStateContext } from '../../state/viewport'
+import CanvasObjects from '../../state/document/objects'
+import DraggedRectangle from '../../state/dragged-rectangle'
+import SelectedTool from '../../state/selected-tool'
+import ViewportPosition from '../../state/viewport-position'
 import type { SliceInstance } from '../objects/slice'
-import { DraggedRectangleContext } from './dragged-rectangle'
-import { ToolSelectionContext } from './state'
 import type { Tool } from './types'
 
-const {
-	dragging,
-	setDragging,
-
-	initialPos,
-	setInitialPos,
-
-	currentPos,
-	setCurrentPos,
-} = useContext(DraggedRectangleContext)
-const viewport = useContext(ViewportStateContext)
-const nonRasterState = useContext(NonRasterStateContext)
-const toolSelection = useContext(ToolSelectionContext)
+const { dragging, initialPos, lastPos: currentPos } = DraggedRectangle
 
 const handleMouseDown = (e: MouseEvent) => {
 	if (e.button !== 0) {
 		return
 	}
-	const x = viewport.toCanvasX(e.clientX)
-	const y = viewport.toCanvasY(e.clientY)
-
-	setInitialPos({ x, y })
-	setCurrentPos({ x, y })
-	setDragging(true)
+	const x = ViewportPosition.toCanvasX(e.clientX)
+	const y = ViewportPosition.toCanvasY(e.clientY)
+	DraggedRectangle.start(x, y)
 
 	e.preventDefault()
 }
@@ -39,9 +24,10 @@ const handleMouseMove = (e: MouseEvent) => {
 	if (!dragging()) {
 		return
 	}
-	const x = viewport.toCanvasX(e.clientX)
-	const y = viewport.toCanvasY(e.clientY)
-	setCurrentPos({ x, y })
+	const x = ViewportPosition.toCanvasX(e.clientX)
+	const y = ViewportPosition.toCanvasY(e.clientY)
+	DraggedRectangle.update(x, y)
+
 	e.preventDefault()
 }
 
@@ -62,7 +48,7 @@ const handleMouseUp = (e: MouseEvent) => {
 
 	if (width > 0 && height > 0) {
 		const id = crypto.randomUUID()
-		nonRasterState.elements.set(id, {
+		CanvasObjects.instances.set(id, {
 			type: 'slice',
 			title: null,
 			x,
@@ -70,27 +56,21 @@ const handleMouseUp = (e: MouseEvent) => {
 			width,
 			height,
 		} satisfies SliceInstance)
-		nonRasterState.select([id])
+		CanvasObjects.select([id])
 	}
 
-	setDragging(false)
-	setInitialPos({ x: 0, y: 0 })
-	setCurrentPos({ x: 0, y: 0 })
-	toolSelection.select('select')
+	DraggedRectangle.clear()
+	SelectedTool.change('select')
 }
 
 const handleKeyDown = (e: KeyboardEvent) => {
 	if (e.key === 'Escape') {
-		setDragging(false)
-		setInitialPos({ x: 0, y: 0 })
-		setCurrentPos({ x: 0, y: 0 })
+		DraggedRectangle.clear()
 	}
 }
 
 const SlicePreview = () => {
-	const viewport = useContext(ViewportStateContext)
-
-	const { dragging, initialPos, currentPos } = useContext(DraggedRectangleContext)
+	const { dragging, initialPos, lastPos: currentPos } = DraggedRectangle
 	const left = () => Math.min(Math.round(initialPos().x), Math.round(currentPos().x))
 	const top = () => Math.min(Math.round(initialPos().y), Math.round(currentPos().y))
 	const width = () => Math.abs(Math.round(currentPos().x) - Math.round(initialPos().x))
@@ -101,17 +81,17 @@ const SlicePreview = () => {
 			<div
 				class="absolute z-15 outline outline-primary-400"
 				style={{
-					height: `${height() * viewport.scale()}px`,
-					left: `${left() * viewport.scale()}px`,
-					top: `${top() * viewport.scale()}px`,
-					width: `${width() * viewport.scale()}px`,
+					height: `${height() * ViewportPosition.scale()}px`,
+					left: `${left() * ViewportPosition.scale()}px`,
+					top: `${top() * ViewportPosition.scale()}px`,
+					width: `${width() * ViewportPosition.scale()}px`,
 				}}
 			>
 				<div
 					class="absolute z-15 whitespace-nowrap rounded-sm bg-primary-600 px-2 py-1 text-white text-xs"
 					style={{
-						left: `calc(${width() * viewport.scale()}px + .5rem)`,
-						top: `calc(${height() * viewport.scale()}px + .5rem)`,
+						left: `calc(${width() * ViewportPosition.scale()}px + .5rem)`,
+						top: `calc(${height() * ViewportPosition.scale()}px + .5rem)`,
 					}}
 				>
 					{width()} × {height()}
@@ -121,7 +101,7 @@ const SlicePreview = () => {
 	)
 }
 
-export const SliceTool: Tool = {
+const SliceTool: Tool = {
 	icon: CropIcon,
 
 	handleMouseDown,
@@ -130,5 +110,7 @@ export const SliceTool: Tool = {
 	handleKeyDown,
 
 	viewportClass: 'cursor-crosshair',
-	viewportElement: SlicePreview,
+	renderInViewport: SlicePreview,
 }
+
+export default SliceTool

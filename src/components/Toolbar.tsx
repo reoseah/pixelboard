@@ -1,20 +1,17 @@
-import { For, useContext } from 'solid-js'
-import { ToolRegistry } from '../features/tools/registry'
-import { ToolSelectionContext } from '../features/tools/state'
+import { For } from 'solid-js'
+import Tools from '../features/tools'
+import SelectedTool from '../state/selected-tool'
 
 export const Toolbar = () => {
-	const tools = useContext(ToolRegistry)
-	const selectedTool = useContext(ToolSelectionContext)
-
 	return (
-		<div class="round flex w-fit gap-1 rounded-lg border border-neutral-750 bg-neutral-825 p-1">
-			<For each={Object.entries(tools)}>
+		<div class="round flex w-fit gap-1 rounded-md border border-neutral-750 bg-neutral-825 p-0.75">
+			<For each={Object.entries(Tools)}>
 				{([id, tool]) => (
 					<button
-						class="grid h-9 w-9 cursor-pointer place-items-center rounded-md text-neutral-200 outline-none transition-colors hover:bg-neutral-750 hover:text-neutral-100 active:bg-neutral-700 active:text-neutral-50 aria-pressed:bg-primary-600 aria-pressed:text-neutral-50"
+						class="grid cursor-pointer place-items-center rounded p-1 text-neutral-200 outline-none transition-colors hover:bg-neutral-750 hover:text-neutral-100 active:bg-neutral-700 active:text-neutral-50 aria-pressed:bg-primary-600 aria-pressed:text-neutral-50"
 						type="button"
-						aria-pressed={selectedTool.id() === id}
-						onClick={() => selectedTool.select(id)}
+						aria-pressed={SelectedTool.id() === id}
+						onClick={() => SelectedTool.change(id)}
 					>
 						<tool.icon />
 					</button>
