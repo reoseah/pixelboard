@@ -6,8 +6,7 @@ export type ObjectInstance = {
 
 // biome-ignore lint/suspicious/noExplicitAny:
 export type ObjectHandler<T extends ObjectInstance = any> = {
-	// TODO: fix inability to use contexts inside this
-	render: Component<{ instance: T; key: string; selected: boolean; highlighted: boolean }>
+	render: Component<{ instance: T; id: string; selected: boolean; highlighted: boolean }>
 
 	getBounds: (instance: T) => { x: number; y: number; height: number; width: number }
 	// TODO: handle elements being moved separately from normal ones

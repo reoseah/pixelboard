@@ -1,5 +1,6 @@
 import { Show, createSignal, onMount } from 'solid-js'
 import CanvasObjects from '../../state/document/objects'
+import type { ResizeDirection } from '../../state/resizing-state'
 import ViewportPosition from '../../state/viewport-position'
 import useMouseUpOutside from '../../util/useMouseUpOutside'
 import type { ObjectHandler } from './types'
@@ -34,7 +35,7 @@ export const SliceHandler: ObjectHandler<SliceInstance> = {
 	}),
 	render: (props: {
 		instance: SliceInstance
-		key: string
+		id: string
 		selected: boolean
 		highlighted: boolean
 	}) => {
@@ -55,21 +56,47 @@ export const SliceHandler: ObjectHandler<SliceInstance> = {
 				data-selected={props.selected}
 			>
 				<Show
-					when={titleBeingEdited() === props.key}
+					when={titleBeingEdited() === props.id}
 					fallback={
 						<div
 							class="-top-5.25 absolute left-0 z-10 w-min max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-neutral-400 text-xs group-data-[highlighted=true]:text-primary-400 group-data-[selected=true]:text-primary-400"
-							ondblclick={() => setTitleBeingEdited(props.key)}
+							ondblclick={() => setTitleBeingEdited(props.id)}
 						>
 							{props.instance.title ?? 'Slice'}
 						</div>
 					}
 				>
-					<TitleEditor key={props.key} initial={props.instance.title} />
+					<TitleEditor key={props.id} initial={props.instance.title} />
+				</Show>
+				<Show when={props.selected}>
+					<ResizeHandle position="top" onPointerDown={(e) => startResize(e, 'top', props.instance, props.id)} />
+					<ResizeHandle position="bottom" onPointerDown={(e) => startResize(e, 'bottom', props.instance, props.id)} />
+					<ResizeHandle position="left" onPointerDown={(e) => startResize(e, 'left', props.instance, props.id)} />
+					<ResizeHandle position="right" onPointerDown={(e) => startResize(e, 'right', props.instance, props.id)} />
+					<ResizeHandle
+						position="top-left"
+						onPointerDown={(e) => startResize(e, 'top-left', props.instance, props.id)}
+					/>
+					<ResizeHandle
+						position="top-right"
+						onPointerDown={(e) => startResize(e, 'top-right', props.instance, props.id)}
+					/>
+					<ResizeHandle
+						position="bottom-left"
+						onPointerDown={(e) => startResize(e, 'bottom-left', props.instance, props.id)}
+					/>
+					<ResizeHandle
+						position="bottom-right"
+						onPointerDown={(e) => startResize(e, 'bottom-right', props.instance, props.id)}
+					/>
 				</Show>
 			</div>
 		)
 	},
+}
+
+const startResize = (e: PointerEvent, direction: string, instance: SliceInstance, id: string) => {
+	// TODO
 }
 
 const TitleEditor = (props: {
@@ -142,5 +169,27 @@ const TitleEditor = (props: {
 				}}
 			/>
 		</>
+	)
+}
+
+const ResizeHandle = (props: {
+	position: ResizeDirection
+	onPointerDown: (e: PointerEvent) => void
+}) => {
+	return (
+		<div
+			class="pointer-events-auto absolute h-2 w-2 border-2 border-primary-500 bg-white"
+			classList={{
+				'-top-1.25 left-[calc(50%-0.25rem)] cursor-ns-resize': props.position === 'top',
+				'-bottom-1.25 left-[calc(50%-0.25rem)] cursor-ns-resize': props.position === 'bottom',
+				'top-[calc(50%-0.25rem)] -left-1.25  cursor-ew-resize': props.position === 'left',
+				'top-[calc(50%-0.25rem)] -right-1.25  cursor-ew-resize': props.position === 'right',
+				'-top-1.25 -left-1.25 cursor-nwse-resize': props.position === 'top-left',
+				'-top-1.25 -right-1.25 cursor-nesw-resize': props.position === 'top-right',
+				'-bottom-1.25 -left-1.25 cursor-nesw-resize': props.position === 'bottom-left',
+				'-bottom-1.25 -right-1.25 cursor-nwse-resize': props.position === 'bottom-right',
+			}}
+			onPointerDown={props.onPointerDown}
+		/>
 	)
 }
