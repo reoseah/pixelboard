@@ -4,7 +4,6 @@ export type ObjectInstance = {
 	type: string
 }
 
-// biome-ignore lint/suspicious/noExplicitAny:
 export type ObjectHandler<T extends ObjectInstance = any> = {
 	render: Component<{ instance: T; id: string; selected: boolean; highlighted: boolean }>
 

@@ -2,7 +2,7 @@ import { Show, createSignal, onMount } from 'solid-js'
 import CanvasObjects from '../../state/document/objects'
 import type { ResizeDirection } from '../../state/resizing-state'
 import ViewportPosition from '../../state/viewport-position'
-import useMouseUpOutside from '../../util/useMouseUpOutside'
+import useMouseDownOutside from '../../util/useMouseDownOutside'
 import type { ObjectHandler } from './types'
 
 export type SliceInstance = {
@@ -54,6 +54,7 @@ export const SliceHandler: ObjectHandler<SliceInstance> = {
 				}}
 				data-highlighted={props.highlighted}
 				data-selected={props.selected}
+				data-object-id={props.id}
 			>
 				<Show
 					when={titleBeingEdited() === props.id}
@@ -124,7 +125,7 @@ const TitleEditor = (props: {
 		updateWidth()
 	})
 
-	useMouseUpOutside(
+	useMouseDownOutside(
 		() => input,
 		() => {
 			updateTitle()

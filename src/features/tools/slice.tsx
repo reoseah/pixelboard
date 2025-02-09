@@ -7,7 +7,7 @@ import ViewportPosition from '../../state/viewport-position'
 import type { SliceInstance } from '../objects/slice'
 import type { Tool } from './types'
 
-const { dragging, initialPos, lastPos: currentPos } = DraggedRectangle
+const { dragging, initialPos, lastPos } = DraggedRectangle
 
 const handleMouseDown = (e: MouseEvent) => {
 	if (e.button !== 0) {
@@ -39,10 +39,10 @@ const handleMouseUp = (e: MouseEvent) => {
 		return
 	}
 
-	const x = Math.round(Math.min(initialPos().x, currentPos().x))
-	const y = Math.round(Math.min(initialPos().y, currentPos().y))
-	const maxX = Math.round(Math.max(initialPos().x, currentPos().x))
-	const maxY = Math.round(Math.max(initialPos().y, currentPos().y))
+	const x = Math.round(Math.min(initialPos().x, lastPos().x))
+	const y = Math.round(Math.min(initialPos().y, lastPos().y))
+	const maxX = Math.round(Math.max(initialPos().x, lastPos().x))
+	const maxY = Math.round(Math.max(initialPos().y, lastPos().y))
 	const width = maxX - x
 	const height = maxY - y
 
@@ -62,7 +62,7 @@ const handleMouseUp = (e: MouseEvent) => {
 				width,
 				height,
 			} satisfies SliceInstance)
-			CanvasObjects.select([id])
+			CanvasObjects.setSelection([id])
 			CanvasObjects.setTitleBeingEdited(id)
 		}
 	})

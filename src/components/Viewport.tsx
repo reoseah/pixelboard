@@ -130,8 +130,8 @@ export const Viewport = () => {
 							<handler.render
 								id={key}
 								instance={instance()}
-								selected={CanvasObjects.selected().includes(key)}
-								highlighted={CanvasObjects.highlighted().includes(key)}
+								selected={CanvasObjects.selection().includes(key)}
+								highlighted={CanvasObjects.highlight().includes(key)}
 							/>
 						)
 					}}
