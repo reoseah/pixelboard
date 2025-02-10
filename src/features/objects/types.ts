@@ -11,4 +11,8 @@ export type ObjectHandler<T extends ObjectInstance = any> = {
 	// TODO: handle elements being moved separately from normal ones
 	move?: (instance: T, dx: number, dy: number) => T
 	finishMove?: (instance: T) => T
+
+	handleMouseDown?: (tool: 'select', event: MouseEvent) => { cancel: boolean }
+	handleMouseMove?: (tool: 'select', event: MouseEvent) => { cancel: boolean }
+	handleMouseUp?: (tool: 'select', event: MouseEvent) => { cancel: boolean }
 }

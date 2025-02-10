@@ -11,6 +11,7 @@ type ViewportPosition = {
 	scale: Accessor<number>
 
 	move: (dx: number, dy: number) => void
+	resetZoom(): void
 	zoomIn: () => void
 	zoomOut: () => void
 
@@ -26,6 +27,9 @@ const ViewportPosition: ViewportPosition = {
 	move: (dx, dy) => {
 		setX(x() + dx)
 		setY(y() + dy)
+	},
+	resetZoom: () => {
+		setScale(10)
 	},
 	zoomIn: () => {
 		setScale(chooseNextZoom(scale()))

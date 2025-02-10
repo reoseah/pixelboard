@@ -1,7 +1,7 @@
 import { type Accessor, createSignal } from 'solid-js'
 
 type ObjectMoving = {
-	active: Accessor<boolean>
+	moving: Accessor<boolean>
 	startX: Accessor<number>
 	startY: Accessor<number>
 	currentX: Accessor<number>
@@ -12,21 +12,21 @@ type ObjectMoving = {
 	clear: () => void
 }
 
-const [active, setActive] = createSignal(false)
+const [moving, setMoving] = createSignal(false)
 const [startX, setStartX] = createSignal(0)
 const [startY, setStartY] = createSignal(0)
 const [currentX, setCurrentX] = createSignal(0)
 const [currentY, setCurrentY] = createSignal(0)
 
 const ObjectMoving: ObjectMoving = {
-	active,
+	moving,
 	startX,
 	startY,
 	currentX,
 	currentY,
 
 	start: (x, y) => {
-		setActive(true)
+		setMoving(true)
 		setStartX(x)
 		setStartY(y)
 		setCurrentX(x)
@@ -37,7 +37,7 @@ const ObjectMoving: ObjectMoving = {
 		setCurrentY(y)
 	},
 	clear: () => {
-		setActive(false)
+		setMoving(false)
 		setStartX(0)
 		setStartY(0)
 		setCurrentX(0)

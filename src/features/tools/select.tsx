@@ -7,17 +7,25 @@ import ViewportPosition from '../../state/viewport-position'
 import ObjectHandlers from '../objects'
 import type { Tool } from './types'
 
-const handleMouseDown = (e: MouseEvent) => {
-	e.preventDefault()
+const handleMouseDown = (event: MouseEvent) => {
+	event.preventDefault()
 
-	const x = ViewportPosition.toCanvasX(e.clientX)
-	const y = ViewportPosition.toCanvasY(e.clientY)
+	const x = ViewportPosition.toCanvasX(event.clientX)
+	const y = ViewportPosition.toCanvasY(event.clientY)
 
-	const clickedId = getObjectUnderCursor(e)
+	const clickedId = getObjectUnderCursor(event)
 	if (clickedId) {
-		if (e.ctrlKey || e.metaKey) {
+		const handler = ObjectHandlers[CanvasObjects.instances.get(clickedId)!.type!]
+		if (handler.handleMouseDown) {
+			const result = handler.handleMouseDown('select', event)
+			if (result.cancel) {
+				return
+			}
+		}
+
+		if (event.ctrlKey || event.metaKey) {
 			CanvasObjects.toggleSelection([clickedId])
-		} else if (e.shiftKey) {
+		} else if (event.shiftKey) {
 			CanvasObjects.addToSelection([clickedId])
 		} else {
 			CanvasObjects.setSelection([clickedId])
@@ -31,11 +39,22 @@ const handleMouseDown = (e: MouseEvent) => {
 	}
 }
 
-const handleMouseMove = (e: MouseEvent) => {
-	const x = ViewportPosition.toCanvasX(e.clientX)
-	const y = ViewportPosition.toCanvasY(e.clientY)
+const handleMouseMove = (event: MouseEvent) => {
+	const x = ViewportPosition.toCanvasX(event.clientX)
+	const y = ViewportPosition.toCanvasY(event.clientY)
 
-	if (ObjectMoving.active()) {
+	const hoveredId = getObjectUnderCursor(event)
+	if (hoveredId) {
+		const handler = ObjectHandlers[CanvasObjects.instances.get(hoveredId)!.type!]
+		if (handler.handleMouseMove) {
+			const result = handler.handleMouseMove('select', event)
+			if (result.cancel) {
+				return
+			}
+		}
+	}
+
+	if (ObjectMoving.moving()) {
 		const dx = x - ObjectMoving.currentX()
 		const dy = y - ObjectMoving.currentY()
 
@@ -52,8 +71,8 @@ const handleMouseMove = (e: MouseEvent) => {
 			}
 		}
 	} else if (DraggedRectangle.dragging()) {
-		const x = ViewportPosition.toCanvasX(e.clientX)
-		const y = ViewportPosition.toCanvasY(e.clientY)
+		const x = ViewportPosition.toCanvasX(event.clientX)
+		const y = ViewportPosition.toCanvasY(event.clientY)
 
 		DraggedRectangle.update(x, y)
 
@@ -65,7 +84,6 @@ const handleMouseMove = (e: MouseEvent) => {
 		const highlightedIds = getElementsInside(minX, minY, maxX, maxY)
 		CanvasObjects.setHighlight(highlightedIds)
 	} else {
-		const hoveredId = getObjectUnderCursor(e)
 		if (hoveredId) {
 			CanvasObjects.setHighlight([hoveredId])
 		} else {
@@ -75,7 +93,7 @@ const handleMouseMove = (e: MouseEvent) => {
 }
 
 const handleMouseUp = () => {
-	if (ObjectMoving.active()) {
+	if (ObjectMoving.moving()) {
 		for (const id of CanvasObjects.selection()) {
 			const element = CanvasObjects.instances.get(id)!
 			const handler = ObjectHandlers[element.type]

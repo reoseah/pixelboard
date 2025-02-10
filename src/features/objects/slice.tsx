@@ -1,9 +1,20 @@
 import { Show, createSignal, onMount } from 'solid-js'
+import ObjectMoving from '../../state/document/object-moving'
 import CanvasObjects from '../../state/document/objects'
-import type { ResizeDirection } from '../../state/resizing-state'
+import SelectedTool from '../../state/selected-tool'
 import ViewportPosition from '../../state/viewport-position'
 import useMouseDownOutside from '../../util/useMouseDownOutside'
 import type { ObjectHandler } from './types'
+
+export type ResizeDirection =
+	| 'top-left'
+	| 'top-right'
+	| 'bottom-left'
+	| 'bottom-right'
+	| 'top'
+	| 'right'
+	| 'bottom'
+	| 'left'
 
 export type SliceInstance = {
 	type: 'slice'
@@ -36,12 +47,10 @@ export const SliceHandler: ObjectHandler<SliceInstance> = {
 	render: (props: {
 		instance: SliceInstance
 		id: string
-		selected: boolean
-		highlighted: boolean
 	}) => {
 		const { scale } = ViewportPosition
-
-		const { titleBeingEdited, setTitleBeingEdited } = CanvasObjects
+		const { selection, highlight, titleBeingEdited, setTitleBeingEdited } = CanvasObjects
+		const { moving } = ObjectMoving
 
 		return (
 			<div
@@ -52,9 +61,11 @@ export const SliceHandler: ObjectHandler<SliceInstance> = {
 					width: `${props.instance.width * scale() - 1}px`,
 					height: `${props.instance.height * scale() - 1}px`,
 				}}
-				data-highlighted={props.highlighted}
-				data-selected={props.selected}
 				data-object-id={props.id}
+				data-selected={selection().includes(props.id) && SelectedTool.id() === 'select'}
+				data-highlighted={
+					highlight().includes(props.id) || (selection().includes(props.id) && SelectedTool.id() !== 'select')
+				}
 			>
 				<Show
 					when={titleBeingEdited() === props.id}
@@ -69,35 +80,28 @@ export const SliceHandler: ObjectHandler<SliceInstance> = {
 				>
 					<TitleEditor key={props.id} initial={props.instance.title} />
 				</Show>
-				<Show when={props.selected}>
-					<ResizeHandle position="top" onPointerDown={(e) => startResize(e, 'top', props.instance, props.id)} />
-					<ResizeHandle position="bottom" onPointerDown={(e) => startResize(e, 'bottom', props.instance, props.id)} />
-					<ResizeHandle position="left" onPointerDown={(e) => startResize(e, 'left', props.instance, props.id)} />
-					<ResizeHandle position="right" onPointerDown={(e) => startResize(e, 'right', props.instance, props.id)} />
-					<ResizeHandle
-						position="top-left"
-						onPointerDown={(e) => startResize(e, 'top-left', props.instance, props.id)}
-					/>
-					<ResizeHandle
-						position="top-right"
-						onPointerDown={(e) => startResize(e, 'top-right', props.instance, props.id)}
-					/>
-					<ResizeHandle
-						position="bottom-left"
-						onPointerDown={(e) => startResize(e, 'bottom-left', props.instance, props.id)}
-					/>
-					<ResizeHandle
-						position="bottom-right"
-						onPointerDown={(e) => startResize(e, 'bottom-right', props.instance, props.id)}
-					/>
+				<Show when={selection().includes(props.id) && SelectedTool.id() === 'select' && !moving()}>
+					<ResizeHandle position="top" />
+					<ResizeHandle position="bottom" />
+					<ResizeHandle position="left" />
+					<ResizeHandle position="right" />
+					<ResizeHandle position="top-left" />
+					<ResizeHandle position="top-right" />
+					<ResizeHandle position="bottom-left" />
+					<ResizeHandle position="bottom-right" />
 				</Show>
 			</div>
 		)
 	},
-}
+	handleMouseDown: (tool, event) => {
+		if (event.target instanceof HTMLElement) {
+			if (event.target.hasAttribute('data-resize-handle')) {
+				return { cancel: true }
+			}
+		}
 
-const startResize = (e: PointerEvent, direction: string, instance: SliceInstance, id: string) => {
-	// TODO
+		return { cancel: false }
+	},
 }
 
 const TitleEditor = (props: {
@@ -175,7 +179,6 @@ const TitleEditor = (props: {
 
 const ResizeHandle = (props: {
 	position: ResizeDirection
-	onPointerDown: (e: PointerEvent) => void
 }) => {
 	return (
 		<div
@@ -190,7 +193,8 @@ const ResizeHandle = (props: {
 				'-bottom-1.25 -left-1.25 cursor-nesw-resize': props.position === 'bottom-left',
 				'-bottom-1.25 -right-1.25 cursor-nwse-resize': props.position === 'bottom-right',
 			}}
-			onPointerDown={props.onPointerDown}
+			data-resize-handle
+			data-resize-direction={props.position}
 		/>
 	)
 }
