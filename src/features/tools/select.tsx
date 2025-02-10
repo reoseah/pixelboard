@@ -1,7 +1,9 @@
 import MousePointer2Icon from 'lucide-solid/icons/mouse-pointer-2'
 import { Show, onCleanup } from 'solid-js'
+import ObjectBeingRenamed from '../../state/document/object-being-renamed'
 import ObjectMoving from '../../state/document/object-moving'
 import CanvasObjects from '../../state/document/objects'
+import ResizingState, { type ResizeDirection } from '../../state/document/resizing-state'
 import DraggedRectangle from '../../state/dragged-rectangle'
 import ViewportPosition from '../../state/viewport-position'
 import ObjectHandlers from '../objects'
@@ -15,12 +17,14 @@ const handleMouseDown = (event: MouseEvent) => {
 
 	const clickedId = getObjectUnderCursor(event)
 	if (clickedId) {
-		const handler = ObjectHandlers[CanvasObjects.instances.get(clickedId)!.type!]
-		if (handler.handleMouseDown) {
-			const result = handler.handleMouseDown('select', event)
-			if (result.cancel) {
-				return
-			}
+		const target = event.target as HTMLElement
+		if (target.hasAttribute('data-renamable-title') && CanvasObjects.selection().includes(clickedId)) {
+			ObjectBeingRenamed.set(clickedId)
+			return
+		}
+		if (target.hasAttribute('data-resize-handle')) {
+			ResizingState.start(clickedId, target.getAttribute('data-resize-direction') as ResizeDirection, x, y)
+			return
 		}
 
 		if (event.ctrlKey || event.metaKey) {
@@ -44,36 +48,12 @@ const handleMouseMove = (event: MouseEvent) => {
 	const y = ViewportPosition.toCanvasY(event.clientY)
 
 	const hoveredId = getObjectUnderCursor(event)
-	if (hoveredId) {
-		const handler = ObjectHandlers[CanvasObjects.instances.get(hoveredId)!.type!]
-		if (handler.handleMouseMove) {
-			const result = handler.handleMouseMove('select', event)
-			if (result.cancel) {
-				return
-			}
-		}
-	}
 
-	if (ObjectMoving.moving()) {
-		const dx = x - ObjectMoving.currentX()
-		const dy = y - ObjectMoving.currentY()
-
+	if (ResizingState.resizing()) {
+		ResizingState.update(x, y)
+	} else if (ObjectMoving.moving()) {
 		ObjectMoving.update(x, y)
-
-		for (const id of CanvasObjects.selection()) {
-			const element = CanvasObjects.instances.get(id)
-			if (element) {
-				const handler = ObjectHandlers[element.type]
-				if (handler.move) {
-					const movedElement = handler.move(element, dx, dy)
-					CanvasObjects.instances.set(id, movedElement)
-				}
-			}
-		}
 	} else if (DraggedRectangle.dragging()) {
-		const x = ViewportPosition.toCanvasX(event.clientX)
-		const y = ViewportPosition.toCanvasY(event.clientY)
-
 		DraggedRectangle.update(x, y)
 
 		const minX = Math.min(DraggedRectangle.initialPos().x, DraggedRectangle.lastPos().x)
@@ -93,16 +73,10 @@ const handleMouseMove = (event: MouseEvent) => {
 }
 
 const handleMouseUp = () => {
-	if (ObjectMoving.moving()) {
-		for (const id of CanvasObjects.selection()) {
-			const element = CanvasObjects.instances.get(id)!
-			const handler = ObjectHandlers[element.type]
-			if (handler.finishMove) {
-				const movedElement = handler.finishMove(element)
-				CanvasObjects.instances.set(id, movedElement)
-			}
-		}
-		ObjectMoving.clear()
+	if (ResizingState.resizing()) {
+		ResizingState.finish()
+	} else if (ObjectMoving.moving()) {
+		ObjectMoving.finish()
 	} else if (DraggedRectangle.dragging()) {
 		const minX = Math.min(DraggedRectangle.initialPos().x, DraggedRectangle.lastPos().x)
 		const minY = Math.min(DraggedRectangle.initialPos().y, DraggedRectangle.lastPos().y)
@@ -138,6 +112,7 @@ const SelectionBox = () => {
 const onSelected = () => {
 	onCleanup(() => {
 		CanvasObjects.setHighlight([])
+		ObjectMoving.finish()
 	})
 }
 

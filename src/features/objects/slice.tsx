@@ -1,20 +1,12 @@
 import { Show, createSignal, onMount } from 'solid-js'
+import ObjectBeingRenamed from '../../state/document/object-being-renamed'
 import ObjectMoving from '../../state/document/object-moving'
 import CanvasObjects from '../../state/document/objects'
+import type { ResizeDirection } from '../../state/document/resizing-state'
 import SelectedTool from '../../state/selected-tool'
 import ViewportPosition from '../../state/viewport-position'
 import useMouseDownOutside from '../../util/useMouseDownOutside'
 import type { ObjectHandler } from './types'
-
-export type ResizeDirection =
-	| 'top-left'
-	| 'top-right'
-	| 'bottom-left'
-	| 'bottom-right'
-	| 'top'
-	| 'right'
-	| 'bottom'
-	| 'left'
 
 export type SliceInstance = {
 	type: 'slice'
@@ -44,17 +36,45 @@ export const SliceHandler: ObjectHandler<SliceInstance> = {
 		x: Math.round(instance.x),
 		y: Math.round(instance.y),
 	}),
+	resize: (instance, direction, dx, dy) => {
+		const replacement: SliceInstance = { ...instance }
+		if (['top', 'top-left', 'top-right'].includes(direction)) {
+			replacement.y += dy
+			replacement.height -= dy
+		}
+		if (['bottom', 'bottom-left', 'bottom-right'].includes(direction)) {
+			replacement.height += dy
+		}
+		if (['left', 'top-left', 'bottom-left'].includes(direction)) {
+			replacement.x += dx
+			replacement.width -= dx
+		}
+		if (['right', 'top-right', 'bottom-right'].includes(direction)) {
+			replacement.width += dx
+		}
+
+		if (replacement.height <= 0) {
+			replacement.y -= replacement.height
+			replacement.height = -replacement.height
+		}
+		if (replacement.width <= 0) {
+			replacement.x -= replacement.width
+			replacement.height = -replacement.height
+		}
+
+		return replacement
+	},
 	render: (props: {
 		instance: SliceInstance
 		id: string
 	}) => {
 		const { scale } = ViewportPosition
-		const { selection, highlight, titleBeingEdited, setTitleBeingEdited } = CanvasObjects
+		const { selection, highlight } = CanvasObjects
 		const { moving } = ObjectMoving
 
 		return (
 			<div
-				class="group absolute outline outline-slice data-[highlighted=true]:z-5 data-[selected=true]:z-5 data-[highlighted=true]:outline-primary-500 data-[selected=true]:outline-2 data-[selected=true]:outline-primary-500"
+				class="group absolute outline outline-slice data-[highlighted=true]:z-5 data-[selected=true]:z-10 data-[highlighted=true]:outline-primary-500 data-[selected=true]:outline-2 data-[selected=true]:outline-primary-500"
 				style={{
 					left: `${props.instance.x * scale()}px`,
 					top: `${props.instance.y * scale()}px`,
@@ -68,11 +88,11 @@ export const SliceHandler: ObjectHandler<SliceInstance> = {
 				}
 			>
 				<Show
-					when={titleBeingEdited() === props.id}
+					when={ObjectBeingRenamed.id() === props.id}
 					fallback={
 						<div
-							class="-top-5.25 absolute left-0 z-10 w-min max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-neutral-400 text-xs group-data-[highlighted=true]:text-primary-400 group-data-[selected=true]:text-primary-400"
-							ondblclick={() => setTitleBeingEdited(props.id)}
+							class="-top-5.25 absolute left-0 z-5 w-min max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-neutral-400 text-xs group-data-[highlighted=true]:text-primary-400 group-data-[selected=true]:text-primary-400"
+							data-renamable-title
 						>
 							{props.instance.title ?? 'Slice'}
 						</div>
@@ -93,22 +113,13 @@ export const SliceHandler: ObjectHandler<SliceInstance> = {
 			</div>
 		)
 	},
-	handleMouseDown: (tool, event) => {
-		if (event.target instanceof HTMLElement) {
-			if (event.target.hasAttribute('data-resize-handle')) {
-				return { cancel: true }
-			}
-		}
-
-		return { cancel: false }
-	},
 }
 
 const TitleEditor = (props: {
 	key: string
 	initial: string | null
 }) => {
-	const { instances, setTitleBeingEdited } = CanvasObjects
+	const { instances } = CanvasObjects
 
 	const [value, setValue] = createSignal(props.initial ?? 'Slice')
 
@@ -117,10 +128,10 @@ const TitleEditor = (props: {
 
 	const updateTitle = () => {
 		instances.set(props.key, {
-			...instances.get(props.key),
+			...(instances.get(props.key) as SliceInstance),
 			title: value().trim() || null,
-		} as SliceInstance)
-		setTitleBeingEdited(null)
+		} satisfies SliceInstance)
+		ObjectBeingRenamed.clear()
 	}
 
 	onMount(() => {
@@ -166,7 +177,7 @@ const TitleEditor = (props: {
 					if (e.key === 'Enter') {
 						updateTitle()
 					} else if (e.key === 'Escape') {
-						setTitleBeingEdited(null)
+						ObjectBeingRenamed.clear()
 					}
 				}}
 				ref={(el) => {
@@ -182,7 +193,7 @@ const ResizeHandle = (props: {
 }) => {
 	return (
 		<div
-			class="pointer-events-auto absolute h-2 w-2 border-2 border-primary-500 bg-white"
+			class="pointer-events-auto absolute z-100 h-2 w-2 border-2 border-primary-500 bg-white"
 			classList={{
 				'-top-1.25 left-[calc(50%-0.25rem)] cursor-ns-resize': props.position === 'top',
 				'-bottom-1.25 left-[calc(50%-0.25rem)] cursor-ns-resize': props.position === 'bottom',

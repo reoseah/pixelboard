@@ -10,7 +10,6 @@ const [store, setStore] = createStore<Record<string, ObjectInstance>>(instances.
 
 const [selection, setSelection] = makePersisted(createSignal<string[]>([]), { name: 'selected-elements' })
 const [highlight, setHighlight] = createSignal<string[]>([])
-const [titleBeingEdited, setTitleBeingEdited] = createSignal<null | string>(null)
 
 export type CanvasObjects = {
 	instances: Y.Map<ObjectInstance>
@@ -24,9 +23,6 @@ export type CanvasObjects = {
 
 	highlight: Accessor<string[]>
 	setHighlight: (ids: string[]) => void
-
-	titleBeingEdited: Accessor<null | string>
-	setTitleBeingEdited: (id: null | string) => void
 }
 
 export const CanvasObjects: CanvasObjects = {
@@ -47,8 +43,6 @@ export const CanvasObjects: CanvasObjects = {
 
 	highlight: highlight,
 	setHighlight: setHighlight,
-	titleBeingEdited,
-	setTitleBeingEdited,
 }
 
 export default CanvasObjects

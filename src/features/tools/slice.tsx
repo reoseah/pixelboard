@@ -1,5 +1,6 @@
 import CropIcon from 'lucide-solid/icons/crop'
 import { Show, batch } from 'solid-js'
+import ObjectBeingRenamed from '../../state/document/object-being-renamed'
 import CanvasObjects from '../../state/document/objects'
 import DraggedRectangle from '../../state/dragged-rectangle'
 import SelectedTool from '../../state/selected-tool'
@@ -63,7 +64,7 @@ const handleMouseUp = (e: MouseEvent) => {
 				height,
 			} satisfies SliceInstance)
 			CanvasObjects.setSelection([id])
-			CanvasObjects.setTitleBeingEdited(id)
+			ObjectBeingRenamed.set(id)
 		}
 	})
 }
