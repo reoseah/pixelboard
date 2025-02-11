@@ -1,5 +1,6 @@
 import { type Accessor, createSignal } from 'solid-js'
 import ObjectHandlers from '../../features/objects'
+import type { ObjectInstance } from '../../features/objects/types'
 import CanvasObjects from './objects'
 
 export type ResizeDirection =
@@ -26,6 +27,7 @@ type ResizingState = {
 }
 
 const [id, setId] = createSignal<string | null>(null)
+let instance: ObjectInstance | undefined = undefined
 const [direction, setDirection] = createSignal<ResizeDirection>('top-left')
 const [startX, setStartX] = createSignal(0)
 const [startY, setStartY] = createSignal(0)
@@ -45,6 +47,7 @@ const ResizingState: ResizingState = {
 
 	start: (id, direction, x, y) => {
 		setId(id)
+		instance = CanvasObjects.instances.get(id)
 		setDirection(direction)
 		setStartX(x)
 		setStartY(y)
@@ -55,19 +58,17 @@ const ResizingState: ResizingState = {
 		}
 		const dx = x - startX()
 		const dy = y - startY()
-		// FIXME
-		setStartX(x)
-		setStartY(y)
 
 		const object = CanvasObjects.instances.get(id()!)!
 		const handler = ObjectHandlers[object.type]
 		if (handler.resize) {
-			const replacement = handler.resize(object, direction(), dx, dy)
+			const replacement = handler.resize(instance, direction(), dx, dy)
 			CanvasObjects.instances.set(id()!, replacement)
 		}
 	},
 	finish: () => {
 		setId(null)
+		instance = undefined
 	},
 }
 

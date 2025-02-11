@@ -36,8 +36,11 @@ export const SliceHandler: ObjectHandler<SliceInstance> = {
 		x: Math.round(instance.x),
 		y: Math.round(instance.y),
 	}),
-	resize: (instance, direction, dx, dy) => {
-		const replacement: SliceInstance = { ...instance }
+	resize: (original, direction, _dx, _dy) => {
+		const dx = Math.round(_dx)
+		const dy = Math.round(_dy)
+
+		const replacement: SliceInstance = { ...original }
 		if (['top', 'top-left', 'top-right'].includes(direction)) {
 			replacement.y += dy
 			replacement.height -= dy
@@ -54,13 +57,16 @@ export const SliceHandler: ObjectHandler<SliceInstance> = {
 		}
 
 		if (replacement.height <= 0) {
-			replacement.y -= replacement.height
+			replacement.y += replacement.height
 			replacement.height = -replacement.height
 		}
 		if (replacement.width <= 0) {
-			replacement.x -= replacement.width
-			replacement.height = -replacement.height
+			replacement.x += replacement.width
+			replacement.width = -replacement.width
 		}
+
+		replacement.width = Math.max(1, replacement.width)
+		replacement.height = Math.max(1, replacement.height)
 
 		return replacement
 	},
