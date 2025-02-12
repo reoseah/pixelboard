@@ -1,5 +1,5 @@
 import type { Component } from 'solid-js'
-import type { ResizeDirection } from '../../state/document/resizing-state'
+import type { ResizeDirection } from '../../state/document/object-resizing'
 
 export type ObjectInstance = {
 	type: string
@@ -12,7 +12,5 @@ export type ObjectHandler<T extends ObjectInstance = any> = {
 
 	// TODO: handle elements being moved separately from normal ones
 	move?: (instance: T, dx: number, dy: number) => T
-	finishMove?: (instance: T) => T
-
 	resize?: (instance: T, direction: ResizeDirection, dx: number, dy: number) => T
 }
