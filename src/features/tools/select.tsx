@@ -1,5 +1,5 @@
-import MousePointer2Icon from 'lucide-solid/icons/mouse-pointer-2'
 import { onCleanup } from 'solid-js'
+import CursorIcon from '../../assets/icons/cursor-24.svg'
 import SelectionBox from '../../components/SelectionBox'
 import ObjectBeingRenamed from '../../state/document/object-being-renamed'
 import ObjectMoving from '../../state/document/object-moving'
@@ -120,7 +120,7 @@ const onSelected = () => {
 }
 
 const SelectTool: Tool = {
-	icon: MousePointer2Icon,
+	icon: CursorIcon,
 
 	onSelected,
 

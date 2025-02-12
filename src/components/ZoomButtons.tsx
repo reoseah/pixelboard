@@ -1,12 +1,12 @@
-import ZoomIn from 'lucide-solid/icons/zoom-in'
-import ZoomOut from 'lucide-solid/icons/zoom-out'
+import ZoomIn from '../assets/icons/zoom-in.svg'
+import ZoomOut from '../assets/icons/zoom-out.svg'
 import ViewportPosition from '../state/viewport-position'
 
 const ZoomButtons = () => {
 	return (
 		<div class="flex text-sm">
 			<button
-				class="group/tooltip-button relative grid cursor-pointer place-content-center rounded-l bg-neutral-800 p-1.5 text-neutral-200 hover:bg-neutral-750 hover:text-neutral-100 active:bg-neutral-700 active:text-white"
+				class="group/tooltip-button relative grid cursor-pointer place-content-center rounded-l bg-neutral-800 p-2 text-neutral-200 hover:bg-neutral-750 hover:text-neutral-100 active:bg-neutral-700 active:text-white"
 				type="button"
 				onclick={ViewportPosition.zoomOut}
 			>
@@ -26,7 +26,7 @@ const ZoomButtons = () => {
 				</div>
 			</button>
 			<button
-				class="group/tooltip-button relative grid cursor-pointer place-content-center rounded-r bg-neutral-800 p-1.5 text-neutral-200 hover:bg-neutral-750 hover:text-neutral-100 active:bg-neutral-700 active:text-white"
+				class="group/tooltip-button relative grid cursor-pointer place-content-center rounded-r bg-neutral-800 p-2 text-neutral-200 hover:bg-neutral-750 hover:text-neutral-100 active:bg-neutral-700 active:text-white"
 				type="button"
 				onclick={ViewportPosition.zoomIn}
 			>

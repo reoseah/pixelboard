@@ -1,8 +1,8 @@
-import Pencil from 'lucide-solid/icons/pencil'
+import PencilIcon from '../../assets/icons/pencil-24.svg'
 import type { Tool } from './types'
 
 const PencilTool: Tool = {
-	icon: Pencil,
+	icon: PencilIcon,
 }
 
 export default PencilTool

@@ -1,5 +1,5 @@
-import CropIcon from 'lucide-solid/icons/crop'
 import { Show } from 'solid-js'
+import CropIcon from '../../assets/icons/knife-24.svg'
 import ObjectBeingRenamed from '../../state/document/object-being-renamed'
 import CanvasObjects from '../../state/document/objects'
 import DraggedRectangle from '../../state/dragged-rectangle'
